@@ -4,20 +4,23 @@
 //   {
 //     "02011030": "02012001",
 //     "02012001-02012021": -1,
-//     "05012001-05012002": "05012001",
-//     "05022005": "05022005-05022006",
-//     "66001001-66001001:9": "66001001",
-//     "66001001:10-66001002": "66001002",
+//     "05022005:1-5": "05022005",
+//     "05022005:6-10": "05022006",
+//     "08002009:5-10": "08002009:1-7",
+//     "08002010:1-2": "08002009:8-9",
 //   }
 
 // 8+ character strings represent a passage location:
-//   BBCCCVVV[:W]
+//   BBCCCVVV
 //     BB is a zero-padded bookId with KJV ordering (1-66)
 //     CCC is a zero-padded chapter
 //     VVV is a zero-padded verse
-//     W is the optional word number in cases where a partial verse must be mapped
-// An integer can be given as the value to a mapping when all the verses in the key range
-// are increased by this amount in the transtion.
+//   BBCCCVVV:W1-W2
+//     W1 is the starting word number in cases where a partial verse must be mapped
+//     W2 is the ending word number in cases where a partial verse must be mapped
+//   BBCCCVVV-BBCCCVVV
+//     The key can also be a location range, with an integer as the value. Use this
+//     when all the verses in the key range are to be increased by the same amount.
 
 // So far I only have the mappings to skipped verses
 

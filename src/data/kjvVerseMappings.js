@@ -24,24 +24,24 @@
 
 // So far I only have the mappings to skipped verses
 
+// These are absent in the ESV, but are they in the KJV?
+
 export default const kjvVerseMappings = {
-  "kjv": {
-    // "40012047": null,
-    "40017021": null,
-    "40018011": null,
-    "40023014": null,
-    "41007016": null,
-    "41009044": null,
-    "41009046": null,
-    "41011026": null,
-    "41015028": null,
-    "42017036": null,
-    "42023017": null,
-    "43005004": null,
-    "44008037": null,
-    "44015034": null,
-    "44024007": null,
-    "44028029": null,
-    "45016024": null,
-  },
+  "40012047": null,  
+  "40017021": null,
+  "40018011": null,
+  "40023014": null,
+  "41007016": null,
+  "41009044": null,
+  "41009046": null,
+  "41011026": null,
+  "41015028": null,
+  "42017036": null,
+  "42023017": null,
+  "43005004": null,
+  "44008037": null,
+  "44015034": null,
+  "44024007": null,
+  "44028029": null,
+  "45016024": null,
 }

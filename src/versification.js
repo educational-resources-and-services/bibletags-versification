@@ -1,9 +1,10 @@
-import kjvVerseMappings from './data/kjvVerseMappings'
-import lxxVerseMappings from './data/lxxVerseMappings'
-import synodalVerseMappings from './data/synodalVerseMappings'
-
+import numberOfVersesPerChapterPerBook from './data/numberOfVersesPerChapterPerBook'
 import getVerseMappingsByVersionInfo from './utils/getVerseMappingsByVersionInfo'
-import { getLocFromVersion, getVersionFromLoc, isValidVerseInOriginal} from './utils/misc'
+import { getLocFromVersion, getVersionFromLoc } from './utils/locFunctions'
+
+export const isValidVerseInOriginal = ({ bookId, chapter, verse }) => (
+  verse >= 1 && verse <= numberOfVersesPerChapterPerBook[bookId-1][chapter-1]
+)
 
 export const getCorrespondingVerseLocation = ({ baseVersion={}, lookupVersionInfo={} }) => {
   // Returns:

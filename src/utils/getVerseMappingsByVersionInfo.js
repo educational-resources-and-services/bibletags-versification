@@ -1,7 +1,20 @@
+import kjvVerseMappings from '../data/kjvVerseMappings'
+import lxxVerseMappings from '../data/lxxVerseMappings'
+import synodalVerseMappings from '../data/synodalVerseMappings'
+
+import { padLocWithLeadingZero } from './locFunctions'
+
 // Assuming a one-way mapping set takes up ~3k, 200 two-way mapping sets would be 1.2 MB of memory
 const MAX_NUMBER_OF_MAPPING_SETS = 200
 const VALID_VERSIFICATION_MODELS = [ 'original', 'kjv', 'lxx', 'synadol' ]
 const VALID_PARTIAL_SCOPE_VALUES = [ undefined, 'ot', 'nt' ]
+
+const verseMappings = {
+  original: {},
+  kjv: kjvVerseMappings,
+  lxx: lxxVerseMappings,
+  synodal: synodalVerseMappings,
+}
 
 const extraVerseMappingsKeys = {}
 let extraVerseMappingsIndex = 0
@@ -38,8 +51,48 @@ export default const getVerseMappingsByVersionInfo = ({ partialScope, versificat
     
     // Create object of versification mappings without abbreviations
 
-    verseMappingsByVersionInfo[versificationModel][extraVerseMappingsKey]['originalToTranslation'] = 1
-    verseMappingsByVersionInfo[versificationModel][extraVerseMappingsKey]['translationToOriginal'] = 2
+    // get the unparsed versification mappings
+    const originalToTranslation = {
+      ...verseMappings[versificationModel],
+      ...(extraVerseMappings || {}),
+    }
+
+    // parse out ranges
+    for(let key in originalToTranslation) {
+      const keyParts = key.match(/^([0-9]{8})-([0-9]{8})$/)
+      if(keyParts) {
+        const startingLoc = parseInt(keyParts[1], 10)
+        const endingLoc = parseInt(keyParts[2], 10)
+        for(let loc=startingLoc; loc<=endingLoc; loc++) {
+          originalToTranslation[padLocWithLeadingZero(loc)] = padLocWithLeadingZero(loc + originalToTranslation[key])
+        }
+        delete originalToTranslation[key]
+      }
+    }
+
+    // switch it around, ignoring nulls
+    const translationToOriginal = {}
+    for(let key in originalToTranslation) {
+      if(originalToTranslation[key] === null) continue
+      translationToOriginal[originalToTranslation[key]] = key
+    }
+
+    // make multi-level so that all keys are simple locs
+    const convertMappingsToMultiLevel = mappings => {
+      for(let key in mappings) {
+        const keyParts = key.match(/^([0-9]{8}):([0-9]+-[0-9]+)$/)
+        if(keyParts) {
+          const loc = parseInt(keyParts[1], 10)
+          const wordRange = parseInt(keyParts[2], 10)
+          if(!mappings[loc]) mappings[loc] = {}
+          mappings[loc][wordRange] = mappings[key]
+          delete mappings[key]
+        }
+      }
+    }
+    
+    verseMappingsByVersionInfo[versificationModel][extraVerseMappingsKey]['originalToTranslation'] = convertMappingsToMultiLevel(originalToTranslation)
+    verseMappingsByVersionInfo[versificationModel][extraVerseMappingsKey]['translationToOriginal'] = convertMappingsToMultiLevel(translationToOriginal)
     verseMappingsByVersionInfo[versificationModel][extraVerseMappingsKey]['createdAt'] = Date.now()
 
 

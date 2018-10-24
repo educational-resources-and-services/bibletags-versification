@@ -1,0 +1,15 @@
+{
+  "name": "bibletags-versification",
+  "scripts": {
+    "build": "uglifyjs src/versification.js -c -m -o ./builds/versification.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/educational-resources-and-services/bibletags-versification.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/educational-resources-and-services/bibletags-versification/issues"
+  },
+  "homepage": "https://bibletags.org"
+}

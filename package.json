@@ -2,7 +2,7 @@
   "name": "bibletags-versification",
   "scripts": {
     "webpack": "webpack",
-    "test": "npm run webpack && mocha 'tests/index.js'"
+    "test": "npm run webpack && mocha 'tests/all.js'"
   },
   "repository": {
     "type": "git",

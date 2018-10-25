@@ -1,7 +1,7 @@
 {
   "name": "bibletags-versification",
   "scripts": {
-    "test": "npm run webpack && mocha 'builds/tests.js'"
+    "test": "webpack && mocha 'builds/tests.js'"
   },
   "repository": {
     "type": "git",

@@ -16,11 +16,31 @@ const verseMappings = {
   synodal: synodalVerseMappings,
 }
 
+const unlikelyOriginals = {
+  "40012047": null,
+  "40017021": null,
+  "40018011": null,
+  "40023014": null,
+  "41007016": null,
+  "41009044": null,
+  "41009046": null,
+  "41011026": null,
+  "41015028": null,
+  "42017036": null,
+  "42023017": null,
+  "43005004": null,
+  "44008037": null,
+  "44015034": null,
+  "44024007": null,
+  "44028029": null,
+  "45016024": null,
+}
+
 const extraVerseMappingsKeys = {}
 let extraVerseMappingsIndex = 0
 const verseMappingsByVersionInfo = {}
 
-const getVerseMappingsByVersionInfo = ({ partialScope, versificationModel, extraVerseMappings }) => {
+const getVerseMappingsByVersionInfo = ({ partialScope, versificationModel, skipsUnlikelyOriginals, extraVerseMappings }) => {
 
   // validate parameters
 
@@ -54,6 +74,7 @@ const getVerseMappingsByVersionInfo = ({ partialScope, versificationModel, extra
     // get the unparsed versification mappings
     const originalToTranslation = {
       ...verseMappings[versificationModel],
+      ...(skipsUnlikelyOriginals ? unlikelyOriginals : {}),
       ...(extraVerseMappings || {}),
     }
 

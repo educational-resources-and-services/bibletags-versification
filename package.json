@@ -1,7 +1,8 @@
 {
   "name": "bibletags-versification",
   "scripts": {
-    "build": "uglifyjs src/versification.js -c -m -o ./builds/versification.js"
+    "webpack": "webpack",
+    "test": "npm run webpack && mocha 'tests/index.js'"
   },
   "repository": {
     "type": "git",
@@ -11,5 +12,13 @@
   "bugs": {
     "url": "https://github.com/educational-resources-and-services/bibletags-versification/issues"
   },
-  "homepage": "https://bibletags.org"
+  "homepage": "https://bibletags.org",
+  "devDependencies": {
+    "@babel/core": "7.1.2",
+    "@babel/plugin-proposal-object-rest-spread": "7.0.0",
+    "babel-loader": "8.0.4",
+    "babel-preset-env": "1.7.0",
+    "webpack": "4.23.0",
+    "webpack-cli": "3.1.2"
+  }
 }

@@ -12,6 +12,7 @@ describe('getCorrespondingVerseLocations', () => {
   describe('No valid verses in the corresponding version (original -> translation)', () => {
 
     // TODO: do some with partialScope and extraVerseMappings
+    // Note: Use assert.deepEqual()
 
   })
 

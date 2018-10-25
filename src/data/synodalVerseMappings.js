@@ -4,6 +4,8 @@
 
 // I need mappings to skipped verses and otherwise
 
-export default const synodalVerseMappings = {
+const synodalVerseMappings = {
   // "20022006": null,
 }
+
+export default synodalVerseMappings

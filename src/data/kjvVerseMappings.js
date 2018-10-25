@@ -26,7 +26,7 @@
 
 // These are absent in the ESV, but are they in the KJV?
 
-export default const kjvVerseMappings = {
+const kjvVerseMappings = {
   "40012047": null,  
   "40017021": null,
   "40018011": null,
@@ -45,3 +45,5 @@ export default const kjvVerseMappings = {
   "44028029": null,
   "45016024": null,
 }
+
+export default kjvVerseMappings

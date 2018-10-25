@@ -4,7 +4,7 @@
 
 // So far I only have the mappings to skipped verses
 
-export default const lxxVerseMappings = {
+const lxxVerseMappings = {
   "01031051": null,
   "01035021": null,
   "02025006": null,
@@ -73,3 +73,5 @@ export default const lxxVerseMappings = {
   "27004011": null,
   "27005015": null,
 }
+
+export default lxxVerseMappings

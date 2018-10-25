@@ -20,7 +20,7 @@ const extraVerseMappingsKeys = {}
 let extraVerseMappingsIndex = 0
 const verseMappingsByVersionInfo = {}
 
-export default const getVerseMappingsByVersionInfo = ({ partialScope, versificationModel, extraVerseMappings }) => {
+const getVerseMappingsByVersionInfo = ({ partialScope, versificationModel, extraVerseMappings }) => {
 
   // validate parameters
 
@@ -125,3 +125,5 @@ export default const getVerseMappingsByVersionInfo = ({ partialScope, versificat
 
   return verseMappingsByVersionInfo[versificationModel][extraVerseMappingsKey]
 }
+
+export default getVerseMappingsByVersionInfo

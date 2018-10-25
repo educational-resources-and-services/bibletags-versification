@@ -14,7 +14,7 @@ module.exports = {
         exclude: /node_modules/,
         loader: 'babel-loader',
         query: {
-          presets: ['env'],
+          presets: ['@babel/preset-env'],
           plugins: [
             "@babel/plugin-proposal-object-rest-spread",
           ],

@@ -155,7 +155,7 @@ export const getCorrespondingVerseLocations = ({ baseVersion={}, lookupVersionIn
   return lookupVersionLocs.map(lookupVersionLoc => getVersionFromLoc(lookupVersionLoc))
 }
 
-export const idValidVerse = version => {
+export const isValidVerse = version => {
   // Returns `true` or `false`, or null if passed an invalid parameter.
 
   // Note: When a translation has a verse that is not in the original Hebrew, Aramaic or

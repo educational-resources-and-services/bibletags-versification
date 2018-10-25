@@ -37,32 +37,6 @@ describe('isValidVerse', () => {
 
   })
 
-  describe('Valid passages', () => {
-
-    // TODO: fill out, particularly passages which are valid in a translation, but not the original
-
-    it('Genesis 1:1', () => {
-      const isValid = isValidVerseInOriginal({ bookId: 1, chapter: 1, verse: 1 })
-      assert.equal(isValid, true)
-    })
-
-    it('Malachi 3:24 (valid in original, but not KJV)', () => {
-      const isValid = isValidVerseInOriginal({ bookId: 39, chapter: 3, verse: 24, versionInfo: { versificationModel: 'original' } })
-      assert.equal(isValid, true)
-    })
-
-    it('Matthew 17:21 (valid in original, but not KJV)', () => {
-      const isValid = isValidVerseInOriginal({ bookId: 40, chapter: 17, verse: 21, versionInfo: { versificationModel: 'original' } })
-      assert.equal(isValid, true)
-    })
-
-    it('Revelation 21:1', () => {
-      const isValid = isValidVerseInOriginal({ bookId: 66, chapter: 21, verse: 1, versionInfo: { versificationModel: 'original' } })
-      assert.equal(isValid, true)
-    })
-
-  })
-
   describe('Invalid passages', () => {
 
     // TODO: fill out, particularly passages which are invalid in a translation, but not the original
@@ -89,4 +63,30 @@ describe('isValidVerse', () => {
 
   })
 
+  describe('Valid passages', () => {
+
+    // TODO: fill out, particularly passages which are valid in a translation, but not the original
+
+    it('Genesis 1:1', () => {
+      const isValid = isValidVerseInOriginal({ bookId: 1, chapter: 1, verse: 1 })
+      assert.equal(isValid, true)
+    })
+
+    it('Malachi 3:24 (valid in original, but not KJV)', () => {
+      const isValid = isValidVerseInOriginal({ bookId: 39, chapter: 3, verse: 24, versionInfo: { versificationModel: 'original' } })
+      assert.equal(isValid, true)
+    })
+
+    it('Matthew 17:21 (valid in original, but not KJV)', () => {
+      const isValid = isValidVerseInOriginal({ bookId: 40, chapter: 17, verse: 21, versionInfo: { versificationModel: 'original' } })
+      assert.equal(isValid, true)
+    })
+
+    it('Revelation 21:1', () => {
+      const isValid = isValidVerseInOriginal({ bookId: 66, chapter: 21, verse: 1, versionInfo: { versificationModel: 'original' } })
+      assert.equal(isValid, true)
+    })
+
+  })
+  
 })

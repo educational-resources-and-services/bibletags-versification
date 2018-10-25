@@ -47,30 +47,6 @@ describe('isValidVerseInOriginal', () => {
 
   })
 
-  describe('Valid passages', () => {
-
-    it('Genesis 1:1', () => {
-      const isValid = isValidVerseInOriginal({ bookId: 1, chapter: 1, verse: 1 })
-      assert.equal(isValid, true)
-    })
-
-    it('Malachi 3:24 (valid in original, but not KJV)', () => {
-      const isValid = isValidVerseInOriginal({ bookId: 39, chapter: 3, verse: 24 })
-      assert.equal(isValid, true)
-    })
-
-    it('Matthew 17:21 (valid in original, but not KJV)', () => {
-      const isValid = isValidVerseInOriginal({ bookId: 40, chapter: 17, verse: 21 })
-      assert.equal(isValid, true)
-    })
-
-    it('Revelation 21:1', () => {
-      const isValid = isValidVerseInOriginal({ bookId: 66, chapter: 21, verse: 1 })
-      assert.equal(isValid, true)
-    })
-
-  })
-
   describe('Invalid passages', () => {
 
     it('Genesis 51:1', () => {
@@ -95,4 +71,28 @@ describe('isValidVerseInOriginal', () => {
 
   })
 
+  describe('Valid passages', () => {
+
+    it('Genesis 1:1', () => {
+      const isValid = isValidVerseInOriginal({ bookId: 1, chapter: 1, verse: 1 })
+      assert.equal(isValid, true)
+    })
+
+    it('Malachi 3:24 (valid in original, but not KJV)', () => {
+      const isValid = isValidVerseInOriginal({ bookId: 39, chapter: 3, verse: 24 })
+      assert.equal(isValid, true)
+    })
+
+    it('Matthew 17:21 (valid in original, but not KJV)', () => {
+      const isValid = isValidVerseInOriginal({ bookId: 40, chapter: 17, verse: 21 })
+      assert.equal(isValid, true)
+    })
+
+    it('Revelation 21:1', () => {
+      const isValid = isValidVerseInOriginal({ bookId: 66, chapter: 21, verse: 1 })
+      assert.equal(isValid, true)
+    })
+
+  })
+  
 })

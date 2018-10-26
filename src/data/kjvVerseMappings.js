@@ -47,6 +47,9 @@ Need manual checking:
 # 40 + 41 -> 40 (per Peter Kirk)
 #! &ACT 19:40-41 = ACT 19:40
 #
+
+check stats from Biblearc DB that this is likely all the mappings
+
 */
 
 

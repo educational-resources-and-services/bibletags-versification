@@ -1,7 +1,7 @@
 import assert from 'assert'
-import { getCorrespondingVerseLocations } from '../src/versification'
+import { getCorrespondingVerseLocation } from '../src/versification'
 
-describe('getCorrespondingVerseLocations', () => {
+describe('getCorrespondingVerseLocation', () => {
   
   describe('Bad parameters', () => {
 

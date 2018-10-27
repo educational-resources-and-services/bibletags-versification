@@ -29,18 +29,18 @@ export const getCorrespondingVerseLocation = ({ baseVersion={}, lookupVersionInf
 
   let originalLocs = baseVerseMappingsByVersionInfo['translationToOriginal'][baseLoc]
   
-  if(originalLocs === 'undefined') {
+  if(typeof originalLocs === 'undefined') {
     // baseVersion and original have the same versification for this verse
     originalLocs = baseLoc
   }
 
   if(typeof originalLocs === 'object') {
     // we want all the locations that the baseVersion mapped to, regardless of wordRange
-    originalLocs = Object.values(originalLoc)
+    originalLocs = Object.values(originalLocs)
 
   } else {
     // always make it an array, since it may be mapped to more than one location in the original
-    originalLocs = [ originalLoc ]
+    originalLocs = [ originalLocs ]
   }
 
   const lookupVersionLocs = []
@@ -56,7 +56,7 @@ export const getCorrespondingVerseLocation = ({ baseVersion={}, lookupVersionInf
   
     let lookupVersionLoc = lookupVerseMappingsByVersionInfo['originalToTranslation'][originalLocWithoutWordRange]
   
-    if(lookupVersionLoc === 'undefined') {
+    if(typeof lookupVersionLoc === 'undefined') {
       // original and lookupVersion have the same versification for this verse
       lookupVersionLoc = originalLoc
     }
@@ -83,7 +83,7 @@ export const getCorrespondingVerseLocation = ({ baseVersion={}, lookupVersionInf
             lowEndOfWordRange <= highEndOfWordRangeInLookupVersionLoc
             || highEndOfWordRange >= lowEndOfWordRangeInLookupVersionLoc
           ) {
-            lookupVersionLocs.push(lookupVersionLoc[key])
+            lookupVersionLocs.push(lookupVersionLoc[lookupVersionLocWordRange])
           }
         }
 

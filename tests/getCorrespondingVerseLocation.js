@@ -12,7 +12,6 @@ describe('getCorrespondingVerseLocation', () => {
   describe('No valid verses in the corresponding version (original -> translation)', () => {
 
     // TODO: do some with partialScope and extraVerseMappings
-    // Note: Use assert.deepEqual()
 
   })
 
@@ -31,6 +30,30 @@ describe('getCorrespondingVerseLocation', () => {
   describe('Has a valid verse in the corresponding version (original -> translation)', () => {
 
     // TODO: do some with partialScope and extraVerseMappings
+
+    it('Genesis 1:1 (original -> KJV)', () => {
+      const correspondingVerseLocations = getCorrespondingVerseLocation({
+        baseVersion: {
+          bookId:1,
+          chapter: 1,
+          verse: 1,
+          versionInfo: {
+            versificationModel:'original'
+          }
+        },
+        lookupVersionInfo: {
+          versificationModel: 'kjv',
+        },
+      })
+
+      assert.deepEqual(correspondingVerseLocations, [
+        {
+          bookId:1,
+          chapter: 1,
+          verse: 1,
+        }
+      ])
+    })
 
   })
 

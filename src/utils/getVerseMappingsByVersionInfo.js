@@ -113,9 +113,14 @@ const getVerseMappingsByVersionInfo = ({ partialScope, versificationModel, skips
       }
     }
     
-    verseMappingsByVersionInfo[versificationModel][extraVerseMappingsKey]['originalToTranslation'] = convertMappingsToMultiLevel(originalToTranslation)
-    verseMappingsByVersionInfo[versificationModel][extraVerseMappingsKey]['translationToOriginal'] = convertMappingsToMultiLevel(translationToOriginal)
-    verseMappingsByVersionInfo[versificationModel][extraVerseMappingsKey]['createdAt'] = Date.now()
+    convertMappingsToMultiLevel(originalToTranslation)
+    convertMappingsToMultiLevel(translationToOriginal)
+
+    verseMappingsByVersionInfo[versificationModel][extraVerseMappingsKey] = {
+      originalToTranslation,
+      translationToOriginal,
+      createdAt: Date.now(),
+    }
 
 
     // Prevent exhausting memory by not caching too many mappings

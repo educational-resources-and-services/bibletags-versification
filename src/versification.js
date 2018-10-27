@@ -16,7 +16,7 @@ export const getCorrespondingVerseLocation = ({ baseVersion={}, lookupVersionInf
     return null
   }
 
-  const baseVerseMappingsByVersionInfo = getVerseMappingsByVersionInfo(versionInfo)
+  const baseVerseMappingsByVersionInfo = getVerseMappingsByVersionInfo(baseVersion.versionInfo)
   const lookupVerseMappingsByVersionInfo = getVerseMappingsByVersionInfo(lookupVersionInfo)
   const baseVersionWithoutWordRange = { ...baseVersion }
   delete baseVersionWithoutWordRange.wordRange

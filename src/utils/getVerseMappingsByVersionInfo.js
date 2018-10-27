@@ -39,6 +39,7 @@ const unlikelyOriginals = {
 const extraVerseMappingsKeys = {}
 let extraVerseMappingsIndex = 0
 const verseMappingsByVersionInfo = {}
+Object.keys(verseMappings).forEach(versificationModel => verseMappingsByVersionInfo[versificationModel] = {})
 
 const getVerseMappingsByVersionInfo = ({ partialScope, versificationModel, skipsUnlikelyOriginals, extraVerseMappings }) => {
 
@@ -66,7 +67,7 @@ const getVerseMappingsByVersionInfo = ({ partialScope, versificationModel, skips
   if(!extraVerseMappingsKey) {
     extraVerseMappingsKey = extraVerseMappingsKeys[extraVerseMappingsJSON] = extraVerseMappingsIndex++
   }
-  
+
   if(!verseMappingsByVersionInfo[versificationModel][extraVerseMappingsKey]) {
     
     // Create object of versification mappings without abbreviations

@@ -7,7 +7,7 @@ import { padLocWithLeadingZero } from './locFunctions'
 // Assuming a one-way mapping set takes up ~3k, 200 two-way mapping sets would be 1.2 MB of memory
 const MAX_NUMBER_OF_MAPPING_SETS = 200
 const VALID_VERSIFICATION_MODELS = [ 'original', 'kjv', 'lxx', 'synadol' ]
-const VALID_PARTIAL_SCOPE_VALUES = [ undefined, 'ot', 'nt' ]
+const VALID_PARTIAL_SCOPE_VALUES = [ null, undefined, 'ot', 'nt' ]
 
 const verseMappings = {
   original: {},

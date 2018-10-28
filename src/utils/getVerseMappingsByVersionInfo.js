@@ -41,7 +41,7 @@ let extraVerseMappingsIndex = 0
 const verseMappingsByVersionInfo = {}
 Object.keys(verseMappings).forEach(versificationModel => verseMappingsByVersionInfo[versificationModel] = {})
 
-const getVerseMappingsByVersionInfo = ({ partialScope, versificationModel, skipsUnlikelyOriginals, extraVerseMappings }) => {
+const getVerseMappingsByVersionInfo = ({ partialScope, versificationModel, skipsUnlikelyOriginals, extraVerseMappings }={}) => {
 
   // validate parameters
 

@@ -28,8 +28,6 @@
 
 /*
 
-Need manual checking:
-
 check stats from Biblearc DB that this is likely all the mappings
 
 */

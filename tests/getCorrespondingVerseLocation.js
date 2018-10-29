@@ -34,11 +34,11 @@ describe('getCorrespondingVerseLocation', () => {
     it('Genesis 1:1 (original -> KJV)', () => {
       const correspondingVerseLocations = getCorrespondingVerseLocation({
         baseVersion: {
-          bookId:1,
+          bookId: 1,
           chapter: 1,
           verse: 1,
           versionInfo: {
-            versificationModel:'original'
+            versificationModel: 'original'
           }
         },
         lookupVersionInfo: {

@@ -1,8 +1,10 @@
 import numberOfVersesPerChapterPerBook from './data/numberOfVersesPerChapterPerBook'
 import getVerseMappingsByVersionInfo from './utils/getVerseMappingsByVersionInfo'
-import { getLocFromVersion, getVersionFromLoc } from './utils/locFunctions'
+import { getLocFromRef, getRefFromLoc } from './utils/locFunctions'
 
-export const isValidVerseInOriginal = ({ bookId, chapter, verse }) => (
+const VALID_PARTIAL_SCOPE_VALUES = [ null, undefined, 'ot', 'nt' ]
+
+export const isValidRefInOriginal = ({ bookId, chapter, verse }) => (
   verse >= 1 && verse <= numberOfVersesPerChapterPerBook[bookId-1][chapter-1]
 )
 
@@ -12,19 +14,47 @@ export const getCorrespondingVerseLocation = ({ baseVersion={}, lookupVersionInf
     // `false` if there is not a valid verse in the corresponding version
     // `null` if invalid parameters were passed
 
-  if(typeof baseVersion !== 'object') {
+  if(
+    typeof baseVersion !== 'object'
+    || typeof baseVersion.info !== 'object'
+    || typeof lookupVersionInfo !== 'object'
+  ) {
     return null
   }
 
-  const baseVerseMappingsByVersionInfo = getVerseMappingsByVersionInfo(baseVersion.versionInfo)
+  if(!VALID_PARTIAL_SCOPE_VALUES.includes(baseVersion.info.partialScope)) {
+    return null
+  }
+
+  if(!VALID_PARTIAL_SCOPE_VALUES.includes(lookupVersionInfo.partialScope)) {
+    return null
+  }
+
+  const baseVerseMappingsByVersionInfo = getVerseMappingsByVersionInfo(baseVersion.info)
   const lookupVerseMappingsByVersionInfo = getVerseMappingsByVersionInfo(lookupVersionInfo)
-  const baseVersionWithoutWordRange = { ...baseVersion }
-  delete baseVersionWithoutWordRange.wordRange
-  const baseLoc = getLocFromVersion(baseVersion)
+  const baseVersionRefWithoutWordRange = { ...baseVersion.ref }
+  delete baseVersionRefWithoutWordRange.wordRange
+  const baseLoc = getLocFromRef(baseVersionRefWithoutWordRange)
 
   if(!baseVerseMappingsByVersionInfo || !lookupVerseMappingsByVersionInfo || !/^[0-9]{8}$/.test(baseLoc)) {
     // bad parameter
     return null
+  }
+
+  if(
+    (baseVersion.info.partialScope === 'ot' && baseVersion.ref.bookId >= 40)
+    || (baseVersion.info.partialScope === 'nt' && baseVersion.ref.bookId <= 39)
+  ) {
+    // invalid verse in base version
+    return null
+  }
+
+  if(
+    (lookupVersionInfo.partialScope === 'ot' && baseVersion.ref.bookId >= 40)
+    || (lookupVersionInfo.partialScope === 'nt' && baseVersion.ref.bookId <= 39)
+  ) {
+    // the corresponding version does not have this testament of the Bible
+    return false
   }
 
   let originalLocs = baseVerseMappingsByVersionInfo['translationToOriginal'][baseLoc]
@@ -47,7 +77,7 @@ export const getCorrespondingVerseLocation = ({ baseVersion={}, lookupVersionInf
   
   originalLocs.forEach(originalLoc => {
 
-    if(!isValidVerseInOriginal(getVersionFromLoc(originalLoc))) {
+    if(!isValidRefInOriginal(getRefFromLoc(originalLoc))) {
       // this verse does not have a valid corresponding verse in the original version
       return
     }
@@ -152,7 +182,7 @@ export const getCorrespondingVerseLocation = ({ baseVersion={}, lookupVersionInf
   }
 
 
-  return lookupVersionLocs.map(lookupVersionLoc => getVersionFromLoc(lookupVersionLoc))
+  return lookupVersionLocs.map(lookupVersionLoc => getRefFromLoc(lookupVersionLoc))
 }
 
 export const isValidVerse = version => {

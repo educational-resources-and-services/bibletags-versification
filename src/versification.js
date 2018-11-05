@@ -1,6 +1,6 @@
 import numberOfVersesPerChapterPerBook from './data/numberOfVersesPerChapterPerBook'
 import getVerseMappingsByVersionInfo from './utils/getVerseMappingsByVersionInfo'
-import { getLocFromRef, getRefFromLoc } from './utils/locFunctions'
+import { getLocFromRef, getRefFromLoc, padLocWithLeadingZero } from './utils/locFunctions'
 
 const VALID_PARTIAL_SCOPE_VALUES = [ null, undefined, 'ot', 'nt' ]
 
@@ -203,3 +203,5 @@ export const isValidVerse = version => {
 
   return typeof correspondingVerseLocations === 'object' ? true : correspondingVerseLocations
 }
+
+export { getLocFromRef, getRefFromLoc, padLocWithLeadingZero }

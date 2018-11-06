@@ -23,9 +23,10 @@
 //     when all the verses in the key range are to be increased by the same amount.
 
 // So far I only have the mappings to skipped verses
-
-// These are absent in the ESV, but are they in the KJV?
-
+/*
+ Notes:
+ 16007068 is in the KJV and Synodel, but does not exist in the WLC.
+ The ESV notes, "Compare Ezra 2:66 and the margins of some Hebrew manuscripts; Hebrew lacks all of verse 68."
 /*
 
 check stats from Biblearc DB that this is likely all the mappings

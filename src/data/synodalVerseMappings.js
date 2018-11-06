@@ -8,8 +8,9 @@
 
 spot check the list.
 
-Sarah's notes:
-//16007068 in Synodel does not exist, also in ESV, see ESV note: Compare Ezra 2:66 and the margins of some Hebrew manuscripts; Hebrew lacks Their horses . . . 245
+Notes:
+16007068 is in the Synodel and KJV, but does not exist in the WLC.
+The ESV notes, "Compare Ezra 2:66 and the margins of some Hebrew manuscripts; Hebrew lacks all of verse 68."
 
 */
 

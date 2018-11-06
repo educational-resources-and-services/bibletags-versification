@@ -35,12 +35,12 @@ describe('getCorrespondingVerseLocation', () => {
       const correspondingVerseLocations = getCorrespondingVerseLocation({
         baseVersion: {
           ref: {
-            bookId:1,
+            bookId: 1,
             chapter: 1,
             verse: 1,
           },
           info: {
-            versificationModel:'original'
+            versificationModel: 'original'
           }
         },
         lookupVersionInfo: {

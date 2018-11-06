@@ -10,6 +10,9 @@ need to spot check
 
 weave the nulls and others together
 
+Notes:
+ 16007068 is in the LXX, KJV and Synodel, but does not exist in the WLC.
+ The ESV notes, "Compare Ezra 2:66 and the margins of some Hebrew manuscripts; Hebrew lacks all of verse 68."
 */
 
 
@@ -118,6 +121,7 @@ const lxxVerseMappings = {
   "02039030": "02036038",
   "05005018": "05005017",
   "05005017": "05005018",
+  "16007068": 1,
   "19010001-018": -979, //PS10 WLC = PS9:22-39 LXX
   "19011001-007": -1000,
   "19012001-009": -1000,

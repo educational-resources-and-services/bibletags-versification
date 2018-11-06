@@ -1,4 +1,4 @@
-// original mapped to the kjv
+// original mapped to the lxx
 
 // See kjvVerseMappings.js for examples
 
@@ -8,29 +8,11 @@
 
 need to spot check
 
-
-need to check these manually
-
-  REPEATS:
-  24049034
-
-# PSA 9 = 9+10
-# 146 + 147 -> 147
-#
-# Jeremiah according to Rahlfs
-# Added by SS 25.3.2003
-#
-# JER 1-25:13 = JER 1-25:13
-# JER 25:14 = part of JER 49:34
-# JER 25:20 = part of JER 49:34
-# JER 52 = JER 52
-#
-# Verses 31:1-13 do not exist
-# Verse 32:14 does not exist
-# Verses 46:4-13 do not exist
-
 weave the nulls and others together
 
+Notes:
+ 16007068 is in the LXX, KJV and Synodel, but does not exist in the WLC.
+ The ESV notes, "Compare Ezra 2:66 and the margins of some Hebrew manuscripts; Hebrew lacks all of verse 68."
 */
 
 
@@ -81,6 +63,7 @@ const lxxVerseMappings = {
   "24007001": null,
   "24007028": null,
   "24011007": null,
+  "24025014": null,
   "24026001": null,
   "24026026": null,
   "24030022": null,
@@ -92,6 +75,7 @@ const lxxVerseMappings = {
   "24034021": null,
   "24037015": null,
   "24037022": null,
+  "24046001": null,
   "24052015": null,
   "25003029": null,
   "26001014": null,
@@ -137,7 +121,8 @@ const lxxVerseMappings = {
   "02039030": "02036038",
   "05005018": "05005017",
   "05005017": "05005018",
-  "19010001-018": -979,
+  "16007068-072": 1,
+  "19010001-018": -979, //PS10 WLC = PS9:22-39 LXX
   "19011001-007": -1000,
   "19012001-009": -1000,
   "19013001-006": -1000,
@@ -277,18 +262,8 @@ const lxxVerseMappings = {
   "19146001-010": -1000,
   "19147001-011": -1000,
   "19147012-020": -11,
-  "24049034-039": -24020,
-  "24049034": "24025020",
-  "24046001-028": -20000,
-  "24050001-046": -23000,
-  "24051001-064": -23000,
-  "24047001-007": -18000,
-  "24049007-022": -19006,
-  "24049001-006": -18984,
-  "24049028-033": -19005,
-  "24049023-027": -18994,
-  "24048001-044": -17000,
-  "24025013": "24032013",
+  "24025013:1-15": "24025013", //JER25:13a WLC = JER25:13 LXX
+  "24025013:16-21": "24032013", //JER25:13b WLC = JER32:13 LXX
   "24025015-038": 7000,
   "24026001-024": 7000,
   "24027001-022": 7000,
@@ -311,8 +286,18 @@ const lxxVerseMappings = {
   "24043001-013": 7000,
   "24044001-030": 7000,
   "24045001-005": 6030,
-  
-  
+  "24046002-028": -20000,
+  "24047001-007": -18000,
+  "24048001-044": -17000,
+  "24049001-006": -18984,
+  "24049007-022": -19006,
+  "24049023-027": -18994,
+  "24049028-033": -19005,
+  "24049034:1-9": "24025014", // Jer49:34a WLC = Jer25:14 LXX
+  "24049034:10-15": "24025020", // Jer49:34b = Jer25:20 LXX
+  "24049035-039": -24020,
+  "24050001-046": -23000,
+  "24051001-064": -23000,
 }
 
 export default lxxVerseMappings

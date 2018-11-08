@@ -2,8 +2,6 @@
 
 // See kjvVerseMappings.js for examples
 
-// So far I only have the mappings to skipped verses
-
 /*
 Notes:
  16007068 is in the LXX, KJV and Synodel, but does not exist in the WLC.

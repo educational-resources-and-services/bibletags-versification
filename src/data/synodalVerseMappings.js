@@ -5,13 +5,9 @@
 // I need mappings to skipped verses and otherwise
 
 /*
-
-spot check the list.
-
 Notes:
 16007068 is in the Synodel and KJV, but does not exist in the WLC.
 The ESV notes, "Compare Ezra 2:66 and the margins of some Hebrew manuscripts; Hebrew lacks all of verse 68."
-
 */
 
 

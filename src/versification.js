@@ -29,9 +29,11 @@ export const getCorrespondingVerseLocation = ({ baseVersion={}, lookupVersionInf
   if(!VALID_PARTIAL_SCOPE_VALUES.includes(lookupVersionInfo.partialScope)) {
     return null
   }
-
+  
   const baseVerseMappingsByVersionInfo = getVerseMappingsByVersionInfo(baseVersion.info)
+  //console.log("baseVerseMappingsByVersionInfo", baseVerseMappingsByVersionInfo);
   const lookupVerseMappingsByVersionInfo = getVerseMappingsByVersionInfo(lookupVersionInfo)
+  //console.log("lookupVerseMappingsByVersionInfo", lookupVerseMappingsByVersionInfo);
   const baseVersionRefWithoutWordRange = { ...baseVersion.ref }
   delete baseVersionRefWithoutWordRange.wordRange
   const baseLoc = getLocFromRef(baseVersionRefWithoutWordRange)
@@ -58,7 +60,7 @@ export const getCorrespondingVerseLocation = ({ baseVersion={}, lookupVersionInf
   }
 
   let originalLocs = baseVerseMappingsByVersionInfo['translationToOriginal'][baseLoc]
-  
+
   if(typeof originalLocs === 'undefined') {
     // baseVersion and original have the same versification for this verse
     originalLocs = baseLoc
@@ -73,7 +75,7 @@ export const getCorrespondingVerseLocation = ({ baseVersion={}, lookupVersionInf
     originalLocs = [ originalLocs ]
   }
 
-  const lookupVersionLocs = []
+  let lookupVersionLocs = []
   
   originalLocs.forEach(originalLoc => {
 
@@ -85,7 +87,7 @@ export const getCorrespondingVerseLocation = ({ baseVersion={}, lookupVersionInf
     const [ originalLocWithoutWordRange, wordRange ] = originalLoc.split(/:/)
   
     let lookupVersionLoc = lookupVerseMappingsByVersionInfo['originalToTranslation'][originalLocWithoutWordRange]
-  
+    
     if(typeof lookupVersionLoc === 'undefined') {
       // original and lookupVersion have the same versification for this verse
       lookupVersionLoc = originalLoc
@@ -95,12 +97,16 @@ export const getCorrespondingVerseLocation = ({ baseVersion={}, lookupVersionInf
       // this verse is skipped in the lookupVersion
       return
     }
-
+    console.log("lookupVersionLoc before if",lookupVersionLoc);
     if(typeof lookupVersionLoc === 'object') {
+
+      console.log("lookupVersionLoc === 'object' and it's value is",lookupVersionLoc);
+
       if(wordRange) {
         // get the pieces from lookupVersionLoc that will cover the wordRange
 
         const wordRangeParts = wordRange.split(/-/)
+        console.log("wordRangeParts", wordRangeParts);
         const lowEndOfWordRange = parseInt(wordRangeParts[0], 10) || 0
         const highEndOfWordRange = parseInt(wordRangeParts[1], 10) || 1000
 
@@ -155,6 +161,9 @@ export const getCorrespondingVerseLocation = ({ baseVersion={}, lookupVersionInf
   }
 
   for(let loc in locsWithWordRanges) {
+    
+    //here is where it's getting messed up, after fixing the consts, come back and check here. Should not enter either if statement
+
     if(locsWithWordRanges[loc].length === Object.keys(lookupVerseMappingsByVersionInfo['translationToOriginal'][loc]).length) {
       // wordRanges cover the entire verse, so no need to indicate a wordRange
       lookupVersionLocs.push(loc)
@@ -180,7 +189,7 @@ export const getCorrespondingVerseLocation = ({ baseVersion={}, lookupVersionInf
       lookupVersionLocs.push(`${loc}:${lowEndOfTotalWordRange}-${highEndOfTotalWordRange}`)
     }
   }
-
+  console.log("lookupVersionLocs after combine", lookupVersionLocs, lookupVersionLocs.map(lookupVersionLoc => getRefFromLoc(lookupVersionLoc)));
 
   return lookupVersionLocs.map(lookupVersionLoc => getRefFromLoc(lookupVersionLoc))
 }

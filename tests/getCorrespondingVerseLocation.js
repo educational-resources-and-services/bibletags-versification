@@ -59,6 +59,104 @@ describe('getCorrespondingVerseLocation', () => {
 
   })
 
+  it('Matthew 17:13 (original -> KJV)', () => {
+    const correspondingVerseLocations = getCorrespondingVerseLocation({
+      baseVersion: {
+        ref: {
+          bookId: 40,
+          chapter: 17,
+          verse: 13,
+        },
+        info: {
+          versificationModel: 'original'
+        }
+      },
+      lookupVersionInfo: {
+        versificationModel: 'kjv',
+      },
+    })
+
+    assert.deepEqual(correspondingVerseLocations, [
+      {
+        bookId:40,
+        chapter: 17,
+        verse: 13,
+      }
+    ])
+  })
+
+  
+describe('Has open-ended end of verse', () => {
+
+    // Example from Matt 17 and 20
+    // "40017014": "40017014:1-19",
+    // "40017015:1-2": "40017014:20-",
+    // "40017015:3-": "40017015",
+    // "40020004": "40020004:1-18",
+    // "40020005:1-3": "40020004:19-23",   //"40020005:1-3": "40020004:19-",
+    // "40020005:4-12": "40020005",        //"40020005:4-": "40020005",
+    
+    it('Matthew 17:14 (original -> KJV)', () => {
+      const correspondingVerseLocations = getCorrespondingVerseLocation({
+        baseVersion: {
+          ref: {
+            bookId: 40,
+            chapter: 17,
+            verse: 14,
+          },
+          info: {
+            versificationModel: 'original'
+          }
+        },
+        lookupVersionInfo: {
+          versificationModel: 'kjv',
+        },
+      })
+
+      assert.deepEqual(correspondingVerseLocations, [
+        {
+          bookId:40,
+          chapter: 17,
+          verse: 14,
+          wordRange: [1, 19],
+        },
+      ])
+    })
+
+    it('Matthew 17:15 (original -> KJV)', () => {       // "40017015:1-2": "40017014:20-", "40017015:3-": "40017015",
+      const correspondingVerseLocations = getCorrespondingVerseLocation({
+        baseVersion: {
+          ref: {
+            bookId: 40,
+            chapter: 17,
+            verse: 15,
+          },
+          info: {
+            versificationModel: 'original'
+          }
+        },
+        lookupVersionInfo: {
+          versificationModel: 'kjv',
+        },
+      })
+
+      assert.deepEqual(correspondingVerseLocations, [
+        {
+          bookId:40,
+          chapter: 17,
+          verse: 14,
+          wordRange: [20, 21],
+        },
+        {
+          bookId:40,
+          chapter: 17,
+          verse: 15
+        },
+      ])
+    })
+
+  })
+
   describe('Has a valid verse in the corresponding version (translation -> original)', () => {
 
     // TODO: do some with partialScope and extraVerseMappings

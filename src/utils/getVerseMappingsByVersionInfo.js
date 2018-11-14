@@ -6,7 +6,7 @@ import { padLocWithLeadingZero } from './locFunctions'
 
 // Assuming a one-way mapping set takes up ~3k, 200 two-way mapping sets would be 1.2 MB of memory
 const MAX_NUMBER_OF_MAPPING_SETS = 200
-const VALID_VERSIFICATION_MODELS = [ 'original', 'kjv', 'lxx', 'synadol' ]
+const VALID_VERSIFICATION_MODELS = [ 'original', 'kjv', 'lxx', 'synodal' ]
 const VALID_PARTIAL_SCOPE_VALUES = [ null, undefined, 'ot', 'nt' ]
 
 const verseMappings = {
@@ -67,7 +67,7 @@ const getVerseMappingsByVersionInfo = ({ partialScope, versificationModel, skips
   if(!extraVerseMappingsKey) {
     extraVerseMappingsKey = extraVerseMappingsKeys[extraVerseMappingsJSON] = extraVerseMappingsIndex++
   }
-
+  
   if(!verseMappingsByVersionInfo[versificationModel][extraVerseMappingsKey]) {
     
     // Create object of versification mappings without abbreviations
@@ -78,15 +78,17 @@ const getVerseMappingsByVersionInfo = ({ partialScope, versificationModel, skips
       ...(skipsUnlikelyOriginals ? unlikelyOriginals : {}),
       ...(extraVerseMappings || {}),
     }
-
+    
     // parse out ranges
     for(let key in originalToTranslation) {
-      const keyParts = key.match(/^([0-9]{8})-([0-9]{8})$/)
+      const keyParts = key.match(/^([0-9]{8})-([0-9]{3})$/)
       if(keyParts) {
         const startingLoc = parseInt(keyParts[1], 10)
-        const endingLoc = parseInt(keyParts[2], 10)
-        for(let loc=startingLoc; loc<=endingLoc; loc++) {
-          originalToTranslation[padLocWithLeadingZero(loc)] = padLocWithLeadingZero(loc + originalToTranslation[key])
+        const endingLoc = parseInt(keyParts[1].substr(0,5) + keyParts[2], 10)
+        if(endingLoc >= startingLoc) {
+          for(let loc=startingLoc; loc<=endingLoc; loc++) {
+            originalToTranslation[padLocWithLeadingZero(loc)] = padLocWithLeadingZero(loc + originalToTranslation[key])
+          }
         }
         delete originalToTranslation[key]
       }
@@ -104,15 +106,19 @@ const getVerseMappingsByVersionInfo = ({ partialScope, versificationModel, skips
       for(let key in mappings) {
         const keyParts = key.match(/^([0-9]{8}):([0-9]+-[0-9]+)$/)
         if(keyParts) {
-          const loc = parseInt(keyParts[1], 10)
-          const wordRange = parseInt(keyParts[2], 10)
+          const loc = keyParts[1]
+          const wordRange = keyParts[2]
           if(!mappings[loc]) mappings[loc] = {}
           mappings[loc][wordRange] = mappings[key]
+          // console.log("mappings"+loc, mappings[loc]);
           delete mappings[key]
         }
       }
     }
     
+    console.log("OOOOOOOOOIIIIIIIIIIOOOOOOOOO");
+    //console.log("verseMappingsByVersionInfo", verseMappingsByVersionInfo);
+
     convertMappingsToMultiLevel(originalToTranslation)
     convertMappingsToMultiLevel(translationToOriginal)
 

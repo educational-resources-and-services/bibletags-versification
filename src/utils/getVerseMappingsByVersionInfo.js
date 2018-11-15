@@ -110,15 +110,11 @@ const getVerseMappingsByVersionInfo = ({ partialScope, versificationModel, skips
           const wordRange = keyParts[2]
           if(!mappings[loc]) mappings[loc] = {}
           mappings[loc][wordRange] = mappings[key]
-          // console.log("mappings"+loc, mappings[loc]);
           delete mappings[key]
         }
       }
     }
-    
-    console.log("OOOOOOOOOIIIIIIIIIIOOOOOOOOO");
-    //console.log("verseMappingsByVersionInfo", verseMappingsByVersionInfo);
-
+  
     convertMappingsToMultiLevel(originalToTranslation)
     convertMappingsToMultiLevel(translationToOriginal)
 

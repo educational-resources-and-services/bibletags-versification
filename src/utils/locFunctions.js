@@ -9,7 +9,7 @@ export const getRefFromLoc = loc => ({
   chapter: parseInt(loc.substr(2,3), 10),
   verse: parseInt(loc.substr(5,3), 10),
   ...(
-    loc.substr(8) === ':'
+    loc.substr(8,1) === ':'
       ? { wordRange: loc.substr(9) }
       : ''
   ),

@@ -8,6 +8,10 @@
 //     "05022005:6-10": "05022006",
 //     "08002009:5-10": "08002009:1-7",
 //     "08002010:1-2": "08002009:8-9",
+
+//     "40017014": "40017014:1-19",
+//     "40017015:1-2": "40017014:20-",
+//     "40017015:3-": "40017015",
 //   }
 
 // 8+ character strings represent a passage location:
@@ -17,19 +21,16 @@
 //     VVV is a zero-padded verse
 //   BBCCCVVV:W1-W2
 //     W1 is the starting word number in cases where a partial verse must be mapped
-//     W2 is the ending word number in cases where a partial verse must be mapped
+//     W2 is the ending word number in cases where a partial verse must be mapped (can be left blank to indicate "rest of the verse")
 //   BBCCCVVV-VVV
 //     The key can also be a location range, with an integer as the value. Use this
 //     when all the verses in the key range are to be increased by the same amount.
 
-// So far I only have the mappings to skipped verses
 /*
  Notes:
  16007068 is in the KJV and Synodel, but does not exist in the WLC.
  The ESV notes, "Compare Ezra 2:66 and the margins of some Hebrew manuscripts; Hebrew lacks all of verse 68."
 /*
-
-check stats from Biblearc DB that this is likely all the mappings
 
 */
 
@@ -302,6 +303,14 @@ const kjvVerseMappings = {
   "38002001-004": -983,
   "38002005-017": -4,
   "39003019-024": 982,
+
+  // testing the NT and open ended (rest of range) mappings
+  "40017014": "40017014:1-19",
+  "40017015:1-2": "40017014:20-21",    //with open ends "40017015:1-2": "40017014:20-",
+  "40017015:3-23": "40017015",         //with open ends "40017015:3-": "40017015",
+  "40020004": "40020004:1-18",
+  "40020005:1-3": "40020004:19-23",   //"40020005:1-3": "40020004:19-",
+  "40020005:4-12": "40020005",        //"40020005:4-": "40020005",
 }
 
 export default kjvVerseMappings

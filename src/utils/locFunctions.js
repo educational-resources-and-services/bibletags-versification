@@ -10,7 +10,7 @@ export const getRefFromLoc = loc => ({
   verse: parseInt(loc.substr(5,3), 10),
   ...(
     loc.substr(8,1) === ':'
-      ? { wordRange: loc.substr(9).split('-') }
+      ? { wordRange: loc.substr(9) }
       : ''
   ),
 })

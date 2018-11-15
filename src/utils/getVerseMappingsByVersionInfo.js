@@ -67,7 +67,7 @@ const getVerseMappingsByVersionInfo = ({ partialScope, versificationModel, skips
   if(!extraVerseMappingsKey) {
     extraVerseMappingsKey = extraVerseMappingsKeys[extraVerseMappingsJSON] = extraVerseMappingsIndex++
   }
-  
+
   if(!verseMappingsByVersionInfo[versificationModel][extraVerseMappingsKey]) {
     
     // Create object of versification mappings without abbreviations
@@ -78,7 +78,7 @@ const getVerseMappingsByVersionInfo = ({ partialScope, versificationModel, skips
       ...(skipsUnlikelyOriginals ? unlikelyOriginals : {}),
       ...(extraVerseMappings || {}),
     }
-    
+
     // parse out ranges
     for(let key in originalToTranslation) {
       const keyParts = key.match(/^([0-9]{8})-([0-9]{3})$/)

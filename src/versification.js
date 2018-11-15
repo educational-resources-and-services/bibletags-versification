@@ -29,7 +29,7 @@ export const getCorrespondingVerseLocation = ({ baseVersion={}, lookupVersionInf
   if(!VALID_PARTIAL_SCOPE_VALUES.includes(lookupVersionInfo.partialScope)) {
     return null
   }
-  
+
   const baseVerseMappingsByVersionInfo = getVerseMappingsByVersionInfo(baseVersion.info)
   const lookupVerseMappingsByVersionInfo = getVerseMappingsByVersionInfo(lookupVersionInfo)
   const baseVersionRefWithoutWordRange = { ...baseVersion.ref }
@@ -85,7 +85,7 @@ export const getCorrespondingVerseLocation = ({ baseVersion={}, lookupVersionInf
     const [ originalLocWithoutWordRange, wordRange ] = originalLoc.split(/:/)
   
     let lookupVersionLoc = lookupVerseMappingsByVersionInfo['originalToTranslation'][originalLocWithoutWordRange]
-    
+  
     if(typeof lookupVersionLoc === 'undefined') {
       // original and lookupVersion have the same versification for this verse
       lookupVersionLoc = originalLoc
@@ -95,9 +95,8 @@ export const getCorrespondingVerseLocation = ({ baseVersion={}, lookupVersionInf
       // this verse is skipped in the lookupVersion
       return
     }
-    
-    if(typeof lookupVersionLoc === 'object') {
 
+    if(typeof lookupVersionLoc === 'object') {
       if(wordRange) {
         // get the pieces from lookupVersionLoc that will cover the wordRange
 
@@ -156,7 +155,6 @@ export const getCorrespondingVerseLocation = ({ baseVersion={}, lookupVersionInf
   }
 
   for(let loc in locsWithWordRanges) {
-    
     if(locsWithWordRanges[loc].length === Object.keys(lookupVerseMappingsByVersionInfo['translationToOriginal'][loc]).length) {
       // wordRanges cover the entire verse, so no need to indicate a wordRange
       lookupVersionLocs.push(loc)

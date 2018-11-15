@@ -95,10 +95,8 @@ export const getCorrespondingVerseLocation = ({ baseVersion={}, lookupVersionInf
       // this verse is skipped in the lookupVersion
       return
     }
-    console.log("lookupVersionLoc before if",lookupVersionLoc);
+    
     if(typeof lookupVersionLoc === 'object') {
-
-      console.log("lookupVersionLoc === 'object' and it's value is",lookupVersionLoc);
 
       if(wordRange) {
         // get the pieces from lookupVersionLoc that will cover the wordRange

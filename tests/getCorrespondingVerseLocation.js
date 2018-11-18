@@ -108,7 +108,7 @@ describe('getCorrespondingVerseLocation', () => {
           bookId:40,
           chapter: 17,
           verse: 14,
-          wordRange: "1-19",
+          wordRange: [1, 19],
         },
       ])
     })
@@ -136,7 +136,7 @@ describe('getCorrespondingVerseLocation', () => {
           bookId:40,
           chapter: 20,
           verse: 4,
-          wordRange: "1-18",
+          wordRange: [1, 18],
         },
       ])
     })
@@ -166,7 +166,7 @@ describe('getCorrespondingVerseLocation', () => {
           bookId:40,
           chapter: 17,
           verse: 14,
-          wordRange: "20-21",
+          wordRange: [20, 21],
         },
         {
           bookId:40,
@@ -198,7 +198,7 @@ describe('getCorrespondingVerseLocation', () => {
           bookId:40,
           chapter: 20,
           verse: 4,
-          wordRange: "19-23",
+          wordRange: [19, 23],
         },
         {
           bookId:40,

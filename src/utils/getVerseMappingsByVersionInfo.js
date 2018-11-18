@@ -107,9 +107,9 @@ const getVerseMappingsByVersionInfo = ({ partialScope, versificationModel, skips
         const keyParts = key.match(/^([0-9]{8}):([0-9]+-[0-9]+)$/)
         if(keyParts) {
           const loc = keyParts[1]
-          const wordRange = keyParts[2]
+          const wordRangeStr = keyParts[2]
           if(!mappings[loc]) mappings[loc] = {}
-          mappings[loc][wordRange] = mappings[key]
+          mappings[loc][wordRangeStr] = mappings[key]
           delete mappings[key]
         }
       }

@@ -10,7 +10,7 @@ export const isValidRefInOriginal = ({ bookId, chapter, verse }) => (
 
 export const getCorrespondingVerseLocation = ({ baseVersion={}, lookupVersionInfo={} }) => {
   // Returns one of the following:
-    // an array of `version` objects with keys `bookId`, `chapter`, `verse` and possibly `wordRange`
+    // an array of `version` objects with keys `bookId`, `chapter`, `verse` and possibly `wordRangeStr`
     // `false` if there is not a valid verse in the corresponding version
     // `null` if invalid parameters were passed
 
@@ -33,7 +33,7 @@ export const getCorrespondingVerseLocation = ({ baseVersion={}, lookupVersionInf
   const baseVerseMappingsByVersionInfo = getVerseMappingsByVersionInfo(baseVersion.info)
   const lookupVerseMappingsByVersionInfo = getVerseMappingsByVersionInfo(lookupVersionInfo)
   const baseVersionRefWithoutWordRange = { ...baseVersion.ref }
-  delete baseVersionRefWithoutWordRange.wordRange
+  delete baseVersionRefWithoutWordRange.wordRangeStr
   const baseLoc = getLocFromRef(baseVersionRefWithoutWordRange)
 
   if(!baseVerseMappingsByVersionInfo || !lookupVerseMappingsByVersionInfo || !/^[0-9]{8}$/.test(baseLoc)) {
@@ -82,7 +82,7 @@ export const getCorrespondingVerseLocation = ({ baseVersion={}, lookupVersionInf
       return
     }
 
-    const [ originalLocWithoutWordRange, wordRange ] = originalLoc.split(/:/)
+    const [ originalLocWithoutWordRange, wordRangeStr ] = originalLoc.split(/:/)
   
     let lookupVersionLoc = lookupVerseMappingsByVersionInfo['originalToTranslation'][originalLocWithoutWordRange]
   
@@ -97,23 +97,23 @@ export const getCorrespondingVerseLocation = ({ baseVersion={}, lookupVersionInf
     }
 
     if(typeof lookupVersionLoc === 'object') {
-      if(wordRange) {
+      if(wordRangeStr) {
         // get the pieces from lookupVersionLoc that will cover the wordRange
 
-        const wordRangeParts = wordRange.split(/-/)
-        const lowEndOfWordRange = parseInt(wordRangeParts[0], 10) || 0
-        const highEndOfWordRange = parseInt(wordRangeParts[1], 10) || 1000
+        const wordRangeStrParts = wordRangeStr.split(/-/)
+        const lowEndOfWordRangeStr = parseInt(wordRangeStrParts[0], 10) || 0
+        const highEndOfWordRangeStr = parseInt(wordRangeStrParts[1], 10) || 1000
 
-        for(let lookupVersionLocWordRange in lookupVersionLoc) {
-          const lookupVersionLocWordRangeParts = lookupVersionLocWordRange.split(/-/)
-          const lowEndOfWordRangeInLookupVersionLoc = parseInt(lookupVersionLocWordRangeParts[0], 10) || 0
-          const highEndOfWordRangeInLookupVersionLoc = parseInt(lookupVersionLocWordRangeParts[1], 10) || 1000
+        for(let lookupVersionLocWordRangeStr in lookupVersionLoc) {
+          const lookupVersionLocWordRangeStrParts = lookupVersionLocWordRangeStr.split(/-/)
+          const lowEndOfWordRangeStrInLookupVersionLoc = parseInt(lookupVersionLocWordRangeStrParts[0], 10) || 0
+          const highEndOfWordRangeStrInLookupVersionLoc = parseInt(lookupVersionLocWordRangeStrParts[1], 10) || 1000
   
           if(
-            lowEndOfWordRange <= highEndOfWordRangeInLookupVersionLoc
-            || highEndOfWordRange >= lowEndOfWordRangeInLookupVersionLoc
+            lowEndOfWordRangeStr <= highEndOfWordRangeStrInLookupVersionLoc
+            || highEndOfWordRangeStr >= lowEndOfWordRangeStrInLookupVersionLoc
           ) {
-            lookupVersionLocs.push(lookupVersionLoc[lookupVersionLocWordRange])
+            lookupVersionLocs.push(lookupVersionLoc[lookupVersionLocWordRangeStr])
           }
         }
 
@@ -141,12 +141,12 @@ export const getCorrespondingVerseLocation = ({ baseVersion={}, lookupVersionInf
   const locsWithWordRanges = {}
 
   lookupVersionLocs.forEach(lookupVersionLoc => {
-    const [ lookupVersionLocWithoutWordRange, wordRange ] = lookupVersionLoc.split(/:/)
-    if(wordRange) {
+    const [ lookupVersionLocWithoutWordRange, wordRangeStr ] = lookupVersionLoc.split(/:/)
+    if(wordRangeStr) {
       if(!locsWithWordRanges[lookupVersionLocWithoutWordRange]) {
         locsWithWordRanges[lookupVersionLocWithoutWordRange] = []
       }
-      locsWithWordRanges[lookupVersionLocWithoutWordRange].push(wordRange)
+      locsWithWordRanges[lookupVersionLocWithoutWordRange].push(wordRangeStr)
     }
   })
 
@@ -164,20 +164,20 @@ export const getCorrespondingVerseLocation = ({ baseVersion={}, lookupVersionInf
       // wordRanges do not cover the entire verse, but we want to combine the wordRanges if possible
       // we can safely assume here that there are no skipped verses between the word ranges
 
-      let lowEndOfTotalWordRange = 1000
-      let highEndOfTotalWordRange = 0
+      let lowEndOfTotalWordRangeStr = 1000
+      let highEndOfTotalWordRangeStr = 0
 
-      locsWithWordRanges[loc].forEach(wordRange => {
-        const wordRangeParts = wordRange.split(/-/)
-        const lowEndOfWordRange = parseInt(wordRangeParts[0], 10) || 0
-        const highEndOfWordRange = parseInt(wordRangeParts[1], 10) || 1000
+      locsWithWordRanges[loc].forEach(wordRangeStr => {
+        const wordRangeStrParts = wordRangeStr.split(/-/)
+        const lowEndOfWordRangeStr = parseInt(wordRangeStrParts[0], 10) || 0
+        const highEndOfWordRangeStr = parseInt(wordRangeStrParts[1], 10) || 1000
 
-        lowEndOfTotalWordRange = Math.min(lowEndOfTotalWordRange, lowEndOfWordRange)
-        highEndOfTotalWordRange = Math.max(highEndOfWordRange, highEndOfWordRange)
+        lowEndOfTotalWordRangeStr = Math.min(lowEndOfTotalWordRangeStr, lowEndOfWordRangeStr)
+        highEndOfTotalWordRangeStr = Math.max(highEndOfWordRangeStr, highEndOfWordRangeStr)
       })
 
       removeLookupVersionLocsStartingWith(`${loc}:`)
-      lookupVersionLocs.push(`${loc}:${lowEndOfTotalWordRange}-${highEndOfTotalWordRange}`)
+      lookupVersionLocs.push(`${loc}:${lowEndOfTotalWordRangeStr}-${highEndOfTotalWordRangeStr}`)
     }
   }
 

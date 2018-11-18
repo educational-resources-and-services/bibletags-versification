@@ -1,7 +1,7 @@
 export const padLocWithLeadingZero = loc => ('0'+loc).substr(-8)
 
 export const getLocFromRef = ({ bookId, chapter, verse, wordRange }) => (
-  `${('0'+bookId).substr(-2)}${('00'+chapter).substr(-3)}${('00'+verse).substr(-3)}${wordRange ? `:${wordRange}` : ''}`
+  `${('0'+bookId).substr(-2)}${('00'+chapter).substr(-3)}${('00'+verse).substr(-3)}${wordRange ? `:${wordRange[0]}-${wordRange[1] || ""}` : ''}`
 )
 
 export const getRefFromLoc = loc => ({
@@ -10,7 +10,7 @@ export const getRefFromLoc = loc => ({
   verse: parseInt(loc.substr(5,3), 10),
   ...(
     loc.substr(8,1) === ':'
-      ? { wordRange: loc.substr(9) }
+      ? { wordRange: loc.substr(9).split("-").map(item => (parseInt(item, 10) || null)) }
       : ''
   ),
 })

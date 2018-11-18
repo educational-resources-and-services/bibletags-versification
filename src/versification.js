@@ -82,7 +82,7 @@ export const getCorrespondingVerseLocation = ({ baseVersion={}, lookupVersionInf
       return
     }
 
-    const [ originalLocWithoutWordRange, wordRange ] = originalLoc.split(/:/)
+    const [ originalLocWithoutWordRange, wordRangeStr ] = originalLoc.split(/:/)
   
     let lookupVersionLoc = lookupVerseMappingsByVersionInfo['originalToTranslation'][originalLocWithoutWordRange]
   
@@ -97,10 +97,10 @@ export const getCorrespondingVerseLocation = ({ baseVersion={}, lookupVersionInf
     }
 
     if(typeof lookupVersionLoc === 'object') {
-      if(wordRange) {
+      if(wordRangeStr) {
         // get the pieces from lookupVersionLoc that will cover the wordRange
 
-        const wordRangeParts = wordRange.split(/-/)
+        const wordRangeParts = wordRangeStr.split(/-/)
         const lowEndOfWordRange = parseInt(wordRangeParts[0], 10) || 0
         const highEndOfWordRange = parseInt(wordRangeParts[1], 10) || 1000
 
@@ -141,12 +141,12 @@ export const getCorrespondingVerseLocation = ({ baseVersion={}, lookupVersionInf
   const locsWithWordRanges = {}
 
   lookupVersionLocs.forEach(lookupVersionLoc => {
-    const [ lookupVersionLocWithoutWordRange, wordRange ] = lookupVersionLoc.split(/:/)
-    if(wordRange) {
+    const [ lookupVersionLocWithoutWordRange, wordRangeStr ] = lookupVersionLoc.split(/:/)
+    if(wordRangeStr) {
       if(!locsWithWordRanges[lookupVersionLocWithoutWordRange]) {
         locsWithWordRanges[lookupVersionLocWithoutWordRange] = []
       }
-      locsWithWordRanges[lookupVersionLocWithoutWordRange].push(wordRange)
+      locsWithWordRanges[lookupVersionLocWithoutWordRange].push(wordRangeStr)
     }
   })
 
@@ -167,8 +167,8 @@ export const getCorrespondingVerseLocation = ({ baseVersion={}, lookupVersionInf
       let lowEndOfTotalWordRange = 1000
       let highEndOfTotalWordRange = 0
 
-      locsWithWordRanges[loc].forEach(wordRange => {
-        const wordRangeParts = wordRange.split(/-/)
+      locsWithWordRanges[loc].forEach(wordRangeStr => {
+        const wordRangeParts = wordRangeStr.split(/-/)
         const lowEndOfWordRange = parseInt(wordRangeParts[0], 10) || 0
         const highEndOfWordRange = parseInt(wordRangeParts[1], 10) || 1000
 

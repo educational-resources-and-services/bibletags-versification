@@ -129,7 +129,7 @@ export const getCorrespondingVerseLocation = ({ baseVersion={}, lookupVersionInf
       lookupVersionLocs.push(lookupVersionLoc)
     }
   })
-  
+
   if(lookupVersionLocs.length === 0) {
     // there are no corresponding verses in the original version
     return false
@@ -139,7 +139,7 @@ export const getCorrespondingVerseLocation = ({ baseVersion={}, lookupVersionInf
   // condense wordRanges together so there is only one range per verse
 
   const locsWithWordRanges = {}
-  
+
   lookupVersionLocs.forEach(lookupVersionLoc => {
     const [ lookupVersionLocWithoutWordRange, wordRangeStr ] = lookupVersionLoc.split(/:/)
     if(wordRangeStr) {
@@ -149,11 +149,11 @@ export const getCorrespondingVerseLocation = ({ baseVersion={}, lookupVersionInf
       locsWithWordRanges[lookupVersionLocWithoutWordRange].push(wordRangeStr)
     }
   })
-  
+
   const removeLookupVersionLocsStartingWith = str => {
     lookupVersionLocs = lookupVersionLocs.filter(lookupVersionLoc => lookupVersionLoc.indexOf(str) !== 0)
   }
-  
+
   for(let loc in locsWithWordRanges) {
     if(locsWithWordRanges[loc].length === Object.keys(lookupVerseMappingsByVersionInfo['translationToOriginal'][loc]).length) {
       // wordRanges cover the entire verse, so no need to indicate a wordRange
@@ -180,7 +180,7 @@ export const getCorrespondingVerseLocation = ({ baseVersion={}, lookupVersionInf
       lookupVersionLocs.push(`${loc}:${lowEndOfTotalWordRange}-${highEndOfTotalWordRange}`)
     }
   }
-  
+
   return lookupVersionLocs.map(lookupVersionLoc => getRefFromLoc(lookupVersionLoc))
 }
 

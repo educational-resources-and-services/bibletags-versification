@@ -35,7 +35,7 @@
 */
 
 
- const kjvVerseMappings = {
+const kjvVerseMappings = {
   "01032001": "01031055",
   "01032002-033": -1,
   "02007026-029": 975,

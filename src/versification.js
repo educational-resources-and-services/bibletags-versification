@@ -60,8 +60,13 @@ export const getCorrespondingVerseLocation = ({ baseVersion={}, lookupVersionInf
   let originalLocs = baseVerseMappingsByVersionInfo['translationToOriginal'][baseLoc]
 
   if(typeof originalLocs === 'undefined') {
+    if(!isValidRefInOriginal(getRefFromLoc(baseLoc))) {
+      // this verse does not have a valid corresponding verse in the original version
+      return false
+    }
+
     // baseVersion and original have the same versification for this verse
-    originalLocs = baseLoc
+    originalLocs = [ baseLoc ]
   }
 
   if(typeof originalLocs === 'object') {
@@ -77,11 +82,6 @@ export const getCorrespondingVerseLocation = ({ baseVersion={}, lookupVersionInf
   
   originalLocs.forEach(originalLoc => {
 
-    if(!isValidRefInOriginal(getRefFromLoc(originalLoc))) {
-      // this verse does not have a valid corresponding verse in the original version
-      return
-    }
-
     const [ originalLocWithoutWordRange, wordRangeStr ] = originalLoc.split(/:/)
   
     let lookupVersionLoc = lookupVerseMappingsByVersionInfo['originalToTranslation'][originalLocWithoutWordRange]
@@ -93,7 +93,6 @@ export const getCorrespondingVerseLocation = ({ baseVersion={}, lookupVersionInf
   
     if(lookupVersionLoc === null) {
       // this verse is skipped in the lookupVersion
-      lookupVersionLocs = null
       return
     }
 
@@ -131,14 +130,9 @@ export const getCorrespondingVerseLocation = ({ baseVersion={}, lookupVersionInf
     }
   })
   
-  if(lookupVersionLocs === null) {
-    // there are no corresponding verses in the lookup version (lookupVersionLocs = null)
-    return []
-  }
-
   if(lookupVersionLocs.length === 0) {
     // user input bad parameters
-    return false
+    return []
   }
 
 

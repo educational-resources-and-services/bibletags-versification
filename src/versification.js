@@ -90,9 +90,9 @@ export const getCorrespondingVerseLocation = ({ baseVersion={}, lookupVersionInf
       // original and lookupVersion have the same versification for this verse
       lookupVersionLoc = originalLoc
     }
-    
+  
     if(lookupVersionLoc === null) {
-      // this verse is skipped in the lookupVersion 
+      // this verse is skipped in the lookupVersion
       return
     }
 

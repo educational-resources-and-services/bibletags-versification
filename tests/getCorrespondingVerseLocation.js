@@ -4,14 +4,124 @@ import { getCorrespondingVerseLocation } from '../src/versification'
 describe('getCorrespondingVerseLocation', () => {
   
   describe('Bad parameters', () => {
+    //all bad parameters should come back simply false, no matter which part of the parameter was bad
+    //is an error msg in place for bad parameters already? if not, where should it be?
+    //bad bookId
+    it('Bad bookId [book 68] (original -> KJV)', () => {
+      const correspondingVerseLocations = getCorrespondingVerseLocation({
+        baseVersion: {
+          ref: {
+            bookId: 68,
+            chapter: 1,
+            verse: 1,
+          },
+          info: {
+            versificationModel: 'original'
+          }
+        },
+        lookupVersionInfo: {
+          versificationModel: 'kjv',
+        },
+      })
 
-    // TODO
+      assert.deepEqual(correspondingVerseLocations, false)
+    })
+
+    //bad chapter
+    it('bad chapter [Gen 55] (original -> KJV)', () => {
+      const correspondingVerseLocations = getCorrespondingVerseLocation({
+        baseVersion: {
+          ref: {
+            bookId: 1,
+            chapter: 55,
+            verse: 1,
+          },
+          info: {
+            versificationModel: 'original'
+          }
+        },
+        lookupVersionInfo: {
+          versificationModel: 'kjv',
+        },
+      })
+
+      assert.deepEqual(correspondingVerseLocations, false)
+    })
+
+    //bad verse
+    it('bad verse [Gen 1:33] (original -> KJV)', () => {
+      const correspondingVerseLocations = getCorrespondingVerseLocation({
+        baseVersion: {
+          ref: {
+            bookId: 1,
+            chapter: 1,
+            verse: 33,
+          },
+          info: {
+            versificationModel: 'original'
+          }
+        },
+        lookupVersionInfo: {
+          versificationModel: 'kjv',
+        },
+      })
+
+      assert.deepEqual(correspondingVerseLocations, false)
+    })
+
+    //bad wordRange
+    it('bad wordRange [Gen 1:1 5-9] (original -> KJV)', () => {
+      const correspondingVerseLocations = getCorrespondingVerseLocation({
+        baseVersion: {
+          ref: {
+            bookId: 1,
+            chapter: 1,
+            verse: 1,
+            wordRange: [5, 9],
+          },
+          info: {
+            versificationModel: 'original'
+          }
+        },
+        lookupVersionInfo: {
+          versificationModel: 'kjv',
+        },
+      })
+
+      assert.deepEqual(correspondingVerseLocations, [
+        {
+          bookId:1,
+          chapter: 1,
+          verse: 1,
+        }
+      ])
+    })
 
   })
 
   describe('No valid verses in the corresponding version (original -> translation)', () => {
 
     // TODO: do some with partialScope and extraVerseMappings
+
+    it('24046001: null (original -> LXX)', () => {
+      const correspondingVerseLocations = getCorrespondingVerseLocation({
+        baseVersion: {
+          ref: {
+            bookId: 24,
+            chapter: 46,
+            verse: 1,
+          },
+          info: {
+            versificationModel: 'original'
+          }
+        },
+        lookupVersionInfo: {
+          versificationModel: 'lxx',
+        },
+      })
+
+      assert.deepEqual(correspondingVerseLocations, false)
+    })
 
   })
 

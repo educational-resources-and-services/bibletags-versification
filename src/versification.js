@@ -5,7 +5,7 @@ import { getLocFromRef, getRefFromLoc, padLocWithLeadingZero } from './utils/loc
 const VALID_PARTIAL_SCOPE_VALUES = [ null, undefined, 'ot', 'nt' ]
 
 export const isValidRefInOriginal = ({ bookId, chapter, verse }) => (
-  verse >= 1 && verse <= numberOfVersesPerChapterPerBook[bookId-1][chapter-1]
+  bookId >= 1 && bookId <= 66 && verse >= 1 && verse <= numberOfVersesPerChapterPerBook[bookId-1][chapter-1]
 )
 
 export const getCorrespondingVerseLocation = ({ baseVersion={}, lookupVersionInfo={} }) => {
@@ -90,13 +90,13 @@ export const getCorrespondingVerseLocation = ({ baseVersion={}, lookupVersionInf
       // original and lookupVersion have the same versification for this verse
       lookupVersionLoc = originalLoc
     }
-  
-    if(lookupVersionLoc === 'null') {
-      // this verse is skipped in the lookupVersion
+
+    if(lookupVersionLoc === null) {
+      // this verse is skipped in the lookupVersion 
       return
     }
 
-    if(typeof lookupVersionLoc === 'object') {
+    if(lookupVersionLoc && typeof lookupVersionLoc === 'object') {
       if(wordRangeStr) {
         // get the pieces from lookupVersionLoc that will cover the wordRange
 

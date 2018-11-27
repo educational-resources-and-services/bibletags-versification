@@ -70,7 +70,7 @@ describe('getCorrespondingVerseLocation', () => {
     })
 
     //bad wordRange
-    it('bad wordRange [Gen 1:1 5-9] (original -> KJV)', () => {
+    it('wordRange given (will be ignored) (original -> KJV)', () => {
       const correspondingVerseLocations = getCorrespondingVerseLocation({
         baseVersion: {
           ref: {
@@ -103,7 +103,7 @@ describe('getCorrespondingVerseLocation', () => {
 
     // TODO: do some with partialScope and extraVerseMappings
 
-    it('24046001: null (original -> LXX)', () => {
+    it('Isaiah 46:1 = null (original -> LXX)', () => {
       const correspondingVerseLocations = getCorrespondingVerseLocation({
         baseVersion: {
           ref: {
@@ -120,7 +120,7 @@ describe('getCorrespondingVerseLocation', () => {
         },
       })
 
-      assert.deepEqual(correspondingVerseLocations, false)
+      assert.deepEqual(correspondingVerseLocations, [])
     })
 
   })

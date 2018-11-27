@@ -90,13 +90,14 @@ export const getCorrespondingVerseLocation = ({ baseVersion={}, lookupVersionInf
       // original and lookupVersion have the same versification for this verse
       lookupVersionLoc = originalLoc
     }
-  
+    
     if(lookupVersionLoc === null) {
       // this verse is skipped in the lookupVersion
+      lookupVersionLocs = null
       return
     }
 
-    if(lookupVersionLoc && typeof lookupVersionLoc === 'object') {
+    if(typeof lookupVersionLoc === 'object') {
       if(wordRangeStr) {
         // get the pieces from lookupVersionLoc that will cover the wordRange
 
@@ -130,8 +131,15 @@ export const getCorrespondingVerseLocation = ({ baseVersion={}, lookupVersionInf
     }
   })
 
+  console.log("lookupVersionLocs", lookupVersionLocs)
+  
+  if(lookupVersionLocs === null) {
+    // there are no corresponding verses in the lookup version (lookupVersionLocs = null)
+    return []
+  }
+
   if(lookupVersionLocs.length === 0) {
-    // there are no corresponding verses in the original version
+    // user input bad parameters
     return false
   }
 

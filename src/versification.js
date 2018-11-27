@@ -129,7 +129,7 @@ export const getCorrespondingVerseLocation = ({ baseVersion={}, lookupVersionInf
       lookupVersionLocs.push(lookupVersionLoc)
     }
   })
-  
+
   if(lookupVersionLocs.length === 0) {
     // there are no corresponding verses in the original version
     return []

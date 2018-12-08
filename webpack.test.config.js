@@ -1,11 +1,13 @@
+// Builds out the mocha tests
+
 var path = require('path')
 var webpack = require('webpack')
 
 module.exports = {
-  entry: './src/versification.js',
+  entry: './tests/all.js',
   output: {
     path: path.resolve(__dirname, 'builds'),
-    filename: 'index.js',
+    filename: 'tests.js',
   },
   module: {
     rules: [
@@ -22,5 +24,6 @@ module.exports = {
       },
     ],
   },
-  mode: 'production',
+  devtool: 'source-map',
+  mode: 'development',
 }

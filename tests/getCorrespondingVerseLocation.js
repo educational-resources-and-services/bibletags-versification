@@ -139,7 +139,7 @@ describe('getCorrespondingVerseLocation', () => {
 
   describe('Has a valid verse in the corresponding version (original -> translation)', () => {
 
-     // TODO: do some with partialScope and extraVerseMappings
+    // TODO: do some with partialScope and extraVerseMappings
 
     it('Genesis 1:1 (original -> KJV)', () => {
       const correspondingVerseLocations = getCorrespondingVerseLocation({
@@ -214,7 +214,7 @@ describe('getCorrespondingVerseLocation', () => {
           }
         },
       })
-  
+
       assert.deepEqual(correspondingVerseLocations, [
         {
           bookId:40,

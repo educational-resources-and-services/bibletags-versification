@@ -70,7 +70,7 @@ const getVerseMappingsByVersionInfo = ({ partialScope, versificationModel, skips
 
   if(!verseMappingsByVersionInfo[versificationModel][extraVerseMappingsKey]) {
     
-  // Create object of versification mappings without abbreviations
+    // Create object of versification mappings without abbreviations
 
     const overrideMappings = ({ baseMappings, overrideMappings }) => {
 

@@ -57,7 +57,7 @@ const getVerseMappingsByVersionInfo = ({ partialScope, versificationModel, skips
     return null
   }
 
-
+  
   // Look to see if a versification mapping for these parameters is already compiled
 
   const extraVerseMappingsJSON = JSON.stringify(extraVerseMappings || {})
@@ -94,7 +94,7 @@ const getVerseMappingsByVersionInfo = ({ partialScope, versificationModel, skips
     
         ;(baseMappingsMap[keyWithoutWordRange] || []).forEach(baseMappingsWordRange => {
           const baseMappingsWordRangeInts = getWordRangeInts(baseMappingsWordRange)
-          const overrideMappingWordRangeInts = getWordRangeInts(overrideMappings[key])
+          const overrideMappingWordRangeInts = getWordRangeInts(overrideMappings[key].split(':')[1] || '0-')
           if(overrideMappingWordRangeInts[0] <= baseMappingsWordRangeInts[1] && overrideMappingWordRangeInts[1] >= baseMappingsWordRangeInts[0]){
             delete baseMappingsCleaned[`${keyWithoutWordRange}:${baseMappingsWordRange}`]
           }
@@ -151,6 +151,9 @@ const getVerseMappingsByVersionInfo = ({ partialScope, versificationModel, skips
       }
     }
 
+    convertMappingsToMultiLevel(originalToTranslation)
+    convertMappingsToMultiLevel(translationToOriginal)
+    
     verseMappingsByVersionInfo[versificationModel][extraVerseMappingsKey] = {
       originalToTranslation,
       translationToOriginal,

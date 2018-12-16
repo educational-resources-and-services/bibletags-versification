@@ -1,6 +1,20 @@
 import assert from 'assert'
 import { getCorrespondingVerseLocation } from '../src/versification'
 
+const kjvInfo = {
+  versificationModel: 'kjv',
+  extraVerseMappings: {
+    // jsdlfkjsfd
+  },
+}
+
+const nivInfo = {
+  versificationModel: 'kjv',
+  extraVerseMappings: {
+    "40017014": "40017014",
+    "40017015": "40017015",
+    }
+}
 describe('getCorrespondingVerseLocation', () => {
   
   describe('Bad parameters', () => {
@@ -19,9 +33,7 @@ describe('getCorrespondingVerseLocation', () => {
             versificationModel: 'original'
           }
         },
-        lookupVersionInfo: {
-          versificationModel: 'kjv',
-        },
+        lookupVersionInfo: kjvInfo,
       })
 
       assert.deepEqual(correspondingVerseLocations, false)
@@ -40,9 +52,7 @@ describe('getCorrespondingVerseLocation', () => {
             versificationModel: 'original'
           }
         },
-        lookupVersionInfo: {
-          versificationModel: 'kjv',
-        },
+        lookupVersionInfo: kjvInfo,
       })
 
       assert.deepEqual(correspondingVerseLocations, false)
@@ -61,9 +71,7 @@ describe('getCorrespondingVerseLocation', () => {
             versificationModel: 'original'
           }
         },
-        lookupVersionInfo: {
-          versificationModel: 'kjv',
-        },
+        lookupVersionInfo: kjvInfo,
       })
 
       assert.deepEqual(correspondingVerseLocations, false)
@@ -83,9 +91,7 @@ describe('getCorrespondingVerseLocation', () => {
             versificationModel: 'original'
           }
         },
-        lookupVersionInfo: {
-          versificationModel: 'kjv',
-        },
+        lookupVersionInfo: kjvInfo,
       })
 
       assert.deepEqual(correspondingVerseLocations, [
@@ -153,9 +159,7 @@ describe('getCorrespondingVerseLocation', () => {
             versificationModel: 'original'
           }
         },
-        lookupVersionInfo: {
-          versificationModel: 'kjv',
-        },
+        lookupVersionInfo: kjvInfo,
       })
 
       assert.deepEqual(correspondingVerseLocations, [
@@ -179,9 +183,7 @@ describe('getCorrespondingVerseLocation', () => {
             versificationModel: 'original'
           }
         },
-        lookupVersionInfo: {
-          versificationModel: 'kjv',
-        },
+        lookupVersionInfo: kjvInfo,
       })
 
       assert.deepEqual(correspondingVerseLocations, [
@@ -194,7 +196,7 @@ describe('getCorrespondingVerseLocation', () => {
     })
   
 
-    it('Extra Verse Mappings KJV KJV', () => {
+    it('Extra Verse Mappings orig NIV', () => {
       const correspondingVerseLocations = getCorrespondingVerseLocation({
         baseVersion: {
           ref: {
@@ -203,16 +205,10 @@ describe('getCorrespondingVerseLocation', () => {
             verse: 14,
           },
           info: {
-            versificationModel: 'kjv'
+            versificationModel: 'original'
           }
         },
-        lookupVersionInfo: {
-          versificationModel: 'kjv',
-          extraVerseMappings: {
-            "40017014": "40017014",
-            "40017015": "40017015",
-          }
-        },
+        lookupVersionInfo: nivInfo,
       })
 
       assert.deepEqual(correspondingVerseLocations, [
@@ -237,9 +233,7 @@ describe('getCorrespondingVerseLocation', () => {
             versificationModel: 'original'
           }
         },
-        lookupVersionInfo: {
-          versificationModel: 'kjv',
-        },
+        lookupVersionInfo: kjvInfo,
       })
 
       assert.deepEqual(correspondingVerseLocations, [
@@ -267,9 +261,7 @@ describe('getCorrespondingVerseLocation', () => {
             versificationModel: 'original'
           }
         },
-        lookupVersionInfo: {
-          versificationModel: 'kjv',
-        },
+        lookupVersionInfo: kjvInfo,
       })
 
       assert.deepEqual(correspondingVerseLocations, [
@@ -299,9 +291,7 @@ describe('getCorrespondingVerseLocation', () => {
             versificationModel: 'original'
           }
         },
-        lookupVersionInfo: {
-          versificationModel: 'kjv',
-        },
+        lookupVersionInfo: kjvInfo,
       })
 
       assert.deepEqual(correspondingVerseLocations, [
@@ -339,18 +329,9 @@ describe('getCorrespondingVerseLocation', () => {
             chapter: 17,
             verse: 14,
           },
-          info: {
-            versificationModel: 'kjv'
-          }
+          info: kjvInfo,
         },
-        lookupVersionInfo: {
-          versificationModel: 'kjv',
-          extraVerseMappings: {
-            "40017014:1-19": "40017014",
-            "40017014:20-": "40017015:1-2",
-            "40017015": "40017015:3-",
-          }
-        },
+        lookupVersionInfo: nivInfo,
       })
   
       assert.deepEqual(correspondingVerseLocations, [

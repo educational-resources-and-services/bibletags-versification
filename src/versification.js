@@ -14,6 +14,10 @@ export const getCorrespondingRef = ({ baseVersion={}, lookupVersionInfo={} }) =>
     // `false` if there is not a valid verse in the corresponding version
     // `null` if invalid parameters were passed
 
+  // When going from an original text to a translation, or vice versa, it returns a result precise
+  // to the word, with `wordRange` when relevant. However, when going from translation to translation,
+  // the result is precise only to the verse and will never include `wordRange`.
+
   if(
     typeof baseVersion !== 'object'
     || typeof baseVersion.info !== 'object'

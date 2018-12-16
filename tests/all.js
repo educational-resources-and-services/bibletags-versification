@@ -4,6 +4,6 @@ describe('Versification', () => {
 
   require('./isValidRefInOriginal.js')
   require('./isValidVerse.js')
-  require('./getCorrespondingVerseLocation.js')
+  require('./getCorrespondingRef.js')
 
 })

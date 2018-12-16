@@ -8,7 +8,7 @@ export const isValidRefInOriginal = ({ bookId, chapter, verse }) => (
   bookId >= 1 && bookId <= 66 && verse >= 1 && verse <= numberOfVersesPerChapterPerBook[bookId-1][chapter-1]
 )
 
-export const getCorrespondingVerseLocation = ({ baseVersion={}, lookupVersionInfo={} }) => {
+export const getCorrespondingRef = ({ baseVersion={}, lookupVersionInfo={} }) => {
   // Returns one of the following:
     // an array of `version` objects with keys `bookId`, `chapter`, `verse` and possibly `wordRange`
     // `false` if there is not a valid verse in the corresponding version
@@ -193,7 +193,7 @@ export const isValidVerse = version => {
   // of a verse in a translation, but rather that a verse in a translation has a
   // corresponding verse in the original.
 
-  const correspondingVerseLocations = getCorrespondingVerseLocation({
+  const correspondingVerseLocations = getCorrespondingRef({
     baseVersion: version,
     lookupVersionInfo: {
       versificationModel: 'original',

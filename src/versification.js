@@ -58,7 +58,7 @@ export const getCorrespondingVerseLocation = ({ baseVersion={}, lookupVersionInf
   }
 
   let originalLocs = baseVerseMappingsByVersionInfo['translationToOriginal'][baseLoc]
-  
+
   if(typeof originalLocs === 'undefined') {
     if(!isValidRefInOriginal(getRefFromLoc(baseLoc))) {
       // this verse does not have a valid corresponding verse in the original version

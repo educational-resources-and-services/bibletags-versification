@@ -57,7 +57,7 @@ const getVerseMappingsByVersionInfo = ({ partialScope, versificationModel, skips
     return null
   }
 
-  
+
   // Look to see if a versification mapping for these parameters is already compiled
 
   const extraVerseMappingsJSON = JSON.stringify(extraVerseMappings || {})

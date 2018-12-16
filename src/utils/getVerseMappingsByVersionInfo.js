@@ -107,11 +107,12 @@ const getVerseMappingsByVersionInfo = ({ partialScope, versificationModel, skips
     }
     
     // get the unparsed versification mappings
-    const originalToTranslation = overrideMappings({
-      baseMappings: overrideMappings({
-        baseMappings: verseMappings[versificationModel],
-        overrideMappings: (skipsUnlikelyOriginals ? unlikelyOriginals : {}),
-      }),
+    let originalToTranslation = overrideMappings({
+      baseMappings: verseMappings[versificationModel],
+      overrideMappings: (skipsUnlikelyOriginals ? unlikelyOriginals : {}),
+    })
+    originalToTranslation = overrideMappings({
+      baseMappings: originalToTranslation,
       overrideMappings: (extraVerseMappings || {}),
     })
 

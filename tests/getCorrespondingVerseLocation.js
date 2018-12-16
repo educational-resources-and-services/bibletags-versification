@@ -1,17 +1,134 @@
 import assert from 'assert'
 import { getCorrespondingVerseLocation } from '../src/versification'
 
+const kjvInfo = {
+  versificationModel: 'kjv',
+  extraVerseMappings: {
+    // jsdlfkjsfd
+  },
+}
+
+const nivInfo = {
+  versificationModel: 'kjv',
+  extraVerseMappings: {
+    "40017014": "40017014",
+    "40017015": "40017015",
+    }
+}
 describe('getCorrespondingVerseLocation', () => {
   
   describe('Bad parameters', () => {
+    //NOTE: functions should return false (not null) when there are bad parameters, no matter which part of the parameter was bad
+    //TODO: error msgs in place for bad parameters? if not, where should they be?
 
-    // TODO
+    //bad bookId
+    it('Bad bookId [book 68] (original -> KJV)', () => {
+      const correspondingVerseLocations = getCorrespondingVerseLocation({
+        baseVersion: {
+          ref: {
+            bookId: 68,
+            chapter: 1,
+            verse: 1,
+          },
+          info: {
+            versificationModel: 'original'
+          }
+        },
+        lookupVersionInfo: kjvInfo,
+      })
+
+      assert.deepEqual(correspondingVerseLocations, false)
+    })
+
+    //bad chapter
+    it('bad chapter [Gen 55] (original -> KJV)', () => {
+      const correspondingVerseLocations = getCorrespondingVerseLocation({
+        baseVersion: {
+          ref: {
+            bookId: 1,
+            chapter: 55,
+            verse: 1,
+          },
+          info: {
+            versificationModel: 'original'
+          }
+        },
+        lookupVersionInfo: kjvInfo,
+      })
+
+      assert.deepEqual(correspondingVerseLocations, false)
+    })
+
+    //bad verse
+    it('bad verse [Gen 1:33] (original -> KJV)', () => {
+      const correspondingVerseLocations = getCorrespondingVerseLocation({
+        baseVersion: {
+          ref: {
+            bookId: 1,
+            chapter: 1,
+            verse: 33,
+          },
+          info: {
+            versificationModel: 'original'
+          }
+        },
+        lookupVersionInfo: kjvInfo,
+      })
+
+      assert.deepEqual(correspondingVerseLocations, false)
+    })
+
+    //bad wordRange
+    it('wordRange given (will be ignored) (original -> KJV)', () => {
+      const correspondingVerseLocations = getCorrespondingVerseLocation({
+        baseVersion: {
+          ref: {
+            bookId: 1,
+            chapter: 1,
+            verse: 1,
+            wordRange: [5, 9],
+          },
+          info: {
+            versificationModel: 'original'
+          }
+        },
+        lookupVersionInfo: kjvInfo,
+      })
+
+      assert.deepEqual(correspondingVerseLocations, [
+        {
+          bookId:1,
+          chapter: 1,
+          verse: 1,
+        }
+      ])
+    })
 
   })
 
   describe('No valid verses in the corresponding version (original -> translation)', () => {
 
-    // TODO: do some with partialScope and extraVerseMappings
+    // TODO: do some with partialScope, extraVerseMappings, skipsUnlikelyOriginals
+
+    it('Isaiah 46:1 = null (original -> LXX)', () => {
+      const correspondingVerseLocations = getCorrespondingVerseLocation({
+        baseVersion: {
+          ref: {
+            bookId: 24,
+            chapter: 46,
+            verse: 1,
+          },
+          info: {
+            versificationModel: 'original'
+          }
+        },
+        lookupVersionInfo: {
+          versificationModel: 'lxx',
+        },
+      })
+
+      assert.deepEqual(correspondingVerseLocations, [])
+    })
 
   })
 
@@ -43,9 +160,7 @@ describe('getCorrespondingVerseLocation', () => {
             versificationModel: 'original'
           }
         },
-        lookupVersionInfo: {
-          versificationModel: 'kjv',
-        },
+        lookupVersionInfo: kjvInfo,
       })
 
       assert.deepEqual(correspondingVerseLocations, [
@@ -69,9 +184,7 @@ describe('getCorrespondingVerseLocation', () => {
             versificationModel: 'original'
           }
         },
-        lookupVersionInfo: {
-          versificationModel: 'kjv',
-        },
+        lookupVersionInfo: kjvInfo,
       })
 
       assert.deepEqual(correspondingVerseLocations, [
@@ -82,11 +195,9 @@ describe('getCorrespondingVerseLocation', () => {
         }
       ])
     })
-  })
+  
 
-  describe('Has verse word ranges', () =>{
-    
-    it('Matthew 17:14 (original -> KJV)', () => {
+    it('Extra Verse Mappings orig NIV', () => {
       const correspondingVerseLocations = getCorrespondingVerseLocation({
         baseVersion: {
           ref: {
@@ -98,9 +209,7 @@ describe('getCorrespondingVerseLocation', () => {
             versificationModel: 'original'
           }
         },
-        lookupVersionInfo: {
-          versificationModel: 'kjv',
-        },
+        lookupVersionInfo: nivInfo,
       })
 
       assert.deepEqual(correspondingVerseLocations, [
@@ -108,7 +217,6 @@ describe('getCorrespondingVerseLocation', () => {
           bookId:40,
           chapter: 17,
           verse: 14,
-          wordRange: [1, 19],
         },
       ])
     })
@@ -126,9 +234,7 @@ describe('getCorrespondingVerseLocation', () => {
             versificationModel: 'original'
           }
         },
-        lookupVersionInfo: {
-          versificationModel: 'kjv',
-        },
+        lookupVersionInfo: kjvInfo,
       })
 
       assert.deepEqual(correspondingVerseLocations, [
@@ -156,9 +262,7 @@ describe('getCorrespondingVerseLocation', () => {
             versificationModel: 'original'
           }
         },
-        lookupVersionInfo: {
-          versificationModel: 'kjv',
-        },
+        lookupVersionInfo: kjvInfo,
       })
 
       assert.deepEqual(correspondingVerseLocations, [
@@ -188,9 +292,7 @@ describe('getCorrespondingVerseLocation', () => {
             versificationModel: 'original'
           }
         },
-        lookupVersionInfo: {
-          versificationModel: 'kjv',
-        },
+        lookupVersionInfo: kjvInfo,
       })
 
       assert.deepEqual(correspondingVerseLocations, [
@@ -219,6 +321,34 @@ describe('getCorrespondingVerseLocation', () => {
   describe('Has a valid verse in the corresponding version (translation -> translation)', () => {
 
     // TODO: do some with partialScope and extraVerseMappings
+
+    it('extraVerseMappings open ended Mat 17:14 (KJV -> NIV)', () => {
+      const correspondingVerseLocations = getCorrespondingVerseLocation({
+        baseVersion: {
+          ref: {
+            bookId: 40,
+            chapter: 17,
+            verse: 14,
+          },
+          info: kjvInfo,
+        },
+        lookupVersionInfo: nivInfo,
+      })
+  
+      assert.deepEqual(correspondingVerseLocations, [
+        {
+          bookId:40,
+          chapter: 17,
+          verse: 14,
+        },
+        {
+          bookId:40,
+          chapter: 17,
+          verse: 15,
+          wordRange: [1, 2],
+        },
+      ])
+    })
 
   })
 

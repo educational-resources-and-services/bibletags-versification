@@ -72,12 +72,49 @@ const getVerseMappingsByVersionInfo = ({ partialScope, versificationModel, skips
     
     // Create object of versification mappings without abbreviations
 
-    // get the unparsed versification mappings
-    const originalToTranslation = {
-      ...verseMappings[versificationModel],
-      ...(skipsUnlikelyOriginals ? unlikelyOriginals : {}),
-      ...(extraVerseMappings || {}),
+    const overrideMappings = ({ baseMappings, overrideMappings }) => {
+
+      const getWordRangeInts = wordRange => wordRange.split('-').map(strNum => parseInt(strNum === '' ? 1000 : strNum, 10))
+    
+      // process baseMappings
+      const baseMappingsMap = {}
+      Object.keys(baseMappings).forEach(locWithWordRange => {
+        const [ loc, wordRange ] = locWithWordRange.split(':')
+        if(!baseMappingsMap[loc]) {
+          baseMappingsMap[loc] = []
+        }
+        wordRange && baseMappingsMap[loc].push(wordRange)
+      })
+    
+      // delete some from baseMappings, based on keys in overrideMappings
+      const baseMappingsCleaned = { ...baseMappings }
+      for(let key in overrideMappings) {
+        const keyWithoutWordRange = key.split(':')[0]
+        delete baseMappingsCleaned[keyWithoutWordRange]
+    
+        ;(baseMappingsMap[keyWithoutWordRange] || []).forEach(baseMappingsWordRange => {
+          const baseMappingsWordRangeInts = getWordRangeInts(baseMappingsWordRange)
+          const overrideMappingWordRangeInts = getWordRangeInts(overrideMappings[key].split(':')[1] || '0-')
+          if(overrideMappingWordRangeInts[0] <= baseMappingsWordRangeInts[1] && overrideMappingWordRangeInts[1] >= baseMappingsWordRangeInts[0]){
+            delete baseMappingsCleaned[`${keyWithoutWordRange}:${baseMappingsWordRange}`]
+          }
+        })
+      }
+    
+      // return merged overrideMappings onto baseMappings
+      return { ...baseMappingsCleaned, ...overrideMappings }
+    
     }
+    
+    // get the unparsed versification mappings
+    let originalToTranslation = overrideMappings({
+      baseMappings: verseMappings[versificationModel],
+      overrideMappings: (skipsUnlikelyOriginals ? unlikelyOriginals : {}),
+    })
+    originalToTranslation = overrideMappings({
+      baseMappings: originalToTranslation,
+      overrideMappings: (extraVerseMappings || {}),
+    })
 
     // parse out ranges
     for(let key in originalToTranslation) {
@@ -114,10 +151,10 @@ const getVerseMappingsByVersionInfo = ({ partialScope, versificationModel, skips
         }
       }
     }
-  
+
     convertMappingsToMultiLevel(originalToTranslation)
     convertMappingsToMultiLevel(translationToOriginal)
-
+    
     verseMappingsByVersionInfo[versificationModel][extraVerseMappingsKey] = {
       originalToTranslation,
       translationToOriginal,

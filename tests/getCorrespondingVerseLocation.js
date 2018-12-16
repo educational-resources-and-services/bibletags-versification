@@ -18,8 +18,9 @@ const nivInfo = {
 describe('getCorrespondingVerseLocation', () => {
   
   describe('Bad parameters', () => {
-    //all bad parameters should come back simply false, no matter which part of the parameter was bad
-    //is an error msg in place for bad parameters already? if not, where should it be?
+    //NOTE: functions should return false (not null) when there are bad parameters, no matter which part of the parameter was bad
+    //TODO: error msgs in place for bad parameters? if not, where should they be?
+
     //bad bookId
     it('Bad bookId [book 68] (original -> KJV)', () => {
       const correspondingVerseLocations = getCorrespondingVerseLocation({

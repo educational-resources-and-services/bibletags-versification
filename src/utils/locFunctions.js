@@ -1,7 +1,43 @@
 export const padLocWithLeadingZero = loc => ('0'+loc).substr(-8)
 
-export const getLocFromRef = ({ bookId, chapter, verse, wordRange }) => (
-  `${('0'+bookId).substr(-2)}${('00'+chapter).substr(-3)}${('00'+verse).substr(-3)}${wordRange ? `:${wordRange[0]}-${wordRange[1] || ""}` : ''}`
+/*
+  Example locs and refs
+
+    01001001
+    {
+      bookId: 1,
+      chapter: 1,
+      verse: 1,
+    }
+
+    01001001:1-3
+    {
+      bookId: 1,
+      chapter: 1,
+      verse: 1,
+      wordRanges: ["1-3"],
+    }
+
+    01001001:4-
+    {
+      bookId: 1,
+      chapter: 1,
+      verse: 1,
+      wordRanges: ["4-"],
+    }
+
+    01001001:1-3,7-9
+    {
+      bookId: 1,
+      chapter: 1,
+      verse: 1,
+      wordRanges: ["1-3","7-9"],
+    }
+*/
+
+export const getLocFromRef = ({ bookId, chapter, verse, wordRanges }) => (
+  `${('0'+bookId).substr(-2)}${('00'+chapter).substr(-3)}${('00'+verse).substr(-3)}`
+  + `${wordRanges ? `:${wordRanges.join(",")}` : ''}`
 )
 
 export const getRefFromLoc = loc => ({
@@ -10,7 +46,7 @@ export const getRefFromLoc = loc => ({
   verse: parseInt(loc.substr(5,3), 10),
   ...(
     loc.substr(8,1) === ':'
-      ? { wordRange: loc.substr(9).split("-").map(item => (parseInt(item, 10) || null)) }
+      ? { wordRanges: loc.substr(9).split(",") }
       : ''
   ),
 })

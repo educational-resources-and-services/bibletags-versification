@@ -8,15 +8,13 @@ export const isValidRefInOriginal = ({ bookId, chapter, verse }) => (
   bookId >= 1 && bookId <= 66 && verse >= 1 && verse <= numberOfVersesPerChapterPerBook[bookId-1][chapter-1]
 )
 
-export const getCorrespondingRef = ({ baseVersion={}, lookupVersionInfo={} }) => {
+export const getCorrespondingRefs = ({ baseVersion={}, lookupVersionInfo={} }) => {
   // Returns one of the following:
-    // an array of `version` objects with keys `bookId`, `chapter`, `verse` and possibly `wordRange`
+    // an array of `version` objects with keys `bookId`, `chapter`, `verse` and possibly `wordRanges`
     // `false` if there is not a valid verse in the corresponding version
     // `null` if invalid parameters were passed
 
-  // When going from an original text to a translation, or vice versa, it returns a result precise
-  // to the word, with `wordRange` when relevant. However, when going from translation to translation,
-  // the result is precise only to the verse and will never include `wordRange`.
+  // Must go from an original text to a translation, or vice versa.
 
   if(
     typeof baseVersion !== 'object'
@@ -34,13 +32,25 @@ export const getCorrespondingRef = ({ baseVersion={}, lookupVersionInfo={} }) =>
     return null
   }
 
-  const baseVerseMappingsByVersionInfo = getVerseMappingsByVersionInfo(baseVersion.info)
-  const lookupVerseMappingsByVersionInfo = getVerseMappingsByVersionInfo(lookupVersionInfo)
-  const baseVersionRefWithoutWordRange = { ...baseVersion.ref }
-  delete baseVersionRefWithoutWordRange.wordRange
-  const baseLoc = getLocFromRef(baseVersionRefWithoutWordRange)
+  const isOriginal = info => !!(
+    ['ot', 'nt'].includes(info.partialScope)
+    && info.versificationModel === 'original'
+    && !info.skipsUnlikelyOriginals
+    && !info.extraVerseMappings
+  )
 
-  if(!baseVerseMappingsByVersionInfo || !lookupVerseMappingsByVersionInfo || !/^[0-9]{8}$/.test(baseLoc)) {
+  const fromOriginal = isOriginal(baseVersion.info)
+
+  if(!fromOriginal && !isOriginal(lookupVersionInfo)) {  // must be one original text and one non-original
+    return null
+  }
+
+  const verseMappingsByVersionInfo = getVerseMappingsByVersionInfo(fromOriginal ? lookupVersionInfo : baseVersion.info)
+  const baseVersionRefWithoutWordRanges = { ...baseVersion.ref }
+  delete baseVersionRefWithoutWordRanges.wordRanges
+  const baseLoc = getLocFromRef(baseVersionRefWithoutWordRanges)
+
+  if(!verseMappingsByVersionInfo || !/^[0-9]{8}$/.test(baseLoc)) {
     // bad parameter
     return null
   }
@@ -61,90 +71,35 @@ export const getCorrespondingRef = ({ baseVersion={}, lookupVersionInfo={} }) =>
     return false
   }
 
-  let originalLocs = baseVerseMappingsByVersionInfo['translationToOriginal'][baseLoc]
+  let lookupLocs = verseMappingsByVersionInfo[fromOriginal ? 'originalToTranslation' : 'translationToOriginal'][baseLoc]
 
-  if(typeof originalLocs === 'undefined') {
+  if(typeof lookupLocs === 'undefined') {
     if(!isValidRefInOriginal(getRefFromLoc(baseLoc))) {
       // this verse does not have a valid corresponding verse in the original version
       return false
     }
 
     // baseVersion and original have the same versification for this verse
-    originalLocs = [ baseLoc ]
-  }
+    lookupLocs = [ baseLoc ]
 
-  if(typeof originalLocs === 'object') {
-    // we want all the locations that the baseVersion mapped to, regardless of wordRange
-    originalLocs = Object.values(originalLocs)
+  } else if(lookupLocs === null) {
+    // there are no corresponding verses in the original version
+    return []
+
+  } else if(typeof lookupLocs === 'object') {
+    // we want all the locations that the baseVersion mapped to, regardless of wordRanges
+    lookupLocs = Object.values(lookupLocs)
 
   } else {
     // always make it an array, since it may be mapped to more than one location in the original
-    originalLocs = [ originalLocs ]
+    lookupLocs = [ lookupLocs ]
   }
-
-  let lookupVersionLocs = []
-  
-  originalLocs.forEach(originalLoc => {
-
-    const [ originalLocWithoutWordRange, wordRangeStr ] = originalLoc.split(/:/)
-  
-    let lookupVersionLoc = lookupVerseMappingsByVersionInfo['originalToTranslation'][originalLocWithoutWordRange]
-  
-    if(typeof lookupVersionLoc === 'undefined') {
-      // original and lookupVersion have the same versification for this verse
-      lookupVersionLoc = originalLoc
-    }
-  
-    if(lookupVersionLoc === null) {
-      // this verse is skipped in the lookupVersion
-      return
-    }
-
-    if(typeof lookupVersionLoc === 'object') {
-      if(wordRangeStr) {
-        // get the pieces from lookupVersionLoc that will cover the wordRange
-
-        const wordRangeParts = wordRangeStr.split(/-/)
-        const lowEndOfWordRange = parseInt(wordRangeParts[0], 10) || 0
-        const highEndOfWordRange = parseInt(wordRangeParts[1], 10) || 1000
-
-        for(let lookupVersionLocWordRange in lookupVersionLoc) {
-          const lookupVersionLocWordRangeParts = lookupVersionLocWordRange.split(/-/)
-          const lowEndOfWordRangeInLookupVersionLoc = parseInt(lookupVersionLocWordRangeParts[0], 10) || 0
-          const highEndOfWordRangeInLookupVersionLoc = parseInt(lookupVersionLocWordRangeParts[1], 10) || 1000
-  
-          if(
-            lowEndOfWordRange <= highEndOfWordRangeInLookupVersionLoc
-            || highEndOfWordRange >= lowEndOfWordRangeInLookupVersionLoc
-          ) {
-            lookupVersionLocs.push(lookupVersionLoc[lookupVersionLocWordRange])
-          }
-        }
-
-      } else {
-        // get all pieces from lookupVersionLoc
-        lookupVersionLocs = [
-          ...lookupVersionLocs,
-          ...Object.values(lookupVersionLoc),
-        ]
-      }
-
-    } else {
-      lookupVersionLocs.push(lookupVersionLoc)
-    }
-  })
-
-  if(lookupVersionLocs.length === 0) {
-    // there are no corresponding verses in the original version
-    return []
-  }
-
 
   // condense wordRanges together so there is only one range per verse
 
   const locsWithWordRanges = {}
 
-  lookupVersionLocs.forEach(lookupVersionLoc => {
+  lookupLocs.forEach(lookupVersionLoc => {
     const [ lookupVersionLocWithoutWordRange, wordRangeStr ] = lookupVersionLoc.split(/:/)
     if(wordRangeStr) {
       if(!locsWithWordRanges[lookupVersionLocWithoutWordRange]) {
@@ -155,37 +110,51 @@ export const getCorrespondingRef = ({ baseVersion={}, lookupVersionInfo={} }) =>
   })
 
   const removeLookupVersionLocsStartingWith = str => {
-    lookupVersionLocs = lookupVersionLocs.filter(lookupVersionLoc => lookupVersionLoc.indexOf(str) !== 0)
+    lookupLocs = lookupLocs.filter(lookupVersionLoc => lookupVersionLoc.indexOf(str) !== 0)
   }
 
   for(let loc in locsWithWordRanges) {
-    if(locsWithWordRanges[loc].length === Object.keys(lookupVerseMappingsByVersionInfo['translationToOriginal'][loc]).length) {
-      // wordRanges cover the entire verse, so no need to indicate a wordRange
-      lookupVersionLocs.push(loc)
+    if(locsWithWordRanges[loc].length === Object.keys(verseMappingsByVersionInfo[fromOriginal ? 'translationToOriginal' : 'originalToTranslation'][loc]).length) {
+      // wordRanges cover the entire verse, so no need to indicate wordRanges
+      lookupLocs.push(loc)
       removeLookupVersionLocsStartingWith(`${loc}:`)
 
     } else if(locsWithWordRanges[loc].length > 1) {
-      // wordRanges do not cover the entire verse, but we want to combine the wordRanges if possible
-      // we can safely assume here that there are no skipped verses between the word ranges
+      // wordRanges do not cover the entire verse, so we want to combine them into
+      // a single loc with as few pieces as possible
 
-      let lowEndOfTotalWordRange = 1000
-      let highEndOfTotalWordRange = 0
+      // put them in order
+      locsWithWordRanges[loc].sort((range1, range2) => (
+        parseInt(range1.split('-')[0], 10) > parseInt(range2.split('-')[0], 10)
+          ? 1
+          : -1
+      ))
 
-      locsWithWordRanges[loc].forEach(wordRangeStr => {
-        const wordRangeParts = wordRangeStr.split(/-/)
-        const lowEndOfWordRange = parseInt(wordRangeParts[0], 10) || 0
-        const highEndOfWordRange = parseInt(wordRangeParts[1], 10) || 1000
+      // reduce
+      locsWithWordRanges[loc].reduce((ranges, thisRange) => {
+        if(typeof ranges !== 'object') {
+          ranges = [ ranges ]
+        }
 
-        lowEndOfTotalWordRange = Math.min(lowEndOfTotalWordRange, lowEndOfWordRange)
-        highEndOfTotalWordRange = Math.max(highEndOfWordRange, highEndOfWordRange)
+        const partsOfLastRange = ranges[ranges.length - 1].split('-')
+        const partsOfNewRange = thisRange.split('-')
+
+        if((parseInt(partsOfLastRange[1], 10) || 0) + 1 === parseInt(partsOfNewRange[0], 10)) {
+          ranges[ranges.length - 1] = `${partsOfLastRange[0]}-${partsOfNewRange[1]}`
+        } else {
+          ranges.push(thisRange)
+        }
+
+        return ranges
       })
 
+      // push on new loc with 1+ word ranges
       removeLookupVersionLocsStartingWith(`${loc}:`)
-      lookupVersionLocs.push(`${loc}:${lowEndOfTotalWordRange}-${highEndOfTotalWordRange}`)
+      lookupLocs.push(`${loc}:${lowEndOfTotalWordRange}-${highEndOfTotalWordRange}`)
     }
   }
 
-  return lookupVersionLocs.map(lookupVersionLoc => getRefFromLoc(lookupVersionLoc))
+  return lookupLocs.map(lookupVersionLoc => getRefFromLoc(lookupVersionLoc))
 }
 
 export const isValidVerse = version => {
@@ -197,14 +166,15 @@ export const isValidVerse = version => {
   // of a verse in a translation, but rather that a verse in a translation has a
   // corresponding verse in the original.
 
-  const correspondingVerseLocations = getCorrespondingRef({
+  const correspondingRefs = getCorrespondingRefs({
     baseVersion: version,
     lookupVersionInfo: {
       versificationModel: 'original',
+      partialScope: version.ref.bookId <=39 ? 'ot' : 'nt',
     },
   })
 
-  return typeof correspondingVerseLocations === 'object' ? true : correspondingVerseLocations
+  return correspondingRefs ? true : correspondingRefs
 }
 
 export { getLocFromRef, getRefFromLoc, padLocWithLeadingZero }

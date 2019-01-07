@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { getCorrespondingRef } from '../src/versification'
+import { getCorrespondingRefs } from '../src/versification'
 
 const kjvInfo = {
   versificationModel: 'kjv',
@@ -15,7 +15,8 @@ const nivInfo = {
     "40017015": "40017015",
     }
 }
-describe('getCorrespondingRef', () => {
+
+describe('getCorrespondingRefs', () => {
   
   describe('Bad parameters', () => {
     //NOTE: functions should return false (not null) when there are bad parameters, no matter which part of the parameter was bad
@@ -23,7 +24,7 @@ describe('getCorrespondingRef', () => {
 
     //bad bookId
     it('Bad bookId [book 68] (original -> KJV)', () => {
-      const correspondingVerseLocations = getCorrespondingRef({
+      const correspondingVerseLocations = getCorrespondingRefs({
         baseVersion: {
           ref: {
             bookId: 68,
@@ -31,7 +32,8 @@ describe('getCorrespondingRef', () => {
             verse: 1,
           },
           info: {
-            versificationModel: 'original'
+            versificationModel: 'original',
+            partialScope: 'nt',
           }
         },
         lookupVersionInfo: kjvInfo,
@@ -42,7 +44,7 @@ describe('getCorrespondingRef', () => {
 
     //bad chapter
     it('bad chapter [Gen 55] (original -> KJV)', () => {
-      const correspondingVerseLocations = getCorrespondingRef({
+      const correspondingVerseLocations = getCorrespondingRefs({
         baseVersion: {
           ref: {
             bookId: 1,
@@ -50,7 +52,8 @@ describe('getCorrespondingRef', () => {
             verse: 1,
           },
           info: {
-            versificationModel: 'original'
+            versificationModel: 'original',
+            partialScope: 'ot',
           }
         },
         lookupVersionInfo: kjvInfo,
@@ -61,7 +64,7 @@ describe('getCorrespondingRef', () => {
 
     //bad verse
     it('bad verse [Gen 1:33] (original -> KJV)', () => {
-      const correspondingVerseLocations = getCorrespondingRef({
+      const correspondingVerseLocations = getCorrespondingRefs({
         baseVersion: {
           ref: {
             bookId: 1,
@@ -69,7 +72,8 @@ describe('getCorrespondingRef', () => {
             verse: 33,
           },
           info: {
-            versificationModel: 'original'
+            versificationModel: 'original',
+            partialScope: 'ot',
           }
         },
         lookupVersionInfo: kjvInfo,
@@ -78,18 +82,19 @@ describe('getCorrespondingRef', () => {
       assert.deepEqual(correspondingVerseLocations, false)
     })
 
-    //bad wordRange
-    it('wordRange given (will be ignored) (original -> KJV)', () => {
-      const correspondingVerseLocations = getCorrespondingRef({
+    //bad wordRanges
+    it('wordRanges given (will be ignored) (original -> KJV)', () => {
+      const correspondingVerseLocations = getCorrespondingRefs({
         baseVersion: {
           ref: {
             bookId: 1,
             chapter: 1,
             verse: 1,
-            wordRange: [5, 9],
+            wordRanges: ["5-9"],
           },
           info: {
-            versificationModel: 'original'
+            versificationModel: 'original',
+            partialScope: 'ot',
           }
         },
         lookupVersionInfo: kjvInfo,
@@ -111,7 +116,7 @@ describe('getCorrespondingRef', () => {
     // TODO: do some with partialScope, extraVerseMappings, skipsUnlikelyOriginals
 
     it('Isaiah 46:1 = null (original -> LXX)', () => {
-      const correspondingVerseLocations = getCorrespondingRef({
+      const correspondingVerseLocations = getCorrespondingRefs({
         baseVersion: {
           ref: {
             bookId: 24,
@@ -119,7 +124,8 @@ describe('getCorrespondingRef', () => {
             verse: 1,
           },
           info: {
-            versificationModel: 'original'
+            versificationModel: 'original',
+            partialScope: 'ot',
           }
         },
         lookupVersionInfo: {
@@ -138,18 +144,12 @@ describe('getCorrespondingRef', () => {
 
   })
 
-  describe('No valid verses in the corresponding version (translation -> translation)', () => {
-
-    // TODO: do some with partialScope and extraVerseMappings
-
-  })
-
   describe('Has a valid verse in the corresponding version (original -> translation)', () => {
 
     // TODO: do some with partialScope and extraVerseMappings
 
     it('Genesis 1:1 (original -> KJV)', () => {
-      const correspondingVerseLocations = getCorrespondingRef({
+      const correspondingVerseLocations = getCorrespondingRefs({
         baseVersion: {
           ref: {
             bookId: 1,
@@ -157,7 +157,8 @@ describe('getCorrespondingRef', () => {
             verse: 1,
           },
           info: {
-            versificationModel: 'original'
+            versificationModel: 'original',
+            partialScope: 'ot',
           }
         },
         lookupVersionInfo: kjvInfo,
@@ -165,7 +166,7 @@ describe('getCorrespondingRef', () => {
 
       assert.deepEqual(correspondingVerseLocations, [
         {
-          bookId:1,
+          bookId: 1,
           chapter: 1,
           verse: 1,
         }
@@ -173,7 +174,7 @@ describe('getCorrespondingRef', () => {
     })
 
     it('Matthew 17:13 (original -> KJV)', () => {
-      const correspondingVerseLocations = getCorrespondingRef({
+      const correspondingVerseLocations = getCorrespondingRefs({
         baseVersion: {
           ref: {
             bookId: 40,
@@ -181,7 +182,8 @@ describe('getCorrespondingRef', () => {
             verse: 13,
           },
           info: {
-            versificationModel: 'original'
+            versificationModel: 'original',
+            partialScope: 'nt',
           }
         },
         lookupVersionInfo: kjvInfo,
@@ -198,7 +200,7 @@ describe('getCorrespondingRef', () => {
   
 
     it('Extra Verse Mappings orig NIV', () => {
-      const correspondingVerseLocations = getCorrespondingRef({
+      const correspondingVerseLocations = getCorrespondingRefs({
         baseVersion: {
           ref: {
             bookId: 40,
@@ -206,7 +208,8 @@ describe('getCorrespondingRef', () => {
             verse: 14,
           },
           info: {
-            versificationModel: 'original'
+            versificationModel: 'original',
+            partialScope: 'nt',
           }
         },
         lookupVersionInfo: nivInfo,
@@ -223,7 +226,7 @@ describe('getCorrespondingRef', () => {
 
     it('Matthew 20:4 (original -> KJV)', () => {
      
-      const correspondingVerseLocations = getCorrespondingRef({
+      const correspondingVerseLocations = getCorrespondingRefs({
         baseVersion: {
           ref: {
             bookId: 40,
@@ -231,7 +234,8 @@ describe('getCorrespondingRef', () => {
             verse: 4,
           },
           info: {
-            versificationModel: 'original'
+            versificationModel: 'original',
+            partialScope: 'nt',
           }
         },
         lookupVersionInfo: kjvInfo,
@@ -242,7 +246,7 @@ describe('getCorrespondingRef', () => {
           bookId:40,
           chapter: 20,
           verse: 4,
-          wordRange: [1, 18],
+          wordRanges: ["1-18"],
         },
       ])
     })
@@ -251,7 +255,7 @@ describe('getCorrespondingRef', () => {
   describe('Has open-ended end of verse', () => {
 
     it('Matthew 17:15 (original -> KJV)', () => {       // "40017015:1-2": "40017014:20-", "40017015:3-": "40017015",
-      const correspondingVerseLocations = getCorrespondingRef({
+      const correspondingVerseLocations = getCorrespondingRefs({
         baseVersion: {
           ref: {
             bookId: 40,
@@ -259,7 +263,8 @@ describe('getCorrespondingRef', () => {
             verse: 15,
           },
           info: {
-            versificationModel: 'original'
+            versificationModel: 'original',
+            partialScope: 'nt',
           }
         },
         lookupVersionInfo: kjvInfo,
@@ -270,7 +275,7 @@ describe('getCorrespondingRef', () => {
           bookId:40,
           chapter: 17,
           verse: 14,
-          wordRange: [20, null], //wordRange: [20, 21]
+          wordRanges: ["20-"], //wordRanges: ["20-21"]
         },
         {
           bookId:40,
@@ -281,7 +286,7 @@ describe('getCorrespondingRef', () => {
     })
 
     it('Matthew 20:5 (original -> KJV)', () => {                //"40020005:1-3": "40020004:19-", "40020005:4-": "40020005",
-      const correspondingVerseLocations = getCorrespondingRef({
+      const correspondingVerseLocations = getCorrespondingRefs({
         baseVersion: {
           ref: {
             bookId: 40,
@@ -289,7 +294,8 @@ describe('getCorrespondingRef', () => {
             verse: 5,
           },
           info: {
-            versificationModel: 'original'
+            versificationModel: 'original',
+            partialScope: 'nt',
           }
         },
         lookupVersionInfo: kjvInfo,
@@ -300,7 +306,7 @@ describe('getCorrespondingRef', () => {
           bookId:40,
           chapter: 20,
           verse: 4,
-          wordRange: [19, null], //wordRange: [19, 23]
+          wordRanges: ["19-"], //wordRanges: ["19-23"]
         },
         {
           bookId:40,
@@ -318,40 +324,6 @@ describe('getCorrespondingRef', () => {
 
   })
 
-  describe('Has a valid verse in the corresponding version (translation -> translation)', () => {
-
-    // TODO: do some with partialScope and extraVerseMappings
-
-    it('extraVerseMappings open ended Mat 17:14 (KJV -> NIV)', () => {
-      const correspondingVerseLocations = getCorrespondingRef({
-        baseVersion: {
-          ref: {
-            bookId: 40,
-            chapter: 17,
-            verse: 14,
-          },
-          info: kjvInfo,
-        },
-        lookupVersionInfo: nivInfo,
-      })
-  
-      assert.deepEqual(correspondingVerseLocations, [
-        {
-          bookId:40,
-          chapter: 17,
-          verse: 14,
-        },
-        {
-          bookId:40,
-          chapter: 17,
-          verse: 15,
-          wordRange: [1, 2],
-        },
-      ])
-    })
-
-  })
-
   describe('Has multiple valid verses in the corresponding version (original -> translation)', () => {
 
     // TODO: do some with partialScope and extraVerseMappings
@@ -359,12 +331,6 @@ describe('getCorrespondingRef', () => {
   })
 
   describe('Has multiple valid verses in the corresponding version (translation -> original)', () => {
-
-    // TODO: do some with partialScope and extraVerseMappings
-
-  })
-
-  describe('Has multiple valid verses in the corresponding version (translation -> translation)', () => {
 
     // TODO: do some with partialScope and extraVerseMappings
 

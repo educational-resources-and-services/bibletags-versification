@@ -1,5 +1,6 @@
 {
   "name": "bibletags-versification",
+  "version": "0.1.0",
   "scripts": {
     "test": "webpack --config webpack.test.config.js && mocha 'builds/tests.js' && webpack"
   },

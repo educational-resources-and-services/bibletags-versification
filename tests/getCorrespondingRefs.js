@@ -42,6 +42,28 @@ describe('getCorrespondingRefs', () => {
       assert.deepEqual(correspondingVerseLocations, false)
     })
 
+    //bad bookId + wrong partialScope
+    it('Bad bookId [book 70] (original -> SYN)', () => {
+      const correspondingVerseLocations = getCorrespondingRefs({
+        baseVersion: {
+          ref: {
+            bookId: 70,
+            chapter: 1,
+            verse: 1,
+          },
+          info: {
+            versificationModel: 'original',
+            partialScope: 'ot',
+          }
+        },
+        lookupVersionInfo: {
+          versificationModel: 'synodal',
+        },
+      })
+
+      assert.deepEqual(correspondingVerseLocations, null)
+    })
+
     //bad chapter
     it('bad chapter [Gen 55] (original -> KJV)', () => {
       const correspondingVerseLocations = getCorrespondingRefs({
@@ -321,6 +343,63 @@ describe('getCorrespondingRefs', () => {
   describe('Has a valid verse in the corresponding version (translation -> original)', () => {
 
     // TODO: do some with partialScope and extraVerseMappings
+
+    it('Exodus 25:5 (fakeversion -> original) *null* partialScope', () => {
+      const correspondingVerseLocations = getCorrespondingRefs({
+        baseVersion: {
+          ref: {
+            bookId: 2,
+            chapter: 25,
+            verse: 5,
+          },
+          info: {
+            versificationModel: 'original',
+            partialScope: null,
+          }
+        },
+        lookupVersionInfo: {
+          versificationModel: 'original',
+          partialScope: 'ot',
+        },
+      })
+
+      assert.deepEqual(correspondingVerseLocations, [
+        {
+          bookId:2,
+          chapter: 25,
+          verse: 5,
+        },
+      ])
+    })
+
+    it('Exodus 25:5 (original -> fakeversion) *null* partialScope', () => {
+      const correspondingVerseLocations = getCorrespondingRefs({
+        baseVersion: {
+          ref: {
+            bookId: 2,
+            chapter: 25,
+            verse: 5,
+          },
+          info: {
+            versificationModel: 'original',
+            partialScope: 'ot',
+          }
+        },
+        lookupVersionInfo: {
+          versificationModel: 'original',
+          partialScope: null,
+        },
+      })
+
+      //assert.deepEqual(correspondingVerseLocations, null)
+      assert.deepEqual(correspondingVerseLocations, [
+        {
+          bookId:2,
+          chapter: 25,
+          verse: 5,
+        },
+      ])
+    })
 
   })
 

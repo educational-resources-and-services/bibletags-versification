@@ -1,4 +1,4 @@
-// original mapped to the KJV
+// original mapped to the "KJV" (a KJV-like mapping)
 
 // Examples
 //   {
@@ -35,7 +35,7 @@
 */
 
 
-const kjvVerseMappings = {
+const kjvLikeVerseMappings = {
   "01032001": "01031055",
   "01032002-033": -1,
   "02007026-029": 975,
@@ -388,4 +388,4 @@ const kjvVerseMappings = {
   "66017010": "66017010:6-",    //"66017010": "66017010:6-28",
 }
 
-export default kjvVerseMappings
+export default kjvLikeVerseMappings

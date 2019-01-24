@@ -1,4 +1,4 @@
-import kjvVerseMappings from '../data/kjvVerseMappings'
+import kjvLikeVerseMappings from '../data/kjvLikeVerseMappings'
 import lxxVerseMappings from '../data/lxxVerseMappings'
 import synodalVerseMappings from '../data/synodalVerseMappings'
 
@@ -11,7 +11,7 @@ const VALID_PARTIAL_SCOPE_VALUES = [ null, undefined, 'ot', 'nt' ]
 
 const verseMappings = {
   original: {},
-  kjv: kjvVerseMappings,
+  kjv: kjvLikeVerseMappings,
   lxx: lxxVerseMappings,
   synodal: synodalVerseMappings,
 }

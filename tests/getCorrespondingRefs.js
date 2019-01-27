@@ -1,8 +1,32 @@
 import assert from 'assert'
 import { getCorrespondingRefs } from '../src/versification'
 
+const uhbOriginalInfo = {
+  versificationModel: 'original',
+  partialScope: 'ot',
+}
+
+const ugntOriginalInfo = {
+  versificationModel: 'kjv',
+  partialScope: 'nt',
+}
+
 const kjvInfo = {
   versificationModel: 'kjv',
+  extraVerseMappings: {             
+    // jsdlfkjsfd
+  },
+}
+
+const synodalInfo = {
+  versificationModel: 'synodal',
+  extraVerseMappings: {
+    // jsdlfkjsfd
+  },
+}
+
+const lxxInfo = {
+  versificationModel: 'lxx',
   extraVerseMappings: {
     // jsdlfkjsfd
   },
@@ -13,7 +37,15 @@ const nivInfo = {
   extraVerseMappings: {
     "40017014": "40017014",
     "40017015": "40017015",
-    }
+  },
+}
+
+const esvInfo = {
+  versificationModel: 'kjv',
+  extraVerseMappings: {
+    // jsdlfkjsfd
+  },
+  skipsUnlikelyOriginals: true,
 }
 
 describe('getCorrespondingRefs', () => {
@@ -56,9 +88,7 @@ describe('getCorrespondingRefs', () => {
             partialScope: 'ot',
           }
         },
-        lookupVersionInfo: {
-          versificationModel: 'synodal',
-        },
+        lookupVersionInfo: synodalInfo,
       })
 
       assert.deepEqual(correspondingVerseLocations, null)
@@ -150,9 +180,7 @@ describe('getCorrespondingRefs', () => {
             partialScope: 'ot',
           }
         },
-        lookupVersionInfo: {
-          versificationModel: 'lxx',
-        },
+        lookupVersionInfo: lxxInfo,
       })
 
       assert.deepEqual(correspondingVerseLocations, [])
@@ -338,12 +366,12 @@ describe('getCorrespondingRefs', () => {
       ])
     })
 
-    it('SkipsUnlikelyOriginals Matthew 20:5 (original -> fakeversion)', () => {
+    it('SkipsUnlikelyOriginals Matthew 20:5 (original -> ESV)', () => {
       const correspondingVerseLocations = getCorrespondingRefs({
         baseVersion: {
-          ref: {                        //STOPPED HERE!!!! There is a bug somewhere, the above instances are changing a variable instead of 
-            bookId: 40,                 //just reading it? 1) Console log every 5ish lines in getVerseMappingsByVersionInfo. See what the 
-            chapter: 20,                //outputs are when it's working. Then see what the outputs are when it's not working.`
+          ref: {
+            bookId: 40,
+            chapter: 20,
             verse: 5,
           },
           info: {
@@ -351,11 +379,7 @@ describe('getCorrespondingRefs', () => {
             partialScope: 'nt',
           }
         },
-        lookupVersionInfo: {
-          versificationModel: 'kjv',
-          partialScope: 'nt',
-          skipsUnlikelyOriginals: true,
-        },
+        lookupVersionInfo: esvInfo,
       })
 
       assert.deepEqual(correspondingVerseLocations, [
@@ -373,7 +397,7 @@ describe('getCorrespondingRefs', () => {
       ])
     })
 
-    it('SkipsUnlikelyOriginals Matthew 12:47 (original -> fakeversion) "40012047": null,', () => {
+    it('SkipsUnlikelyOriginals Matthew 12:47 (original -> ESV) "40012047": null,', () => {
       const correspondingVerseLocations = getCorrespondingRefs({
         baseVersion: {
           ref: {
@@ -386,11 +410,7 @@ describe('getCorrespondingRefs', () => {
             partialScope: 'nt',
           }
         },
-        lookupVersionInfo: {
-          versificationModel: 'kjv',
-          partialScope: 'nt',
-          skipsUnlikelyOriginals: true,
-        },
+        lookupVersionInfo: esvInfo,
       })
       assert.deepEqual(correspondingVerseLocations, [])
     })
@@ -414,10 +434,7 @@ describe('getCorrespondingRefs', () => {
             partialScope: null,
           }
         },
-        lookupVersionInfo: {
-          versificationModel: 'original',
-          partialScope: 'ot',
-        },
+        lookupVersionInfo: uhbOriginalInfo,
       })
 
       assert.deepEqual(correspondingVerseLocations, [

@@ -318,7 +318,7 @@ describe('getCorrespondingRefs', () => {
           info: {
             versificationModel: 'original',
             partialScope: 'nt',
-          }
+          },
         },
         lookupVersionInfo: kjvInfo,
       })
@@ -336,6 +336,63 @@ describe('getCorrespondingRefs', () => {
           verse: 5,
         },
       ])
+    })
+
+    it('SkipsUnlikelyOriginals Matthew 20:5 (original -> fakeversion)', () => {
+      const correspondingVerseLocations = getCorrespondingRefs({
+        baseVersion: {
+          ref: {                        //STOPPED HERE!!!! There is a bug somewhere, the above instances are changing a variable instead of 
+            bookId: 40,                 //just reading it? 1) Console log every 5ish lines in getVerseMappingsByVersionInfo. See what the 
+            chapter: 20,                //outputs are when it's working. Then see what the outputs are when it's not working.`
+            verse: 5,
+          },
+          info: {
+            versificationModel: 'original',
+            partialScope: 'nt',
+          }
+        },
+        lookupVersionInfo: {
+          versificationModel: 'kjv',
+          partialScope: 'nt',
+          skipsUnlikelyOriginals: true,
+        },
+      })
+
+      assert.deepEqual(correspondingVerseLocations, [
+        {
+          bookId:40,
+          chapter: 20,
+          verse: 4,
+          wordRanges: ["19-"], //wordRanges: ["19-23"]
+        },
+        {
+          bookId:40,
+          chapter: 20,
+          verse: 5,
+        },
+      ])
+    })
+
+    it('SkipsUnlikelyOriginals Matthew 12:47 (original -> fakeversion) "40012047": null,', () => {
+      const correspondingVerseLocations = getCorrespondingRefs({
+        baseVersion: {
+          ref: {
+            bookId: 40,
+            chapter: 12,
+            verse: 47,
+          },
+          info: {
+            versificationModel: 'original',
+            partialScope: 'nt',
+          }
+        },
+        lookupVersionInfo: {
+          versificationModel: 'kjv',
+          partialScope: 'nt',
+          skipsUnlikelyOriginals: true,
+        },
+      })
+      assert.deepEqual(correspondingVerseLocations, [])
     })
 
   })

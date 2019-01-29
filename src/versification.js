@@ -40,15 +40,17 @@ export const getCorrespondingRefs = ({ baseVersion={}, lookupVersionInfo={} }) =
   if(!VALID_SKIPS_UNLIKELY_ORIG_VALUES.includes(lookupVersionInfo.skipsUnlikelyOriginals)) {
     return null
   }
-  
+
   if(
     baseVersion.ref.bookId < 1
     || baseVersion.ref.chapter < 1
+    || !Number.isInteger(baseVersion.ref.bookId)
+    || !Number.isInteger(baseVersion.ref.chapter)
   ) {
     return null
   }
-  
-  if(baseVersion.info.verse <0) {
+
+  if(baseVersion.ref.verse < 0) {
     return null
   }
 

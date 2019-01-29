@@ -3,6 +3,7 @@ import getVerseMappingsByVersionInfo from './utils/getVerseMappingsByVersionInfo
 import { getLocFromRef, getRefFromLoc, padLocWithLeadingZero } from './utils/locFunctions'
 
 const VALID_PARTIAL_SCOPE_VALUES = [ null, undefined, 'ot', 'nt' ]
+const VALID_SKIPS_UNLIKELY_ORIG_VALUES = [ true, false, undefined ]
 
 export const isValidRefInOriginal = ({ bookId, chapter, verse }) => (
   bookId >= 1 && bookId <= 66 && verse >= 1 && verse <= numberOfVersesPerChapterPerBook[bookId-1][chapter-1]
@@ -29,6 +30,25 @@ export const getCorrespondingRefs = ({ baseVersion={}, lookupVersionInfo={} }) =
   }
 
   if(!VALID_PARTIAL_SCOPE_VALUES.includes(lookupVersionInfo.partialScope)) {
+    return null
+  }
+
+  if(!VALID_SKIPS_UNLIKELY_ORIG_VALUES.includes(baseVersion.info.skipsUnlikelyOriginals)) {
+    return null
+  }
+
+  if(!VALID_SKIPS_UNLIKELY_ORIG_VALUES.includes(lookupVersionInfo.skipsUnlikelyOriginals)) {
+    return null
+  }
+  
+  if(
+    baseVersion.ref.bookId < 1
+    || baseVersion.ref.chapter < 1
+  ) {
+    return null
+  }
+  
+  if(baseVersion.info.verse <0) {
     return null
   }
 

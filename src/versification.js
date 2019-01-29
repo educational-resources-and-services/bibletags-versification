@@ -42,15 +42,13 @@ export const getCorrespondingRefs = ({ baseVersion={}, lookupVersionInfo={} }) =
   }
 
   if(
-    baseVersion.ref.bookId < 1
-    || baseVersion.ref.chapter < 1
-    || !Number.isInteger(baseVersion.ref.bookId)
+    !Number.isInteger(baseVersion.ref.bookId)
     || !Number.isInteger(baseVersion.ref.chapter)
+    || !Number.isInteger(baseVersion.ref.verse)
+    || baseVersion.ref.bookId < 1
+    || baseVersion.ref.chapter < 1
+    || baseVersion.ref.verse < 0
   ) {
-    return null
-  }
-
-  if(baseVersion.ref.verse < 0) {
     return null
   }
 

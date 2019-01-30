@@ -49,11 +49,6 @@ const esvInfo = {
   skipsUnlikelyOriginals: true,
 }
 
-const fakeVersionOneInfo = {      //fakeVersion for bad parameter testing: absent/invalid versificationModel
-  versificationModel: '',
-  skipsUnlikelyOriginals: true,
-}
-
 describe('getCorrespondingRefs', () => {
   
   describe('Bad parameters', () => {
@@ -263,7 +258,7 @@ describe('getCorrespondingRefs', () => {
       assert.deepEqual(correspondingVerseLocations, null)
     })
 
-    it('versificationModel is absent/invalid (original -> fakeVersionOne)', () => {
+    it('versificationModel is absent/invalid (original -> fakeversion)', () => {
       const correspondingVerseLocations = getCorrespondingRefs({
         baseVersion: {
           ref: {
@@ -273,7 +268,10 @@ describe('getCorrespondingRefs', () => {
           },
           info: ugntOriginalInfo,
         },
-        lookupVersionInfo: fakeVersionOneInfo,
+        lookupVersionInfo: {
+          versificationModel: '',
+          skipsUnlikelyOriginals: true,
+        },
       })
 
       assert.deepEqual(correspondingVerseLocations, null)

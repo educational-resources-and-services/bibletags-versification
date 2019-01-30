@@ -49,10 +49,30 @@ const esvInfo = {
   skipsUnlikelyOriginals: true,
 }
 
+const fakeVersionOneInfo = {      //fakeVersion for bad parameter testing: absent/invalid versificationModel
+  versificationModel: '',
+  skipsUnlikelyOriginals: true,
+}
+
 describe('getCorrespondingRefs', () => {
   
-  describe('Bad and "bad" parameters (both truly bad parameters, and those which we just dont know)', () => {
-    //NOTE: functions should return NULL for a true bad parameter (not false). Functions should return FALSE if no corresponding verse.
+  describe('Bad parameters', () => {
+    /*
+      Return null if there is a bad parameter. I.e.: 
+        neither base nor lookup is original language version
+        invalid info
+          versificationModel is absent or not valid
+          partialScope is invalid
+          extraVerseMappings is present but not an object
+          skipsUnlikelyOriginals is present but not a boolean
+        bookId, chapter or verse are not integers
+        bookId or chapter < 1
+        verse is < 0
+        baseVersion has partialScope and bookId is outside that scope (ie. ot must have bookId between 1-39, nt must have bookId between 40-66)
+      Return false if parameters are valid, but there is no corresponding passage in the lookup version
+    */
+        
+
     //TODO: error msgs in place for bad parameters? if not, where should they be?
 
     //bad (null) and high (false) bookIds
@@ -72,7 +92,7 @@ describe('getCorrespondingRefs', () => {
       assert.deepEqual(correspondingVerseLocations, false)
     })
 
-    it('high bookId [book 70] + bad partial scope (original -> SYN)', () => {
+    it('baseVersion has partialScope but bookId is outside of the scope, + high bookId (original -> SYN)', () => {
       const correspondingVerseLocations = getCorrespondingRefs({
         baseVersion: {
           ref: {
@@ -85,7 +105,7 @@ describe('getCorrespondingRefs', () => {
         lookupVersionInfo: synodalInfo,
       })
 
-      assert.deepEqual(correspondingVerseLocations, null) //null instead of false because the bad partalScope parameter is being caught first
+      assert.deepEqual(correspondingVerseLocations, null) //null instead of false because the partalScope parameter is being caught first
     })
 
     it('bad bookId [book Macabees] (ESV -> orig)', () => {
@@ -121,7 +141,7 @@ describe('getCorrespondingRefs', () => {
       assert.deepEqual(correspondingVerseLocations, false)
     })
 
-    it('bad chapter [1Sam 0] (original -> NIV)', () => {
+    it('chapter < 1 [1Sam 0] (original -> NIV)', () => {
       const correspondingVerseLocations = getCorrespondingRefs({
         baseVersion: {
           ref: {
@@ -132,6 +152,22 @@ describe('getCorrespondingRefs', () => {
           info: uhbOriginalInfo,
         },
         lookupVersionInfo: nivInfo,
+      })
+
+      assert.deepEqual(correspondingVerseLocations, null)
+    })
+
+    it('chapter is not an integer (ESV -> original)', () => {
+      const correspondingVerseLocations = getCorrespondingRefs({
+        baseVersion: {
+          ref: {
+            bookId: 28,
+            chapter: 'nine',
+            verse: 2,
+          },
+          info: esvInfo,
+        },
+        lookupVersionInfo: uhbOriginalInfo,
       })
 
       assert.deepEqual(correspondingVerseLocations, null)
@@ -154,7 +190,7 @@ describe('getCorrespondingRefs', () => {
       assert.deepEqual(correspondingVerseLocations, false)
     })
 
-    it('bad verse [Rom 5:-3] (original -> SYN)', () => {
+    it('verse < 0 [Rom 5:-3] (original -> SYN)', () => {
       const correspondingVerseLocations = getCorrespondingRefs({
         baseVersion: {
           ref: {
@@ -165,6 +201,22 @@ describe('getCorrespondingRefs', () => {
           info: ugntOriginalInfo,
         },
         lookupVersionInfo: synodalInfo,
+      })
+
+      assert.deepEqual(correspondingVerseLocations, null)
+    })
+
+    it('verse is not an integer (NIV -> original)', () => {
+      const correspondingVerseLocations = getCorrespondingRefs({
+        baseVersion: {
+          ref: {
+            bookId: 50,
+            chapter: 5,
+            verse: 'five',
+          },
+          info: nivInfo,
+        },
+        lookupVersionInfo: ugntOriginalInfo,
       })
 
       assert.deepEqual(correspondingVerseLocations, null)
@@ -192,6 +244,77 @@ describe('getCorrespondingRefs', () => {
           verse: 1,
         }
       ])
+    })
+
+    //other bad parameters
+    it('neither baseVersion nor LookupVersion is original (KJV -> ESV)', () => {
+      const correspondingVerseLocations = getCorrespondingRefs({
+        baseVersion: {
+          ref: {
+            bookId: 47,
+            chapter: 6,
+            verse: 3,
+          },
+          info: kjvInfo,
+        },
+        lookupVersionInfo: esvInfo,
+      })
+
+      assert.deepEqual(correspondingVerseLocations, null)
+    })
+
+    it('versificationModel is absent/invalid (original -> fakeVersionOne)', () => {
+      const correspondingVerseLocations = getCorrespondingRefs({
+        baseVersion: {
+          ref: {
+            bookId: 47,
+            chapter: 6,
+            verse: 3,
+          },
+          info: ugntOriginalInfo,
+        },
+        lookupVersionInfo: fakeVersionOneInfo,
+      })
+
+      assert.deepEqual(correspondingVerseLocations, null)
+    })
+
+    it('extraVerseMappings is present but not an object (original -> fakeversion', () => {
+      const correspondingVerseLocations = getCorrespondingRefs({
+        baseVersion: {
+          ref: {
+            bookId: 16,
+            chapter: 2,
+            verse: 3,
+          },
+          info: uhbOriginalInfo,
+        },
+        lookupVersionInfo: {
+          versificationModel: 'original',
+          extraVerseMappings: "40017014",
+        },  
+      })
+
+      assert.deepEqual(correspondingVerseLocations, null)
+    })
+
+    it('skipsUnlikelyOriginals is present but not boolean (original -> fakeversion', () => {
+      const correspondingVerseLocations = getCorrespondingRefs({
+        baseVersion: {
+          ref: {
+            bookId: 16,
+            chapter: 2,
+            verse: 3,
+          },
+          info: uhbOriginalInfo,
+        },
+        lookupVersionInfo: {
+          versificationModel: 'original',
+          skipsUnlikelyOriginals: 86,
+        },  
+      })
+      
+      assert.deepEqual(correspondingVerseLocations, null)
     })
 
   })
@@ -237,7 +360,22 @@ describe('getCorrespondingRefs', () => {
   describe('No valid verses in the corresponding version (translation -> original)', () => {
 
     // TODO: do some with partialScope and extraVerseMappings
-    // TODO: write test for Esther 10:4 LXX (not in the original)
+
+    it('Esther 10:4 (LXX -> original)', () => {
+      const correspondingVerseLocations = getCorrespondingRefs({
+        baseVersion: {
+          ref: {
+            bookId: 17,
+            chapter: 10,
+            verse: 4,
+          },
+          info: lxxInfo,
+        },
+        lookupVersionInfo: uhbOriginalInfo,
+      })
+
+      assert.deepEqual(correspondingVerseLocations, false)
+    })
   })
 
   describe('Has a valid verse in the corresponding version (original -> translation)', () => {

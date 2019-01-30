@@ -87,11 +87,11 @@ describe('getCorrespondingRefs', () => {
       assert.deepEqual(correspondingVerseLocations, false)
     })
 
-    it('baseVersion has partialScope but bookId is outside of the scope, + high bookId (original -> SYN)', () => {
+    it('baseVersion has partialScope but bookId is outside of the scope (original -> SYN)', () => {
       const correspondingVerseLocations = getCorrespondingRefs({
         baseVersion: {
           ref: {
-            bookId: 70,
+            bookId: 58,
             chapter: 1,
             verse: 1,
           },
@@ -100,7 +100,7 @@ describe('getCorrespondingRefs', () => {
         lookupVersionInfo: synodalInfo,
       })
 
-      assert.deepEqual(correspondingVerseLocations, null) //null instead of false because the partalScope parameter is being caught first
+      assert.deepEqual(correspondingVerseLocations, null)
     })
 
     it('bad bookId [book Macabees] (ESV -> orig)', () => {

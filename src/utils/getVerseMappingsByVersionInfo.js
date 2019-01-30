@@ -1,4 +1,4 @@
-import kjvVerseMappings from '../data/kjvVerseMappings'
+import kjvLikeVerseMappings from '../data/kjvLikeVerseMappings'
 import lxxVerseMappings from '../data/lxxVerseMappings'
 import synodalVerseMappings from '../data/synodalVerseMappings'
 
@@ -11,7 +11,7 @@ const VALID_PARTIAL_SCOPE_VALUES = [ null, undefined, 'ot', 'nt' ]
 
 const verseMappings = {
   original: {},
-  kjv: kjvVerseMappings,
+  kjv: kjvLikeVerseMappings,
   lxx: lxxVerseMappings,
   synodal: synodalVerseMappings,
 }
@@ -68,8 +68,7 @@ const getVerseMappingsByVersionInfo = ({ partialScope, versificationModel, skips
     extraVerseMappingsKey = extraVerseMappingsKeys[extraVerseMappingsJSON] = extraVerseMappingsIndex++
   }
 
-  if(!verseMappingsByVersionInfo[versificationModel][extraVerseMappingsKey]) {
-    
+  if(!verseMappingsByVersionInfo[versificationModel][`${extraVerseMappingsKey}-${!!skipsUnlikelyOriginals}`]) {
     // Create object of versification mappings without abbreviations
 
     const overrideMappings = ({ baseMappings, overrideMappings }) => {
@@ -105,7 +104,7 @@ const getVerseMappingsByVersionInfo = ({ partialScope, versificationModel, skips
       return { ...baseMappingsCleaned, ...overrideMappings }
     
     }
-    
+
     // get the unparsed versification mappings
     let originalToTranslation = overrideMappings({
       baseMappings: verseMappings[versificationModel],
@@ -154,8 +153,8 @@ const getVerseMappingsByVersionInfo = ({ partialScope, versificationModel, skips
 
     convertMappingsToMultiLevel(originalToTranslation)
     convertMappingsToMultiLevel(translationToOriginal)
-    
-    verseMappingsByVersionInfo[versificationModel][extraVerseMappingsKey] = {
+
+    verseMappingsByVersionInfo[versificationModel][`${extraVerseMappingsKey}-${!!skipsUnlikelyOriginals}`] = {
       originalToTranslation,
       translationToOriginal,
       createdAt: Date.now(),
@@ -189,7 +188,7 @@ const getVerseMappingsByVersionInfo = ({ partialScope, versificationModel, skips
     }
   }
 
-  return verseMappingsByVersionInfo[versificationModel][extraVerseMappingsKey]
+  return verseMappingsByVersionInfo[versificationModel][`${extraVerseMappingsKey}-${!!skipsUnlikelyOriginals}`]
 }
 
 export default getVerseMappingsByVersionInfo

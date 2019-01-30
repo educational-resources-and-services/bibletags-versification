@@ -1,6 +1,6 @@
 // original mapped to the synodal
 
-// See kjvVerseMappings.js for examples
+// See kjvLikeVerseMappings.js for examples
 
 // I need mappings to skipped verses and otherwise
 

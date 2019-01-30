@@ -1,6 +1,6 @@
 // original mapped to the vulgate
 
-// See kjvVerseMappings.js for examples
+// See kjvLikeVerseMappings.js for examples
 
 // I need mappings to skipped verses and otherwise
 

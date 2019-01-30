@@ -1,6 +1,6 @@
 // original mapped to the lxx
 
-// See kjvVerseMappings.js for examples
+// See kjvLikeVerseMappings.js for examples
 
 /*
 Notes:

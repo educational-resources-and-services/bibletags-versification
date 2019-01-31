@@ -1,12 +1,12 @@
 import assert from 'assert'
-import { isValidVerse } from '../src/versification'
+import { hasCorrespondingVerseInOriginal } from '../src/versification'
 
-describe('isValidVerse', () => {
+describe('hasCorrespondingVerseInOriginal', () => {
   
   describe('Bad parameters', () => {
 
     it('should return null if missing bookId', () => {
-      const isValid = isValidVerse({
+      const isValid = hasCorrespondingVerseInOriginal({
         ref: { chapter: 1, verse: 1 },
         info: { versificationModel: 'original', partialScope: 'ot' },
       })
@@ -14,7 +14,7 @@ describe('isValidVerse', () => {
     })
 
     it('should return null if missing chapter', () => {
-      const isValid = isValidVerse({
+      const isValid = hasCorrespondingVerseInOriginal({
         ref: { bookId: 1, verse: 1 },
         info: { versificationModel: 'original', partialScope: 'ot' },
       })
@@ -22,7 +22,7 @@ describe('isValidVerse', () => {
     })
 
     it('should return null if missing verse', () => {
-      const isValid = isValidVerse({
+      const isValid = hasCorrespondingVerseInOriginal({
         ref: { bookId: 1, chapter: 1 },
         info: { versificationModel: 'original', partialScope: 'ot' },
       })
@@ -30,14 +30,14 @@ describe('isValidVerse', () => {
     })
 
     it('should return null if missing versionInfo', () => {
-      const isValid = isValidVerse({
+      const isValid = hasCorrespondingVerseInOriginal({
         ref: { bookId: 1, chapter: 1, verse: 1 },
       })
       assert.equal(isValid, null)
     })
 
     it('should return null if missing versionInfo.versificationModel', () => {
-      const isValid = isValidVerse({
+      const isValid = hasCorrespondingVerseInOriginal({
         ref: { bookId: 1, chapter: 1, verse: 1},
         info: {},
       })
@@ -45,7 +45,7 @@ describe('isValidVerse', () => {
     })
 
     it('should return null if there is a non-integer parameters', () => {
-      const isValid = isValidVerse({
+      const isValid = hasCorrespondingVerseInOriginal({
         ref: { bookId: 1, chapter: 1, verse: 'A'},
         info: { versificationModel: 'original', partialScope: 'ot' },
       })
@@ -59,7 +59,7 @@ describe('isValidVerse', () => {
     // TODO: fill out, particularly passages which are invalid in a translation, but not the original
 
     it('Genesis 51:1', () => {
-      const isValid = isValidVerse({
+      const isValid = hasCorrespondingVerseInOriginal({
         ref: { bookId: 1, chapter: 51, verse: 1},
         info: { versificationModel: 'original', partialScope: 'ot' },
       })
@@ -67,7 +67,7 @@ describe('isValidVerse', () => {
     })
 
     it('Malachi 4:1 (valid in KJV, but not original)', () => {
-      const isValid = isValidVerse({
+      const isValid = hasCorrespondingVerseInOriginal({
         ref: { bookId: 39, chapter: 4, verse: 1},
         info: { versificationModel: 'original', partialScope: 'ot' },
       })
@@ -75,7 +75,7 @@ describe('isValidVerse', () => {
     })
 
     it('Matthew 31:1', () => {
-      const isValid = isValidVerse({
+      const isValid = hasCorrespondingVerseInOriginal({
         ref: { bookId: 40, chapter: 31, verse: 1},
         info: { versificationModel: 'original', partialScope: 'nt' },
       })
@@ -83,7 +83,7 @@ describe('isValidVerse', () => {
     })
 
     it('Revelation 20:16', () => {
-      const isValid = isValidVerse({
+      const isValid = hasCorrespondingVerseInOriginal({
         ref: { bookId: 66, chapter: 20, verse: 16},
         info: { versificationModel: 'original', partialScope: 'nt' },
       })
@@ -97,7 +97,7 @@ describe('isValidVerse', () => {
     // TODO: fill out, particularly passages which are valid in a translation, but not the original
 
     it('Genesis 1:1', () => {
-      const isValid = isValidVerse({
+      const isValid = hasCorrespondingVerseInOriginal({
         ref: { bookId: 1, chapter: 1, verse: 1 },
         info: { versificationModel: 'original', partialScope: 'ot' },
       })
@@ -105,7 +105,7 @@ describe('isValidVerse', () => {
     })
 
     it('Malachi 3:24 (valid in original, but not KJV)', () => {
-      const isValid = isValidVerse({
+      const isValid = hasCorrespondingVerseInOriginal({
         ref: { bookId: 39, chapter: 3, verse: 24},
         info: { versificationModel: 'original', partialScope: 'ot' },
       })
@@ -113,7 +113,7 @@ describe('isValidVerse', () => {
     })
 
     it('Matthew 17:21 (valid in original, but not KJV)', () => {
-      const isValid = isValidVerse({
+      const isValid = hasCorrespondingVerseInOriginal({
         ref: { bookId: 40, chapter: 17, verse: 21},
         info: { versificationModel: 'original', partialScope: 'nt' },
       })
@@ -121,7 +121,7 @@ describe('isValidVerse', () => {
     })
 
     it('Revelation 21:1', () => {
-      const isValid = isValidVerse({
+      const isValid = hasCorrespondingVerseInOriginal({
         ref: { bookId: 66, chapter: 21, verse: 1},
         info: { versificationModel: 'original', partialScope: 'nt' },
       })

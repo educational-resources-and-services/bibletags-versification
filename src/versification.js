@@ -177,8 +177,8 @@ export const getCorrespondingRefs = ({ baseVersion={}, lookupVersionInfo={} }) =
   return lookupLocs.map(lookupVersionLoc => getRefFromLoc(lookupVersionLoc))
 }
 
-export const isValidVerse = version => {
-  // Returns `true` or `false`, or null if passed an invalid parameter.
+export const hasCorrespondingVerseInOriginal = version => {
+  // Returns `true` or `false`, or null if passed an invalid parameter. Assumes version parameter to represent a valid passage.
 
   // Note: When a translation has a verse that is not in the original Hebrew, Aramaic or
   // Greek (translated, perhaps, from the LXX, apocryphal book or chapter, etc), it 

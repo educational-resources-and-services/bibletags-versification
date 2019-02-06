@@ -129,14 +129,14 @@ const getVerseMappingsByVersionInfo = ({ partialScope, versificationModel, skips
         delete originalToTranslation[key]
       }
     }
-    
+
     // switch it around, ignoring nulls
     const translationToOriginal = {}
     for(let key in originalToTranslation) {
       if(originalToTranslation[key] === null) continue
       translationToOriginal[originalToTranslation[key]] = key
     }
-    
+
     // make multi-level so that all keys are simple locs
     const convertMappingsToMultiLevel = mappings => {
       for(let key in mappings) {

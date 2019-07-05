@@ -1,4 +1,5 @@
 import numberOfVersesPerChapterPerBook from './data/numberOfVersesPerChapterPerBook'
+import hebrewOrderingOfBookIds from './data/hebrewOrderingOfBookIds'
 import getVerseMappingsByVersionInfo from './utils/getVerseMappingsByVersionInfo'
 import { getLocFromRef, getRefFromLoc, padLocWithLeadingZero } from './utils/locFunctions'
 
@@ -226,6 +227,25 @@ export const getNumberOfChapters = ({ versionInfo, bookId }) => {
   }
 
   return correspondingRefs ? correspondingRefs.pop().chapter : null
+}
+
+export const getBookIdListWithCorrectOrdering = ({ versionInfo: { versificationModel, partialScope } }) => {
+
+  const books = (
+    versificationModel === 'original'
+      ? hebrewOrderingOfBookIds
+      : Array(66).fill(0).map((x, idx) => idx+1)
+  )
+
+  if(partialScope === 'ot') {
+    books.splice(39, 27)
+  }
+
+  if(partialScope === 'nt') {
+    books.splice(0, 39)
+  }
+
+  return books
 }
 
 export { getLocFromRef, getRefFromLoc, padLocWithLeadingZero }

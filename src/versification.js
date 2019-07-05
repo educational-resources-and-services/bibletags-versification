@@ -197,4 +197,35 @@ export const hasCorrespondingVerseInOriginal = version => {
   return correspondingRefs ? true : correspondingRefs
 }
 
+export const getNumberOfChapters = ({ versionInfo, bookId }) => {
+
+  const numberOfVersesPerChapter = numberOfVersesPerChapterPerBook[bookId-1]
+
+  if(!numberOfVersesPerChapter) return null
+
+  const chapter = numberOfVersesPerChapter.length
+  let verse = numberOfVersesPerChapter[chapter-1]
+  let correspondingRefs
+
+  while(!correspondingRefs && verse > 0) {
+    correspondingRefs = getCorrespondingRefs({
+      baseVersion: {
+        info: {
+          versificationModel: 'original',
+          partialScope: bookId <=39 ? 'ot' : 'nt',
+        },
+        ref: {
+          bookId,
+          chapter,
+          verse,
+        }
+      },
+      lookupVersionInfo: versionInfo,
+    })
+    verse--
+  }
+
+  return correspondingRefs ? correspondingRefs.pop().chapter : null
+}
+
 export { getLocFromRef, getRefFromLoc, padLocWithLeadingZero }

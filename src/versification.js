@@ -233,7 +233,10 @@ export const getBookIdListWithCorrectOrdering = ({ versionInfo: { versificationM
 
   const books = (
     versificationModel === 'original'
-      ? hebrewOrderingOfBookIds
+      ? [
+        ...hebrewOrderingOfBookIds,
+        ...Array(27).fill(0).map((x, idx) => idx+40),
+      ]
       : Array(66).fill(0).map((x, idx) => idx+1)
   )
 

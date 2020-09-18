@@ -12,7 +12,7 @@ export const isValidRefInOriginal = ({ bookId, chapter, verse }) => (
 
 export const getCorrespondingRefs = ({ baseVersion={}, lookupVersionInfo={} }) => {
   // Returns one of the following:
-    // an array of `version` objects with keys `bookId`, `chapter`, `verse` and possibly `wordRanges`
+    // an array of `ref` objects with keys `bookId`, `chapter`, `verse` and possibly `wordRanges`
     // `false` if there is not a valid verse in the corresponding version
     // `null` if invalid parameters were passed
 
@@ -54,8 +54,7 @@ export const getCorrespondingRefs = ({ baseVersion={}, lookupVersionInfo={} }) =
   }
 
   const isOriginal = info => !!(
-    ['ot', 'nt'].includes(info.partialScope)
-    && info.versificationModel === 'original'
+    info.versificationModel === 'original'
     && !info.skipsUnlikelyOriginals
     && !info.extraVerseMappings
   )
@@ -191,7 +190,6 @@ export const hasCorrespondingVerseInOriginal = version => {
     baseVersion: version,
     lookupVersionInfo: {
       versificationModel: 'original',
-      partialScope: version.ref.bookId <=39 ? 'ot' : 'nt',
     },
   })
 
@@ -213,7 +211,6 @@ export const getNumberOfChapters = ({ versionInfo, bookId }) => {
       baseVersion: {
         info: {
           versificationModel: 'original',
-          partialScope: bookId <=39 ? 'ot' : 'nt',
         },
         ref: {
           bookId,

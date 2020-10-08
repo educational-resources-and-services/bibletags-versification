@@ -9,6 +9,7 @@
     "url": "git+https://github.com/educational-resources-and-services/bibletags-versification.git"
   },
   "main": "builds/index.js",
+  "type": "module",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/educational-resources-and-services/bibletags-versification/issues"

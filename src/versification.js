@@ -206,6 +206,10 @@ export const getNumberOfChapters = ({ versionInfo, bookId }) => {
   let verse = numberOfVersesPerChapter[chapter-1]
   let correspondingRefs
 
+  // This approach is wrong as it assumes the last verse in a book in one version is the last verse in that book in another.
+  // But, SYNO has the last verses in Romans two chapters back! (As a result, the SYNO is now showing only 14 chapters for Romans in the apps.)
+  // So I should run a check on verse 1 of the last chapter of the book as well and take the greater of the two.
+
   while(!correspondingRefs && verse > 0) {
     correspondingRefs = getCorrespondingRefs({
       baseVersion: {

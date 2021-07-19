@@ -13,7 +13,7 @@ Versification is also complicated by the fact that some versions occasionally de
 - `isValidRefInOriginal({ bookId, chapter, verse }): Boolean`
 - `getCorrespondingRefs({ baseVersion, lookupVersionInfo }): [ { bookId: Int, chapter: Int, verse: Int} ]`
 - `getNumberOfChapters({ versionInfo, bookId }): Boolean or null`
-- `getBookIdListWithCorrectOrdering({ versionInfo: { versificationModel, partialScope } }): [ Int ]`
+- `getBookIdListWithCorrectOrdering({ versionInfo: { hebrewOrdering, partialScope } }): [ Int ]`
 - `getLocFromRef({ bookId, chapter, verse, wordRanges }): String`
 - `getRefFromLoc(loc): Object`
 - `padLocWithLeadingZero(loc): String`

@@ -230,10 +230,10 @@ export const getNumberOfChapters = ({ versionInfo, bookId }) => {
   return correspondingRefs ? correspondingRefs.pop().chapter : null
 }
 
-export const getBookIdListWithCorrectOrdering = ({ versionInfo: { versificationModel, partialScope } }) => {
+export const getBookIdListWithCorrectOrdering = ({ versionInfo: { hebrewOrdering, partialScope } }) => {
 
   const books = (
-    versificationModel === 'original'
+    hebrewOrdering
       ? [
         ...hebrewOrderingOfBookIds,
         ...Array(27).fill(0).map((x, idx) => idx+40),

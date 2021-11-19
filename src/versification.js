@@ -10,6 +10,15 @@ export const isValidRefInOriginal = ({ bookId, chapter, verse }) => (
   bookId >= 1 && bookId <= 66 && verse >= 1 && verse <= numberOfVersesPerChapterPerBook[bookId-1][chapter-1]
 )
 
+export const hasValidRefInOriginal = version => (
+  !!getCorrespondingRefs({
+    baseVersion: version,
+    lookupVersionInfo: {
+      versificationModel: 'original',
+    },
+  })
+)
+
 export const getCorrespondingRefs = ({ baseVersion={}, lookupVersionInfo={} }) => {
   // Returns one of the following:
     // an array of `ref` objects with keys `bookId`, `chapter`, `verse` and possibly `wordRanges`
@@ -97,6 +106,24 @@ export const getCorrespondingRefs = ({ baseVersion={}, lookupVersionInfo={} }) =
     if(!isValidRefInOriginal(getRefFromLoc(baseLoc))) {
       // this verse does not have a valid corresponding verse in the original version
       return false
+    }
+
+    if(!fromOriginal) {
+      // Need to discern lookup locs that go nowhere because orig of that loc was mapped elsewhere
+      const refs = getCorrespondingRefs({
+        baseVersion: {
+          info: lookupVersionInfo,
+          ref: baseVersionRefWithoutWordRanges,
+        },
+        lookupVersionInfo: baseVersion.info,
+      })
+      if(
+        refs.length !== 1
+        || refs[0].chapter !== baseVersionRefWithoutWordRanges.chapter
+        || refs[0].verse !== baseVersionRefWithoutWordRanges.verse
+      ) {
+        return false
+      }
     }
 
     // baseVersion and original have the same versification for this verse
@@ -206,28 +233,142 @@ export const getNumberOfChapters = ({ versionInfo, bookId }) => {
   let verse = numberOfVersesPerChapter[chapter-1]
   let correspondingRefs
 
-  // This approach is wrong as it assumes the last verse in a book in one version is the last verse in that book in another.
-  // But, SYNO has the last verses in Romans two chapters back! (As a result, the SYNO is now showing only 14 chapters for Romans in the apps.)
-  // So I should run a check on verse 1 of the last chapter of the book as well and take the greater of the two.
-
-  while(!correspondingRefs && verse > 0) {
-    correspondingRefs = getCorrespondingRefs({
+  const goGetCorrespondingRefs = chapterAndVerse => (
+    getCorrespondingRefs({
       baseVersion: {
         info: {
           versificationModel: 'original',
         },
         ref: {
           bookId,
-          chapter,
-          verse,
+          ...chapterAndVerse,
         }
       },
       lookupVersionInfo: versionInfo,
     })
+  )
+
+  const getLastChapterFromRefs = refs => ((refs || []).pop() || {}).chapter || 0
+
+  while(!correspondingRefs && verse > 0) {
+    correspondingRefs = goGetCorrespondingRefs({
+      chapter,
+      verse,
+    })
     verse--
   }
 
-  return correspondingRefs ? correspondingRefs.pop().chapter : null
+  // The above may be wrong as it assumes the last verse in a book in one version is the last verse in that book in another.
+  // But, SYNO has the last verses in Romans two chapters back! (As a result, the above would only show 14 chapters for Romans in SYNO.)
+  // Hence I run a check on verse 1 of the last chapter of the book as well below, and take the greater of the two.
+
+  const numChapters = Math.max(
+    getLastChapterFromRefs(correspondingRefs),
+    getLastChapterFromRefs(
+      goGetCorrespondingRefs({
+        chapter,
+        verse: 1,
+      })
+    ),
+  )
+
+  return numChapters || null
+}
+
+export const getStartAndEndVersesByChapter = ({ versionInfo, bookId }) => {
+
+  const numberOfVersesPerChapter = numberOfVersesPerChapterPerBook[bookId-1]
+  let startAndEndVersesByChapter = []
+
+  if(
+    !numberOfVersesPerChapter
+    || (versionInfo.partialScope === 'ot' && bookId >= 40)
+    || (versionInfo.partialScope === 'nt' && bookId <= 39)
+  ) {
+    // this version does not have this testament of the Bible
+    return {
+      startAndEndVersesByChapter: [],
+      skippedVerses: [],
+    }
+  }
+
+  // for each chapter in the original
+  numberOfVersesPerChapter.forEach((numVersesInOrig, idx) => {
+
+    const isValidVerse = verse => (
+      hasValidRefInOriginal({
+        info: versionInfo,
+        ref: {
+          bookId,
+          chapter: idx + 1,
+          verse,
+        },
+      })
+    )
+
+    // find the first valid verse in the chapter
+    const BEYOND_MAX_VERSE_NUM = 200
+    let firstVerseInChapter = 0
+    while(
+      firstVerseInChapter < BEYOND_MAX_VERSE_NUM
+      && !isValidVerse(firstVerseInChapter)
+    ) firstVerseInChapter++
+
+    // now find the last valid verse in the chapter
+    let lastVerseInChapter = numVersesInOrig
+
+    // start with the last in the original and reduce until we have a valid verse
+    while(
+      lastVerseInChapter > 0
+      && !isValidVerse(lastVerseInChapter)
+    ) lastVerseInChapter--
+
+    // now go forward until there is an invalid verse
+    while(isValidVerse(lastVerseInChapter)) {
+      lastVerseInChapter++
+    }
+
+    // finally, back one to the last valid verse
+    lastVerseInChapter--
+
+    // mark this the number of verses in this chapter
+    startAndEndVersesByChapter[idx] = (
+      (
+        firstVerseInChapter !== BEYOND_MAX_VERSE_NUM
+        && lastVerseInChapter
+      )
+        ? [
+          firstVerseInChapter,
+          lastVerseInChapter,
+        ]
+        : null
+    )
+  })
+
+  // remove null chapters at the end
+  let hitChapterWithVerses = false
+  startAndEndVersesByChapter = startAndEndVersesByChapter
+    .reverse()
+    .filter(startAndEndVerses => {
+      if(startAndEndVerses) {
+        hitChapterWithVerses = true
+        return true
+      }
+      return hitChapterWithVerses
+    })
+    .reverse()
+
+  // find skipped verses in each chapter of this book
+  const verseMappingsByVersionInfo = getVerseMappingsByVersionInfo(versionInfo)
+  const skippedLocs = Object.keys(verseMappingsByVersionInfo.originalToTranslation).filter(loc => (
+    parseInt(loc.substr(0,2), 10) === bookId
+    && verseMappingsByVersionInfo.originalToTranslation[loc] === null
+  ))
+
+  return {
+    startAndEndVersesByChapter,
+    skippedLocs,
+  }
 }
 
 export const getBookIdListWithCorrectOrdering = ({ versionInfo: { hebrewOrdering, partialScope } }) => {

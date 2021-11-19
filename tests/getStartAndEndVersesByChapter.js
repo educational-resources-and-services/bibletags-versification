@@ -74,7 +74,6 @@ describe('getStartAndEndVersesByChapter', () => {
         versionInfo: { versificationModel: 'kjv' },
         bookId: 29,
       })
-
       assert.deepEqual(
         startAndEndVerses,
         {

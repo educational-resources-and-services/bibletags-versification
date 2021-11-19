@@ -307,7 +307,7 @@ export const getStartAndEndVersesByChapter = ({ versionInfo, bookId }) => {
     )
 
     // find the first valid verse in the chapter
-    const BEYOND_MAX_VERSE_NUM = 200
+    const BEYOND_MAX_VERSE_NUM = 140
     let firstVerseInChapter = 0
     while(
       firstVerseInChapter < BEYOND_MAX_VERSE_NUM

@@ -1,17 +1,17 @@
 import assert from 'assert'
-import { getAllLocsInOriginalRefRange } from '../src/versification'
+import { getOriginalLocsFromRange } from '../src/versification'
 
-describe('getAllLocsInOriginalRefRange', () => {
+describe('getOriginalLocsFromRange', () => {
   
   describe('Bad parameters', () => {
 
     it('should return empty arrary if two different books', () => {
-      const locs = getAllLocsInOriginalRefRange({ bookId: 3, chapter: 1, verse: 1 }, { bookId: 2, chapter: 1, verse: 5 })
+      const locs = getOriginalLocsFromRange(`03001001`, `02001005`)
       assert.deepEqual(locs, [])
     })
 
     it('should return empty arrary if not in order', () => {
-      const locs = getAllLocsInOriginalRefRange({ bookId: 2, chapter: 2, verse: 1 }, { bookId: 2, chapter: 1, verse: 1 })
+      const locs = getOriginalLocsFromRange(`02002001`, `02001001`)
       assert.deepEqual(locs, [])
     })
 
@@ -20,7 +20,7 @@ describe('getAllLocsInOriginalRefRange', () => {
   describe('Valid passages', () => {
 
     it('Genesis 1:1-5', () => {
-      const locs = getAllLocsInOriginalRefRange({ bookId: 1, chapter: 1, verse: 1 }, { bookId: 1, chapter: 1, verse: 5 })
+      const locs = getOriginalLocsFromRange(`01001001`, `01001005`)
       assert.deepEqual(locs, [
         `01001001`,
         `01001002`,
@@ -31,7 +31,7 @@ describe('getAllLocsInOriginalRefRange', () => {
     })
 
     it('Genesis 1:31-3:3 (multiple chapters)', () => {
-      const locs = getAllLocsInOriginalRefRange({ bookId: 1, chapter: 1, verse: 31 }, { bookId: 1, chapter: 3, verse: 3 })
+      const locs = getOriginalLocsFromRange(`01001031`, `01003003`)
       assert.deepEqual(locs, [
         `01001031`,
         `01002001`,
@@ -66,14 +66,14 @@ describe('getAllLocsInOriginalRefRange', () => {
     })
 
     it('Genesis 1:1 (single verse)', () => {
-      const locs = getAllLocsInOriginalRefRange({ bookId: 1, chapter: 1, verse: 1 }, { bookId: 1, chapter: 1, verse: 1 })
+      const locs = getOriginalLocsFromRange(`01001001`, `01001001`)
       assert.deepEqual(locs, [
         `01001001`,
       ])
     })
 
     it('Genesis 1:1b-3 (partial start verse)', () => {
-      const locs = getAllLocsInOriginalRefRange({ bookId: 1, chapter: 1, verse: 1, wordRanges: [ `4-6` ] }, { bookId: 1, chapter: 1, verse: 3 })
+      const locs = getOriginalLocsFromRange(`01001001:4-6`, `01001003`)
       assert.deepEqual(locs, [
         `01001001:4-6`,
         `01001002`,

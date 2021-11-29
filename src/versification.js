@@ -10,7 +10,10 @@ export const isValidRefInOriginal = ({ bookId, chapter, verse }) => (
   bookId >= 1 && bookId <= 66 && verse >= 1 && verse <= numberOfVersesPerChapterPerBook[bookId-1][chapter-1]
 )
 
-export const getAllLocsInOriginalRefRange = (fromRef, toRef) => {
+export const getOriginalLocsFromRange = (fromLoc, toLoc) => {
+
+  const fromRef = getRefFromLoc(fromLoc)
+  const toRef = getRefFromLoc(toLoc)
 
   const refLessThanOrEqualTo = (ref1, ref2) => (
     isValidRefInOriginal(ref1)
@@ -27,7 +30,7 @@ export const getAllLocsInOriginalRefRange = (fromRef, toRef) => {
 
   if(!refLessThanOrEqualTo(fromRef, toRef)) return []
 
-  const locs = [ getLocFromRef(fromRef) ]
+  const locs = [ fromLoc ]
   let { bookId, chapter, verse } = fromRef
   verse++
 
@@ -43,7 +46,7 @@ export const getAllLocsInOriginalRefRange = (fromRef, toRef) => {
 
   } while(chapter <= toRef.chapter)
 
-  locs.splice(locs.length - 1, 1, getLocFromRef(toRef))
+  locs.splice(locs.length - 1, 1, toLoc)
 
   return locs
 }

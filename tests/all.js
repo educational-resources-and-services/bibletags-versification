@@ -3,6 +3,7 @@ import assert from 'assert'
 describe('Versification', () => {
 
   require('./isValidRefInOriginal.js')
+  require('./getPreviousNextOriginalLoc.js')
   require('./getOriginalLocsFromRange.js')
   require('./hasCorrespondingVerseInOriginal.js')
   require('./getCorrespondingRefs.js')

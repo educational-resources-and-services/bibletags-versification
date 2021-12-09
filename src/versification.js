@@ -10,6 +10,36 @@ export const isValidRefInOriginal = ({ bookId, chapter, verse }) => (
   bookId >= 1 && bookId <= 66 && verse >= 1 && verse <= numberOfVersesPerChapterPerBook[bookId-1][chapter-1]
 )
 
+export const getPreviousOriginalLoc = loc => {
+  let { bookId, chapter, verse } = getRefFromLoc(loc)
+
+  if(verse > 1) {
+    verse--
+  } else if(chapter > 1) {
+    chapter--
+    verse = numberOfVersesPerChapterPerBook[bookId-1][chapter-1]
+  } else {
+    return null
+  }
+  
+  return getLocFromRef({ bookId, chapter, verse })
+}
+
+export const getNextOriginalLoc = loc => {
+  let { bookId, chapter, verse } = getRefFromLoc(loc)
+
+  if(verse < numberOfVersesPerChapterPerBook[bookId-1][chapter-1]) {
+    verse++
+  } else if(chapter < numberOfVersesPerChapterPerBook[bookId-1].length) {
+    chapter++
+    verse = 1
+  } else {
+    return null
+  }
+  
+  return getLocFromRef({ bookId, chapter, verse })
+}
+
 export const getOriginalLocsFromRange = (fromLoc, toLoc) => {
 
   const fromRef = getRefFromLoc(fromLoc)

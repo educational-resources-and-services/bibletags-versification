@@ -60,7 +60,7 @@ export const getOriginalLocsFromRange = (fromLoc, toLoc) => {
 
   if(!refLessThanOrEqualTo(fromRef, toRef)) return []
 
-  const locs = [ fromLoc ]
+  const locs = [ fromLoc.replace(/-.*$/, '-') ]
   let { bookId, chapter, verse } = fromRef
   verse++
 
@@ -76,7 +76,7 @@ export const getOriginalLocsFromRange = (fromLoc, toLoc) => {
 
   } while(chapter <= toRef.chapter)
 
-  locs.splice(locs.length - 1, 1, toLoc)
+  locs.splice(locs.length - 1, 1, toLoc.replace(/:.*-$/, '').replace(/:.*([0-9]+)$/, ':1-$1'))
 
   return locs
 }

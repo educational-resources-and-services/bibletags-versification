@@ -73,11 +73,11 @@ describe('getOriginalLocsFromRange', () => {
     })
 
     it('Genesis 1:1b-3 (partial start verse)', () => {
-      const locs = getOriginalLocsFromRange(`01001001:4-6`, `01001003`)
+      const locs = getOriginalLocsFromRange(`01001001:4-6`, `01001003:7-9`)
       assert.deepEqual(locs, [
-        `01001001:4-6`,
+        `01001001:4-`,
         `01001002`,
-        `01001003`,
+        `01001003:1-9`,
       ])
     })
 

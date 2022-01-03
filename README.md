@@ -32,18 +32,54 @@ Versification is also complicated by the fact that some versions occasionally de
 
 ### Functions exposed
 
-- `isValidRefInOriginal({ bookId, chapter, verse }): Boolean`
-- `getPreviousOriginalLoc(loc): String`
-- `getNextOriginalLoc(loc): String`
-- `getOriginalLocsFromRange(fromLoc, toLoc): [ String ]`
-- `getCorrespondingRefs({ baseVersion, lookupVersionInfo }): [ { bookId: Int, chapter: Int, verse: Int} ]`
-- `hasCorrespondingVerseInOriginal(version): Boolean`
-- `getNumberOfChapters({ versionInfo, bookId }): Boolean or null`
-- `getStartAndEndVersesByChapter({ versionInfo, bookId }): [ Int, Int ] or null`
-- `getBookIdListWithCorrectOrdering({ versionInfo: { hebrewOrdering, partialScope } }): [ Int ]`
-- `getLocFromRef({ bookId, chapter, verse, wordRanges }): String`
-- `getRefFromLoc(loc): Object`
-- `padLocWithLeadingZero(loc): String`
+```js
+isValidRefInOriginal({ bookId, chapter, verse }): Boolean
+```
+
+```js
+getPreviousOriginalLoc(loc): String
+```
+
+```js
+getNextOriginalLoc(loc): String
+```
+
+```js
+getOriginalLocsFromRange(fromLoc, toLoc): [ String ]
+```
+
+```js
+getCorrespondingRefs({ baseVersion, lookupVersionInfo }): [ { bookId: Int, chapter: Int, verse: Int} ]
+```
+
+```js
+hasCorrespondingVerseInOriginal(version): Boolean
+```
+
+```js
+getNumberOfChapters({ versionInfo, bookId }): Boolean or null
+```
+
+```js
+getStartAndEndVersesByChapter({ versionInfo, bookId }): [ Int, Int ] or null
+```
+
+```js
+getBookIdListWithCorrectOrdering({ versionInfo: { hebrewOrdering, partialScope } }): [ Int ]
+```
+
+```js
+getLocFromRef({ bookId, chapter, verse, wordRanges }): String
+```
+
+```js
+getRefFromLoc(loc): Object
+```
+
+```js
+padLocWithLeadingZero(loc): String
+```
+
 
 #### Example locs and refs
 

@@ -81,15 +81,6 @@ export const getOriginalLocsFromRange = (fromLoc, toLoc) => {
   return locs
 }
 
-export const hasValidRefInOriginal = version => (
-  !!getCorrespondingRefs({
-    baseVersion: version,
-    lookupVersionInfo: {
-      versificationModel: 'original',
-    },
-  })
-)
-
 export const getCorrespondingRefs = ({ baseVersion={}, lookupVersionInfo={} }) => {
   // Returns one of the following:
     // an array of `ref` objects with keys `bookId`, `chapter`, `verse` and possibly `wordRanges`
@@ -367,7 +358,7 @@ export const getStartAndEndVersesByChapter = ({ versionInfo, bookId }) => {
   numberOfVersesPerChapter.forEach((numVersesInOrig, idx) => {
 
     const isValidVerse = verse => (
-      hasValidRefInOriginal({
+      hasCorrespondingVerseInOriginal({
         info: versionInfo,
         ref: {
           bookId,

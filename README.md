@@ -1,6 +1,28 @@
 # Bible Tags
 
-See [bibletags-widget](https://github.com/educational-resources-and-services/bibletags-widget) for information on this and related repositories.
+## About
+
+*Original language Bible study for everyone, in every language.*
+
+Vision: That every Christian might have free access to the Bible tagged to the original Hebrew, Aramaic and Greek with parsing and lexical information—all in their own language.
+
+For more information on this project, see the [Bible Tags website](https://bibletags.org).
+
+## Repos
+
+* [bibletags-data](https://github.com/educational-resources-and-services/bibletags-data) **(Contains general information on project design, installation, and contributing.)**
+* [bibletags-react-native-app](https://github.com/educational-resources-and-services/bibletags-react-native-app)
+* [bibletags-ui-helper](https://github.com/educational-resources-and-services/bibletags-ui-helper)
+* [bibletags-versification](https://github.com/educational-resources-and-services/bibletags-versification)
+* [bibletags-widget](https://github.com/educational-resources-and-services/bibletags-widget)
+* [bibletags-widget-script](https://github.com/educational-resources-and-services/bibletags-widget-script)
+
+## Bugs
+
+* Use the appropriate repository's `Issues`. Please first check if your bug report / feature request already exists before submitting a new issue.
+* For bug reports, please provide a clear description of the problem and step-by-step explanation of how to reproduce it.
+
+# bibletags-versification
 
 ## Concept and approach
 
@@ -11,8 +33,13 @@ Versification is also complicated by the fact that some versions occasionally de
 ### Functions exposed
 
 - `isValidRefInOriginal({ bookId, chapter, verse }): Boolean`
+- `getPreviousOriginalLoc(loc): String`
+- `getNextOriginalLoc(loc): String`
+- `getOriginalLocsFromRange(fromLoc, toLoc): [ String ]`
 - `getCorrespondingRefs({ baseVersion, lookupVersionInfo }): [ { bookId: Int, chapter: Int, verse: Int} ]`
+- `hasCorrespondingVerseInOriginal(version): Boolean`
 - `getNumberOfChapters({ versionInfo, bookId }): Boolean or null`
+- `getStartAndEndVersesByChapter({ versionInfo, bookId }): [ Int, Int ] or null`
 - `getBookIdListWithCorrectOrdering({ versionInfo: { hebrewOrdering, partialScope } }): [ Int ]`
 - `getLocFromRef({ bookId, chapter, verse, wordRanges }): String`
 - `getRefFromLoc(loc): Object`
@@ -52,7 +79,5 @@ Versification is also complicated by the fact that some versions occasionally de
     wordRanges: ["1-3","7-9"],
   }
 ```
-
-For more information on this project, see the [Bible Tags website](https://bibletags.org).
 
 [UnfoldingWord's Versification data](https://github.com/unfoldingWord-dev/uw-api) used in part to develop versification mappings and tests. (See the `imports` directory.)

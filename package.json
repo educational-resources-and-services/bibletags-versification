@@ -1,5 +1,5 @@
 {
-  "name": "bibletags-versification",
+  "name": "@bibletags/bibletags-versification",
   "version": "0.1.0",
   "scripts": {
     "test": "webpack --config webpack.test.config.js && mocha 'builds/tests.js' && webpack"
@@ -11,9 +11,14 @@
   "main": "builds/index.js",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/educational-resources-and-services/bibletags-versification/issues"
+    "url": "https://github.com/educational-resources-and-services/bibletags-data/issues"
   },
   "homepage": "https://bibletags.org",
+  "author": "Andy Hubert",
+  "funding": {
+    "type" : "individual",
+    "url" : "https://gofundme.com/f/yarn4-bible-tags"
+  },
   "devDependencies": {
     "@babel/core": "7.1.2",
     "@babel/plugin-proposal-object-rest-spread": "7.0.0",

@@ -10,7 +10,7 @@ For more information on this project, see the [Bible Tags website](https://bible
 
 ## Repos
 
-* [bibletags-data](https://github.com/educational-resources-and-services/bibletags-data) **(Contains general information on project design, installation, and contributing.)**
+* [bibletags-data](https://github.com/educational-resources-and-services/bibletags-data) **(Contains general information on project design and contributing.)**
 * [bibletags-react-native-app](https://github.com/educational-resources-and-services/bibletags-react-native-app)
 * [bibletags-ui-helper](https://github.com/educational-resources-and-services/bibletags-ui-helper)
 * [bibletags-versification](https://github.com/educational-resources-and-services/bibletags-versification)
@@ -19,7 +19,8 @@ For more information on this project, see the [Bible Tags website](https://bible
 
 ## Bugs
 
-* Use the appropriate repository's `Issues`. Please first check if your bug report / feature request already exists before submitting a new issue.
+* See [here](https://github.com/educational-resources-and-services/bibletags-ui-data/issues).
+* Please first check if your bug report / feature request already exists before submitting a new issue.
 * For bug reports, please provide a clear description of the problem and step-by-step explanation of how to reproduce it.
 
 # bibletags-versification
@@ -30,7 +31,21 @@ To line up verses between versions correctly, we will need to have versification
 
 Versification is also complicated by the fact that some versions occasionally deliniate by verse range instead of individual verses. For example, John 10:22-23 are presented together in the Living Bible (TLB). In such cases, such verse ranges should be treated as the initial verse alone (i.e. John 10:22 in our example), but be mapped to the entire verse range in the original language. This approach assumes verse ranges to be exceptional. Versions containing many verse ranges (eg. The Message), on the other hand, are uncondussive to the Bible Tags project, being paraphrases more than translations.
 
-### Functions exposed
+## Installation
+
+```bash
+git clone https://github.com/educational-resources-and-services/bibletags-versification
+cd bibletags-versification
+npm install
+```
+
+#### Testing
+
+```js
+npm run test
+```
+
+## Functions exposed
 
 ```js
 isValidRefInOriginal({ bookId, chapter, verse }): Boolean

@@ -34,6 +34,24 @@ Versification is also complicated by the fact that some versions occasionally de
 
 Finally, this library allows for partial verse mapping as well.
 
+## Usage
+
+```bash
+npm i @bibletags/bibletags-versification
+```
+
+##### ES6
+
+```js
+import { ... } from '@bibletags/bibletags-versification'
+```
+
+##### NodeJS
+
+```js
+const { ... } = require('@bibletags/bibletags-versification/node_build')
+```
+
 ## Development
 
 ### Installation

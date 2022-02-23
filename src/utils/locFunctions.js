@@ -43,7 +43,9 @@ export const getLocFromRef = ({ bookId, chapter, verse, wordRanges }) => (
 export const getRefFromLoc = loc => ({
   bookId: parseInt(loc.substr(0,2), 10),
   chapter: parseInt(loc.substr(2,3), 10),
-  verse: parseInt(loc.substr(5,3), 10),
+  ...(loc.length === 5 ? {} : {
+    verse: parseInt(loc.substr(5,3), 10),
+  }),
   ...(
     loc.substr(8,1) === ':'
       ? { wordRanges: loc.substr(9).split(",") }

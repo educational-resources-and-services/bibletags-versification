@@ -10,7 +10,7 @@ Object.defineProperty(exports, "getLocFromRef", {
     return _locFunctions.getLocFromRef;
   }
 });
-exports.getPreviousOriginalLoc = exports.getOriginalLocsFromRange = exports.getNumberOfChapters = exports.getNextOriginalLoc = void 0;
+exports.getPreviousOriginalLoc = exports.getOriginalLocsFromRange = exports.getNumberOfChapters = exports.getNextTranslationRef = exports.getNextOriginalLoc = void 0;
 Object.defineProperty(exports, "getRefFromLoc", {
   enumerable: true,
   get: function get() {
@@ -55,13 +55,13 @@ function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Sy
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
 var VALID_PARTIAL_SCOPE_VALUES = [null, undefined, 'ot', 'nt'];
 var VALID_SKIPS_UNLIKELY_ORIG_VALUES = [true, false, undefined];
@@ -123,6 +123,54 @@ var getNextOriginalLoc = function getNextOriginalLoc(loc) {
 
 exports.getNextOriginalLoc = getNextOriginalLoc;
 
+var getNextTranslationRef = function getNextTranslationRef(_ref2) {
+  var ref = _ref2.ref,
+      loc = _ref2.loc,
+      info = _ref2.info;
+  ref = loc ? (0, _locFunctions.getRefFromLoc)(loc) : _objectSpread({}, ref);
+  ref.verse++;
+
+  var isValidLoc = function isValidLoc() {
+    return !!getCorrespondingRefs({
+      baseVersion: {
+        info: info,
+        ref: ref
+      },
+      lookupVersionInfo: {
+        versificationModel: 'original'
+      }
+    });
+  };
+
+  while (ref.bookId <= 66) {
+    while (ref.chapter <= 151) {
+      // assumes no more than 151 chapters
+      for (var i = 0; i < 10; i++) {
+        // assumes a gab of no more than 10 verses
+        if (isValidLoc()) return (0, _locFunctions.getLocFromRef)(ref);
+        ref.verse++;
+      }
+
+      ref.chapter++;
+      ref.verse = 0; // for psalms in some versions
+    }
+
+    ref.bookId++;
+    ref.chapter = 1;
+    ref.verse = 0;
+  } // try Genesis 1:1
+
+
+  ref.bookId = ref.chapter = ref.verse = 1;
+  if (isValidLoc()) return (0, _locFunctions.getLocFromRef)(ref); // try Matthew 1:1
+
+  ref.bookId = 40;
+  if (isValidLoc()) return (0, _locFunctions.getLocFromRef)(ref);
+  return null;
+};
+
+exports.getNextTranslationRef = getNextTranslationRef;
+
 var getOriginalLocsFromRange = function getOriginalLocsFromRange(fromLoc, toLoc) {
   var fromRef = (0, _locFunctions.getRefFromLoc)(fromLoc);
   var toRef = (0, _locFunctions.getRefFromLoc)(toLoc);
@@ -162,11 +210,11 @@ var getOriginalLocsFromRange = function getOriginalLocsFromRange(fromLoc, toLoc)
 
 exports.getOriginalLocsFromRange = getOriginalLocsFromRange;
 
-var getCorrespondingRefs = function getCorrespondingRefs(_ref2) {
-  var _ref2$baseVersion = _ref2.baseVersion,
-      baseVersion = _ref2$baseVersion === void 0 ? {} : _ref2$baseVersion,
-      _ref2$lookupVersionIn = _ref2.lookupVersionInfo,
-      lookupVersionInfo = _ref2$lookupVersionIn === void 0 ? {} : _ref2$lookupVersionIn;
+var getCorrespondingRefs = function getCorrespondingRefs(_ref3) {
+  var _ref3$baseVersion = _ref3.baseVersion,
+      baseVersion = _ref3$baseVersion === void 0 ? {} : _ref3$baseVersion,
+      _ref3$lookupVersionIn = _ref3.lookupVersionInfo,
+      lookupVersionInfo = _ref3$lookupVersionIn === void 0 ? {} : _ref3$lookupVersionIn;
 
   // Returns one of the following:
   // an array of `ref` objects with keys `bookId`, `chapter`, `verse` and possibly `wordRanges`
@@ -349,9 +397,9 @@ var hasCorrespondingVerseInOriginal = function hasCorrespondingVerseInOriginal(v
 
 exports.hasCorrespondingVerseInOriginal = hasCorrespondingVerseInOriginal;
 
-var getNumberOfChapters = function getNumberOfChapters(_ref3) {
-  var versionInfo = _ref3.versionInfo,
-      bookId = _ref3.bookId;
+var getNumberOfChapters = function getNumberOfChapters(_ref4) {
+  var versionInfo = _ref4.versionInfo,
+      bookId = _ref4.bookId;
   var numberOfVersesPerChapter = _numberOfVersesPerChapterPerBook["default"][bookId - 1];
   if (!numberOfVersesPerChapter) return null;
   var chapter = numberOfVersesPerChapter.length;
@@ -396,9 +444,9 @@ var getNumberOfChapters = function getNumberOfChapters(_ref3) {
 
 exports.getNumberOfChapters = getNumberOfChapters;
 
-var getStartAndEndVersesByChapter = function getStartAndEndVersesByChapter(_ref4) {
-  var versionInfo = _ref4.versionInfo,
-      bookId = _ref4.bookId;
+var getStartAndEndVersesByChapter = function getStartAndEndVersesByChapter(_ref5) {
+  var versionInfo = _ref5.versionInfo,
+      bookId = _ref5.bookId;
   var numberOfVersesPerChapter = _numberOfVersesPerChapterPerBook["default"][bookId - 1];
   var startAndEndVersesByChapter = [];
 
@@ -471,10 +519,10 @@ var getStartAndEndVersesByChapter = function getStartAndEndVersesByChapter(_ref4
 
 exports.getStartAndEndVersesByChapter = getStartAndEndVersesByChapter;
 
-var getBookIdListWithCorrectOrdering = function getBookIdListWithCorrectOrdering(_ref5) {
-  var _ref5$versionInfo = _ref5.versionInfo,
-      hebrewOrdering = _ref5$versionInfo.hebrewOrdering,
-      partialScope = _ref5$versionInfo.partialScope;
+var getBookIdListWithCorrectOrdering = function getBookIdListWithCorrectOrdering(_ref6) {
+  var _ref6$versionInfo = _ref6.versionInfo,
+      hebrewOrdering = _ref6$versionInfo.hebrewOrdering,
+      partialScope = _ref6$versionInfo.partialScope;
   var books = hebrewOrdering ? [].concat(_toConsumableArray(_hebrewOrderingOfBookIds["default"]), _toConsumableArray(Array(27).fill(0).map(function (x, idx) {
     return idx + 40;
   }))) : Array(66).fill(0).map(function (x, idx) {

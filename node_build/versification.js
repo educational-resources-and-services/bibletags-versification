@@ -147,7 +147,7 @@ var getNextTranslationRef = function getNextTranslationRef(_ref2) {
       // assumes no more than 151 chapters
       for (var i = 0; i < 10; i++) {
         // assumes a gab of no more than 10 verses
-        if (isValidLoc()) return (0, _locFunctions.getLocFromRef)(ref);
+        if (isValidLoc()) return ref;
         ref.verse++;
       }
 
@@ -162,10 +162,10 @@ var getNextTranslationRef = function getNextTranslationRef(_ref2) {
 
 
   ref.bookId = ref.chapter = ref.verse = 1;
-  if (isValidLoc()) return (0, _locFunctions.getLocFromRef)(ref); // try Matthew 1:1
+  if (isValidLoc()) return ref; // try Matthew 1:1
 
   ref.bookId = 40;
-  if (isValidLoc()) return (0, _locFunctions.getLocFromRef)(ref);
+  if (isValidLoc()) return ref;
   return null;
 };
 

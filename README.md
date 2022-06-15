@@ -83,6 +83,10 @@ getNextOriginalLoc(loc): String
 ```
 
 ```js
+getNextTranslationRef({ ref, loc, info }): [ String ]
+```
+
+```js
 getOriginalLocsFromRange(fromLoc, toLoc): [ String ]
 ```
 

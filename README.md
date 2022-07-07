@@ -10,7 +10,7 @@ For more information on this project, see the [Bible Tags website](https://bible
 
 ## Repos
 
-* [bibletags-data](https://github.com/educational-resources-and-services/bibletags-data) **(Contains general information on project design and contributing.)**
+* [bibletags-data](https://github.com/educational-resources-and-services/bibletags-data)
 * [bibletags-react-native-app](https://github.com/educational-resources-and-services/bibletags-react-native-app)
 * [bibletags-ui-helper](https://github.com/educational-resources-and-services/bibletags-ui-helper)
 * [bibletags-versification](https://github.com/educational-resources-and-services/bibletags-versification)
@@ -20,9 +20,7 @@ For more information on this project, see the [Bible Tags website](https://bible
 
 ## Bugs
 
-* See [here](https://github.com/educational-resources-and-services/bibletags-data/issues).
-* Please first check if your bug report / feature request already exists before submitting a new issue.
-* For bug reports, please provide a clear description of the problem and step-by-step explanation of how to reproduce it.
+* Report [here](https://github.com/educational-resources-and-services/bibletags-data/issues).
 
 # bibletags-versification
 

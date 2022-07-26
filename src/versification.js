@@ -496,4 +496,4 @@ export const getBookIdListWithCorrectOrdering = ({ versionInfo: { hebrewOrdering
   return books
 }
 
-export { getLocFromRef, getRefFromLoc, padLocWithLeadingZero }
+export { getLocFromRef, getRefFromLoc, padLocWithLeadingZero, getVerseMappingsByVersionInfo }

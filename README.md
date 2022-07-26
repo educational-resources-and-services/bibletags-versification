@@ -93,6 +93,10 @@ getCorrespondingRefs({ baseVersion, lookupVersionInfo }): [ { bookId: Int, chapt
 ```
 
 ```js
+getVerseMappingsByVersionInfo(versionInfo): { originalToTranslation: Array, translationToOriginal: Array }
+```
+
+```js
 hasCorrespondingVerseInOriginal(version): Boolean
 ```
 

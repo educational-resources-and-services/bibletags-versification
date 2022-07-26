@@ -189,7 +189,7 @@ var getVerseMappingsByVersionInfo = function getVerseMappingsByVersionInfo() {
 
     var convertMappingsToMultiLevel = function convertMappingsToMultiLevel(mappings) {
       for (var _key2 in mappings) {
-        var _keyParts = _key2.match(/^([0-9]{8}):([0-9]+-[0-9]*)$/);
+        var _keyParts = _key2.match(/^([0-9]{8}):([0-9]+(?:-[0-9]*)?)$/);
 
         if (_keyParts) {
           var _loc = _keyParts[1];

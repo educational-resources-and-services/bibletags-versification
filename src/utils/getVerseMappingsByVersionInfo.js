@@ -140,7 +140,7 @@ const getVerseMappingsByVersionInfo = ({ partialScope, versificationModel, skips
     // make multi-level so that all keys are simple locs
     const convertMappingsToMultiLevel = mappings => {
       for(let key in mappings) {
-        const keyParts = key.match(/^([0-9]{8}):([0-9]+-[0-9]*)$/)
+        const keyParts = key.match(/^([0-9]{8}):([0-9]+(?:-[0-9]*)?)$/)
         if(keyParts) {
           const loc = keyParts[1]
           const wordRangeStr = keyParts[2]

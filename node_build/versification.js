@@ -17,7 +17,14 @@ Object.defineProperty(exports, "getRefFromLoc", {
     return _locFunctions.getRefFromLoc;
   }
 });
-exports.isValidRefInOriginal = exports.hasCorrespondingVerseInOriginal = exports.getStartAndEndVersesByChapter = void 0;
+exports.getStartAndEndVersesByChapter = void 0;
+Object.defineProperty(exports, "getVerseMappingsByVersionInfo", {
+  enumerable: true,
+  get: function get() {
+    return _getVerseMappingsByVersionInfo["default"];
+  }
+});
+exports.isValidRefInOriginal = exports.hasCorrespondingVerseInOriginal = void 0;
 Object.defineProperty(exports, "padLocWithLeadingZero", {
   enumerable: true,
   get: function get() {

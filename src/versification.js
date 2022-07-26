@@ -40,6 +40,47 @@ export const getNextOriginalLoc = loc => {
   return getLocFromRef({ bookId, chapter, verse })
 }
 
+export const getPreviousTranslationRef = ({ ref, loc, info }) => {
+  ref = loc ? getRefFromLoc(loc) : { ...ref }
+  ref.verse--
+
+  const isValidLoc = () => !!(
+    getCorrespondingRefs({
+      baseVersion: {
+        info,
+        ref,
+      },
+      lookupVersionInfo: {
+        versificationModel: 'original',
+      },
+    })
+  )
+
+  while(ref.bookId >= 1) {
+    while(ref.chapter > 0) {
+      while(ref.verse >= 0) {
+        if(isValidLoc()) return ref
+        ref.verse--
+      }
+      ref.chapter--
+      ref.verse = 176
+    }
+    ref.bookId--
+    ref.chapter = 151
+    ref.verse = 176
+  }
+
+  // try Genesis 1:1
+  ref.bookId = ref.chapter = ref.verse = 1
+  if(isValidLoc()) return ref
+
+  // try Matthew 1:1
+  ref.bookId = 40
+  if(isValidLoc()) return ref
+
+  return null
+}
+
 export const getNextTranslationRef = ({ ref, loc, info }) => {
   ref = loc ? getRefFromLoc(loc) : { ...ref }
   ref.verse++
@@ -58,7 +99,7 @@ export const getNextTranslationRef = ({ ref, loc, info }) => {
 
   while(ref.bookId <= 66) {
     while(ref.chapter <= 151) {  // assumes no more than 151 chapters
-      for(let i=0; i<10; i++) {  // assumes a gab of no more than 10 verses
+      for(let i=0; i<15; i++) {  // assumes a gab of no more than 15 verses
         if(isValidLoc()) return ref
         ref.verse++
       }

@@ -81,7 +81,11 @@ getNextOriginalLoc(loc): String
 ```
 
 ```js
-getNextTranslationRef({ ref, loc, info }): [ String ]
+getPreviousTranslationRef({ ref, loc, info }): { bookId, chapter, verse }
+```
+
+```js
+getNextTranslationRef({ ref, loc, info }): { bookId, chapter, verse }
 ```
 
 ```js

@@ -375,14 +375,14 @@ var getCorrespondingRefs = function getCorrespondingRefs(_ref4) {
     var _lookupVersionLoc$spl = lookupVersionLoc.split(/:/),
         _lookupVersionLoc$spl2 = _slicedToArray(_lookupVersionLoc$spl, 2),
         lookupVersionLocWithoutWordRange = _lookupVersionLoc$spl2[0],
-        wordRangeStr = _lookupVersionLoc$spl2[1];
+        wordRangesStr = _lookupVersionLoc$spl2[1];
 
-    if (wordRangeStr) {
+    if (wordRangesStr) {
       if (!locsWithWordRanges[lookupVersionLocWithoutWordRange]) {
         locsWithWordRanges[lookupVersionLocWithoutWordRange] = [];
       }
 
-      locsWithWordRanges[lookupVersionLocWithoutWordRange].push(wordRangeStr);
+      locsWithWordRanges[lookupVersionLocWithoutWordRange].push(wordRangesStr);
     }
   });
 
@@ -400,18 +400,21 @@ var getCorrespondingRefs = function getCorrespondingRefs(_ref4) {
     } else if (locsWithWordRanges[loc].length > 1) {
       // wordRanges do not cover the entire verse, so we want to combine them into
       // a single loc with as few pieces as possible
-      // put them in order
+      // flatten out
+      locsWithWordRanges[loc] = locsWithWordRanges[loc].map(function (wordRangesStr) {
+        return wordRangesStr.split(',');
+      }).flat(); // put them in order
+
       locsWithWordRanges[loc].sort(function (range1, range2) {
-        return parseInt(range1.split('-')[0], 10) > parseInt(range2.split('-')[0], 10) ? 1 : -1;
+        return parseInt(range1.split('-')[0], 10) - parseInt(range2.split('-')[0], 10);
       }); // reduce
 
-      locsWithWordRanges[loc].reduce(function (ranges, thisRange) {
-        if (_typeof(ranges) !== 'object') {
-          ranges = [ranges];
-        }
-
+      locsWithWordRanges[loc] = locsWithWordRanges[loc].reduce(function (ranges, thisRange) {
+        if (ranges.length === 0) return [thisRange];
         var partsOfLastRange = ranges[ranges.length - 1].split('-');
+        partsOfLastRange[1] = partsOfLastRange[1] || partsOfLastRange[0];
         var partsOfNewRange = thisRange.split('-');
+        partsOfNewRange[1] = partsOfNewRange[1] || partsOfNewRange[0];
 
         if ((parseInt(partsOfLastRange[1], 10) || 0) + 1 === parseInt(partsOfNewRange[0], 10)) {
           ranges[ranges.length - 1] = "".concat(partsOfLastRange[0], "-").concat(partsOfNewRange[1]);
@@ -420,14 +423,14 @@ var getCorrespondingRefs = function getCorrespondingRefs(_ref4) {
         }
 
         return ranges;
-      }); // push on new loc with 1+ word ranges
+      }, []); // push on new loc with 1+ word ranges
 
       removeLookupVersionLocsStartingWith("".concat(loc, ":"));
-      lookupLocs.push("".concat(loc, ":").concat(lowEndOfTotalWordRange, "-").concat(highEndOfTotalWordRange));
+      lookupLocs.push("".concat(loc, ":").concat(locsWithWordRanges[loc].join(',')));
     }
   }
 
-  return lookupLocs.map(function (lookupVersionLoc) {
+  return lookupLocs.sort().map(function (lookupVersionLoc) {
     return (0, _locFunctions.getRefFromLoc)(lookupVersionLoc);
   });
 };

@@ -293,12 +293,12 @@ export const getCorrespondingRefs = ({ baseVersion={}, lookupVersionInfo={} }) =
   lookupLocs = lookupLocs.filter(Boolean)  // get rid of mappings to null
 
   lookupLocs.forEach(lookupVersionLoc => {
-    const [ lookupVersionLocWithoutWordRange, wordRangeStr ] = lookupVersionLoc.split(/:/)
-    if(wordRangeStr) {
+    const [ lookupVersionLocWithoutWordRange, wordRangesStr ] = lookupVersionLoc.split(/:/)
+    if(wordRangesStr) {
       if(!locsWithWordRanges[lookupVersionLocWithoutWordRange]) {
         locsWithWordRanges[lookupVersionLocWithoutWordRange] = []
       }
-      locsWithWordRanges[lookupVersionLocWithoutWordRange].push(wordRangeStr)
+      locsWithWordRanges[lookupVersionLocWithoutWordRange].push(wordRangesStr)
     }
   })
 
@@ -316,21 +316,20 @@ export const getCorrespondingRefs = ({ baseVersion={}, lookupVersionInfo={} }) =
       // wordRanges do not cover the entire verse, so we want to combine them into
       // a single loc with as few pieces as possible
 
+      // flatten out
+      locsWithWordRanges[loc] = locsWithWordRanges[loc].map(wordRangesStr => wordRangesStr.split(',')).flat()
+
       // put them in order
-      locsWithWordRanges[loc].sort((range1, range2) => (
-        parseInt(range1.split('-')[0], 10) > parseInt(range2.split('-')[0], 10)
-          ? 1
-          : -1
-      ))
+      locsWithWordRanges[loc].sort((range1, range2) => parseInt(range1.split('-')[0], 10) - parseInt(range2.split('-')[0], 10))
 
       // reduce
-      locsWithWordRanges[loc].reduce((ranges, thisRange) => {
-        if(typeof ranges !== 'object') {
-          ranges = [ ranges ]
-        }
+      locsWithWordRanges[loc] = locsWithWordRanges[loc].reduce((ranges, thisRange) => {
+        if(ranges.length === 0) return [ thisRange ]
 
         const partsOfLastRange = ranges[ranges.length - 1].split('-')
+        partsOfLastRange[1] = partsOfLastRange[1] || partsOfLastRange[0]
         const partsOfNewRange = thisRange.split('-')
+        partsOfNewRange[1] = partsOfNewRange[1] || partsOfNewRange[0]
 
         if((parseInt(partsOfLastRange[1], 10) || 0) + 1 === parseInt(partsOfNewRange[0], 10)) {
           ranges[ranges.length - 1] = `${partsOfLastRange[0]}-${partsOfNewRange[1]}`
@@ -339,15 +338,15 @@ export const getCorrespondingRefs = ({ baseVersion={}, lookupVersionInfo={} }) =
         }
 
         return ranges
-      })
+      }, [])
 
       // push on new loc with 1+ word ranges
       removeLookupVersionLocsStartingWith(`${loc}:`)
-      lookupLocs.push(`${loc}:${lowEndOfTotalWordRange}-${highEndOfTotalWordRange}`)
+      lookupLocs.push(`${loc}:${locsWithWordRanges[loc].join(',')}`)
     }
   }
 
-  return lookupLocs.map(lookupVersionLoc => getRefFromLoc(lookupVersionLoc))
+  return lookupLocs.sort().map(lookupVersionLoc => getRefFromLoc(lookupVersionLoc))
 }
 
 export const hasCorrespondingVerseInOriginal = version => {

@@ -766,4 +766,116 @@ describe('getCorrespondingRefs', () => {
     })
   })
 
+  describe('Complex word ranges', () => {
+
+    it('Numbers 25:19 (original -> FAKE)', () => {
+      const correspondingVerseLocations = getCorrespondingRefs({
+        baseVersion: {
+          ref: {
+            bookId: 4,
+            chapter: 25,
+            verse: 19,
+          },
+          info: uhbOriginalInfo,
+        },
+        lookupVersionInfo: {
+          versificationModel: 'kjv',
+          extraVerseMappings: {
+            '04025019:1-2,4': '04026001:1-5',
+            '04025019:3': '04026001:8-10,6',
+            '04026001': '04026001:7,11-',
+          },
+          skipsUnlikelyOriginals: true,
+        },
+      })
+
+      assert.deepEqual(correspondingVerseLocations, [
+        {
+          bookId: 4,
+          chapter: 26,
+          verse: 1,
+          wordRanges: [
+            "1-6",
+            "8-10",
+          ],
+        },
+      ])
+    })
+
+    it('Numbers 26:1 (FAKE -> original)', () => {
+      const correspondingVerseLocations = getCorrespondingRefs({
+        baseVersion: {
+          ref: {
+            bookId: 4,
+            chapter: 26,
+            verse: 1,
+          },
+          info: {
+            versificationModel: 'kjv',
+            extraVerseMappings: {
+              '04025019:1-2,4': '04026001:1-5',
+              '04025019:3': '04026001:6,8-10',
+              '04026001': '04026001:7,11-',
+            },
+            skipsUnlikelyOriginals: true,
+          },
+        },
+        lookupVersionInfo: uhbOriginalInfo,
+      })
+
+      assert.deepEqual(correspondingVerseLocations, [
+        {
+          bookId: 4,
+          chapter: 25,
+          verse: 19,
+        },
+        {
+          bookId: 4,
+          chapter: 26,
+          verse: 1,
+        },
+      ])
+    })
+
+    it('Numbers 26:1 (FAKE -> original)', () => {
+      const correspondingVerseLocations = getCorrespondingRefs({
+        baseVersion: {
+          ref: {
+            bookId: 4,
+            chapter: 26,
+            verse: 1,
+          },
+          info: {
+            versificationModel: 'kjv',
+            extraVerseMappings: {
+              '04025019:1-2,4': '04026001:1-5',
+              '04025019:3': '04026002:1',
+              '04026001': '04026001:7,11-',
+            },
+            skipsUnlikelyOriginals: true,
+          },
+        },
+        lookupVersionInfo: uhbOriginalInfo,
+      })
+
+      assert.deepEqual(correspondingVerseLocations, [
+        {
+          bookId: 4,
+          chapter: 25,
+          verse: 19,
+          wordRanges: [
+            "1-2",
+            "4",
+          ],
+        },
+        {
+          bookId: 4,
+          chapter: 26,
+          verse: 1,
+        },
+      ])
+    })
+
+  })
+
 })

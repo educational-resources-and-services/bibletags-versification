@@ -189,13 +189,13 @@ var getVerseMappingsByVersionInfo = function getVerseMappingsByVersionInfo() {
 
     var convertMappingsToMultiLevel = function convertMappingsToMultiLevel(mappings) {
       for (var _key2 in mappings) {
-        var _keyParts = _key2.match(/^([0-9]{8}):([0-9]+(?:-[0-9]*)?)$/);
+        var _keyParts = _key2.match(/^([0-9]{8}):([0-9]+(?:-[0-9]*)?(?:,[0-9]+(?:-[0-9]*)?)*)$/);
 
         if (_keyParts) {
           var _loc = _keyParts[1];
-          var wordRangeStr = _keyParts[2];
+          var wordRangesStr = _keyParts[2];
           if (!mappings[_loc]) mappings[_loc] = {};
-          mappings[_loc][wordRangeStr] = mappings[_key2];
+          mappings[_loc][wordRangesStr] = mappings[_key2];
           delete mappings[_key2];
         }
       }

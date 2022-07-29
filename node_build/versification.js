@@ -369,6 +369,8 @@ var getCorrespondingRefs = function getCorrespondingRefs(_ref4) {
 
 
   var locsWithWordRanges = {};
+  lookupLocs = lookupLocs.filter(Boolean); // get rid of mappings to null
+
   lookupLocs.forEach(function (lookupVersionLoc) {
     var _lookupVersionLoc$spl = lookupVersionLoc.split(/:/),
         _lookupVersionLoc$spl2 = _slicedToArray(_lookupVersionLoc$spl, 2),

@@ -290,6 +290,8 @@ export const getCorrespondingRefs = ({ baseVersion={}, lookupVersionInfo={} }) =
 
   const locsWithWordRanges = {}
 
+  lookupLocs = lookupLocs.filter(Boolean)  // get rid of mappings to null
+
   lookupLocs.forEach(lookupVersionLoc => {
     const [ lookupVersionLocWithoutWordRange, wordRangeStr ] = lookupVersionLoc.split(/:/)
     if(wordRangeStr) {

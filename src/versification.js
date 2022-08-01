@@ -307,12 +307,7 @@ export const getCorrespondingRefs = ({ baseVersion={}, lookupVersionInfo={} }) =
   }
 
   for(let loc in locsWithWordRanges) {
-    if(locsWithWordRanges[loc].length === Object.keys(verseMappingsByVersionInfo[fromOriginal ? 'translationToOriginal' : 'originalToTranslation'][loc]).length) {
-      // wordRanges cover the entire verse, so no need to indicate wordRanges
-      lookupLocs.push(loc)
-      removeLookupVersionLocsStartingWith(`${loc}:`)
-
-    } else if(locsWithWordRanges[loc].length > 1) {
+    if(locsWithWordRanges[loc].length > 1 || locsWithWordRanges[loc] === '1-') {
       // wordRanges do not cover the entire verse, so we want to combine them into
       // a single loc with as few pieces as possible
 
@@ -326,13 +321,13 @@ export const getCorrespondingRefs = ({ baseVersion={}, lookupVersionInfo={} }) =
       locsWithWordRanges[loc] = locsWithWordRanges[loc].reduce((ranges, thisRange) => {
         if(ranges.length === 0) return [ thisRange ]
 
-        const partsOfLastRange = ranges[ranges.length - 1].split('-')
-        partsOfLastRange[1] = partsOfLastRange[1] || partsOfLastRange[0]
+        const partsOfPreviousRange = ranges[ranges.length - 1].split('-')
+        partsOfPreviousRange[1] = partsOfPreviousRange[1] === undefined ? partsOfPreviousRange[0] : partsOfPreviousRange[1]
         const partsOfNewRange = thisRange.split('-')
-        partsOfNewRange[1] = partsOfNewRange[1] || partsOfNewRange[0]
+        partsOfNewRange[1] = partsOfNewRange[1] === undefined ? partsOfNewRange[0] : partsOfNewRange[1]
 
-        if((parseInt(partsOfLastRange[1], 10) || 0) + 1 === parseInt(partsOfNewRange[0], 10)) {
-          ranges[ranges.length - 1] = `${partsOfLastRange[0]}-${partsOfNewRange[1]}`
+        if(partsOfPreviousRange[1] !== `` && parseInt(partsOfPreviousRange[1], 10) + 1 === parseInt(partsOfNewRange[0], 10)) {
+          ranges[ranges.length - 1] = `${partsOfPreviousRange[0]}-${partsOfNewRange[1]}`
         } else {
           ranges.push(thisRange)
         }
@@ -342,7 +337,13 @@ export const getCorrespondingRefs = ({ baseVersion={}, lookupVersionInfo={} }) =
 
       // push on new loc with 1+ word ranges
       removeLookupVersionLocsStartingWith(`${loc}:`)
-      lookupLocs.push(`${loc}:${locsWithWordRanges[loc].join(',')}`)
+
+      if(locsWithWordRanges[loc].length === 1 && locsWithWordRanges[loc][0] === '1-') {
+        // wordRanges cover the entire verse, so no need to indicate wordRanges
+        lookupLocs.push(loc)
+      } else {
+        lookupLocs.push(`${loc}:${locsWithWordRanges[loc].join(',')}`)
+      }
     }
   }
 

@@ -24,7 +24,7 @@ exports["default"] = void 0;
 //     VVV is a zero-padded verse
 //   BBCCCVVV:W1-W2
 //     W1 is the starting word number in cases where a partial verse must be mapped
-//     W2 is the ending word number in cases where a partial verse must be mapped (can be left blank to indicate "rest of the verse")
+//     W2 is the ending word number in cases where a partial verse must be mapped (MUST be left blank when it covers the rest of the verse)
 //   BBCCCVVV-VVV
 //     The key can also be a location range, with an integer as the value. Use this
 //     when all the verses in the key range are to be increased by the same amount.

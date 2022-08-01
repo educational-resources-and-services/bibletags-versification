@@ -147,20 +147,20 @@ padLocWithLeadingZero(loc): String
     //     VVV is a zero-padded verse
     //   BBCCCVVV:W1-W2
     //     W1 is the starting word number in cases where a partial verse must be mapped
-    //     W2 is the ending word number in cases where a partial verse must be mapped (can be left blank to indicate "rest of the verse")
+    //     W2 is the ending word number in cases where a partial verse must be mapped (MUST be left blank when it covers the rest of the verse)
     //   BBCCCVVV-VVV
     //     The key can also be a location range, with an integer as the value. Use this
     //     when all the verses in the key range are to be increased by the same amount.
 
-    "02011030": "02012001",  // single verse mapped to another single verse
-    "02012001-021": -1,  // all translation verses in this range need to be reduced by 1 to match the original
-    "05022005:1-5": "05022005",  // verse 5 in the translation comes from two in the original; words 1-5 correspond to verse 5 in the original...
-    "05022005:6-10": "05022006",  // ...while words 6-10 correspond to verse 6 in the original
-    "08002009:5-10": "08002009:1-7",  // words 5-10 in the translation correspond to words 1-7 in the original
-    "08002010:1-2": "08002009:8-9",  // words 1-2 of verse 10 in the translation correspond to words 8-9 of verse 9 in the original
-    "40017014": "40017014:1-19",  // all of verse 14 in the translation correspond to only words 1-19 of the original
-    "40017015:1-2": "40017014:20-",  // words 1-2 of verse 15 in the translation correspond to word 20 of verse 14 to the end of that same verse in the original
-    "40017015:3-": "40017015",  // word 3 of verse 15 to the end of the same verse correspond to verse 15 in the orignal
+    "02011030": "02012001",  // single original verse mapped to a single translation verse
+    "02012001-021": -1,  // all original verses in this range need to be reduced by 1 to map properly to the translation
+    "05022005:1-5": "05022005",  // verse 5 in the original maps to two in the translation; words 1-5 correspond to verse 5 in the translation...
+    "05022005:6-": "05022006",  // ...while words 6 through the end correspond to verse 6 in the translation
+    "08002009:5-10": "08002009:1-7",  // words 5-10 in the original correspond to words 1-7 in the translation
+    "08002010:1-2": "08002009:8-9",  // words 1-2 of verse 10 in the original correspond to words 8-9 of verse 9 in the translation
+    "40017014": "40017014:1-19",  // all of verse 14 in the original correspond to only words 1-19 of the translation
+    "40017015:1-2": "40017014:20-",  // words 1-2 of verse 15 in the original correspond to word 20 of verse 14 to the end of that same verse in the translation
+    "40017015:3-": "40017015",  // word 3 of verse 15 to the end of the same verse correspond to verse 15 in the translation
   },
 }
 ```

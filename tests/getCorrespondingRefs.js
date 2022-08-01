@@ -813,7 +813,7 @@ describe('getCorrespondingRefs', () => {
           info: {
             versificationModel: 'kjv',
             extraVerseMappings: {
-              '04025019:1-2,4': '04026001:1-5',
+              '04025019:1-2,4-': '04026001:1-5',
               '04025019:3': '04026001:6,8-10',
               '04026001': '04026001:7,11-',
             },
@@ -872,6 +872,106 @@ describe('getCorrespondingRefs', () => {
           bookId: 4,
           chapter: 26,
           verse: 1,
+        },
+      ])
+    })
+
+    it('Psalm 18:0 (FAKE -> original)', () => {
+      const correspondingVerseLocations = getCorrespondingRefs({
+        baseVersion: {
+          ref: {
+            bookId: 19,
+            chapter: 18,
+            verse: 0,
+          },
+          info: {
+            versificationModel: 'kjv',
+            extraVerseMappings: {
+              "19018002:1-1": "19018000:44-45",
+            },
+          },
+        },
+        lookupVersionInfo: uhbOriginalInfo,
+      })
+
+      assert.deepEqual(correspondingVerseLocations, [
+        {
+          bookId: 19,
+          chapter: 18,
+          verse: 2,
+          wordRanges: [
+            "1",
+          ],
+        },
+      ])
+    })
+
+    it('Psalm 18:1 (FAKE -> original)', () => {
+      const correspondingVerseLocations = getCorrespondingRefs({
+        baseVersion: {
+          ref: {
+            bookId: 19,
+            chapter: 18,
+            verse: 1,
+          },
+          info: {
+            versificationModel: 'kjv',
+            extraVerseMappings: {
+              "19018002:1-2": "19018000:44-45",
+              "19018002:3-": "19018001:1-3",
+              "19018003:2": "19018001:4-10",
+            },
+          },
+        },
+        lookupVersionInfo: uhbOriginalInfo,
+      })
+
+      assert.deepEqual(correspondingVerseLocations, [
+        {
+          bookId: 19,
+          chapter: 18,
+          verse: 2,
+          wordRanges: [
+            "3-",
+          ],
+        },
+        {
+          bookId: 19,
+          chapter: 18,
+          verse: 3,
+          wordRanges: [
+            "2",
+          ],
+        },
+      ])
+    })
+
+    it('Psalm 18:2 (original -> FAKE)', () => {
+      const correspondingVerseLocations = getCorrespondingRefs({
+        baseVersion: {
+          ref: {
+            bookId: 19,
+            chapter: 18,
+            verse: 2,
+          },
+          info: uhbOriginalInfo,
+        },
+        lookupVersionInfo: {
+          versificationModel: 'kjv',
+          extraVerseMappings: {
+            "19018002:1-": "19018000:44-45",
+          },
+        },
+      })
+
+      assert.deepEqual(correspondingVerseLocations, [
+        {
+          bookId: 19,
+          chapter: 18,
+          verse: 0,
+          wordRanges: [
+            "44-45",
+          ],
         },
       ])
     })

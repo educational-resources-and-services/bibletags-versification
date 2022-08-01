@@ -393,11 +393,7 @@ var getCorrespondingRefs = function getCorrespondingRefs(_ref4) {
   };
 
   for (var loc in locsWithWordRanges) {
-    if (locsWithWordRanges[loc].length === Object.keys(verseMappingsByVersionInfo[fromOriginal ? 'translationToOriginal' : 'originalToTranslation'][loc]).length) {
-      // wordRanges cover the entire verse, so no need to indicate wordRanges
-      lookupLocs.push(loc);
-      removeLookupVersionLocsStartingWith("".concat(loc, ":"));
-    } else if (locsWithWordRanges[loc].length > 1) {
+    if (locsWithWordRanges[loc].length > 1 || locsWithWordRanges[loc] === '1-') {
       // wordRanges do not cover the entire verse, so we want to combine them into
       // a single loc with as few pieces as possible
       // flatten out
@@ -411,13 +407,13 @@ var getCorrespondingRefs = function getCorrespondingRefs(_ref4) {
 
       locsWithWordRanges[loc] = locsWithWordRanges[loc].reduce(function (ranges, thisRange) {
         if (ranges.length === 0) return [thisRange];
-        var partsOfLastRange = ranges[ranges.length - 1].split('-');
-        partsOfLastRange[1] = partsOfLastRange[1] || partsOfLastRange[0];
+        var partsOfPreviousRange = ranges[ranges.length - 1].split('-');
+        partsOfPreviousRange[1] = partsOfPreviousRange[1] === undefined ? partsOfPreviousRange[0] : partsOfPreviousRange[1];
         var partsOfNewRange = thisRange.split('-');
-        partsOfNewRange[1] = partsOfNewRange[1] || partsOfNewRange[0];
+        partsOfNewRange[1] = partsOfNewRange[1] === undefined ? partsOfNewRange[0] : partsOfNewRange[1];
 
-        if ((parseInt(partsOfLastRange[1], 10) || 0) + 1 === parseInt(partsOfNewRange[0], 10)) {
-          ranges[ranges.length - 1] = "".concat(partsOfLastRange[0], "-").concat(partsOfNewRange[1]);
+        if (partsOfPreviousRange[1] !== "" && parseInt(partsOfPreviousRange[1], 10) + 1 === parseInt(partsOfNewRange[0], 10)) {
+          ranges[ranges.length - 1] = "".concat(partsOfPreviousRange[0], "-").concat(partsOfNewRange[1]);
         } else {
           ranges.push(thisRange);
         }
@@ -426,7 +422,13 @@ var getCorrespondingRefs = function getCorrespondingRefs(_ref4) {
       }, []); // push on new loc with 1+ word ranges
 
       removeLookupVersionLocsStartingWith("".concat(loc, ":"));
-      lookupLocs.push("".concat(loc, ":").concat(locsWithWordRanges[loc].join(',')));
+
+      if (locsWithWordRanges[loc].length === 1 && locsWithWordRanges[loc][0] === '1-') {
+        // wordRanges cover the entire verse, so no need to indicate wordRanges
+        lookupLocs.push(loc);
+      } else {
+        lookupLocs.push("".concat(loc, ":").concat(locsWithWordRanges[loc].join(',')));
+      }
     }
   }
 

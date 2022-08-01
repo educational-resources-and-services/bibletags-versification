@@ -71,64 +71,82 @@ const getVerseMappingsByVersionInfo = ({ partialScope, versificationModel, skips
   if(!verseMappingsByVersionInfo[versificationModel][`${extraVerseMappingsKey}-${!!skipsUnlikelyOriginals}`]) {
     // Create object of versification mappings without abbreviations
 
-    const overrideMappings = ({ baseMappings, overrideMappings }) => {
+    const getOverrideMappings = ({ baseMappings, overrideMappings }) => {
 
-      const getWordRangeInts = wordRange => wordRange.split('-').map(strNum => parseInt(strNum === '' ? 1000 : strNum, 10))
-    
-      // process baseMappings
-      const baseMappingsMap = {}
+      // find baseMapping keys by bareLocs
+      const baseMappingsKeysByBareOriginalLoc = {}
+      const baseMappingsKeysByBareTranslationLoc = {}
       Object.keys(baseMappings).forEach(locWithWordRange => {
-        const [ loc, wordRange ] = locWithWordRange.split(':')
-        if(!baseMappingsMap[loc]) {
-          baseMappingsMap[loc] = []
+
+        const [ bareOriginalLoc ] = locWithWordRange.split(':')
+        baseMappingsKeysByBareOriginalLoc[bareOriginalLoc] = baseMappingsKeysByBareOriginalLoc[bareOriginalLoc] || []
+        baseMappingsKeysByBareOriginalLoc[bareOriginalLoc].push(locWithWordRange)
+
+        if(baseMappings[locWithWordRange]) {
+          const [ bareTranslationLoc ] = baseMappings[locWithWordRange].split(':')
+          baseMappingsKeysByBareTranslationLoc[bareTranslationLoc] = baseMappingsKeysByBareTranslationLoc[bareTranslationLoc] || []
+          baseMappingsKeysByBareTranslationLoc[bareTranslationLoc].push(locWithWordRange)
         }
-        wordRange && baseMappingsMap[loc].push(wordRange)
+
       })
-    
-      // delete some from baseMappings, based on keys in overrideMappings
+
+      // delete from baseMappings where base loc used in overrideMappings (both original and translation sides)
       const baseMappingsCleaned = { ...baseMappings }
-      for(let key in overrideMappings) {
-        const keyWithoutWordRange = key.split(':')[0]
-        delete baseMappingsCleaned[keyWithoutWordRange]
-    
-        ;(baseMappingsMap[keyWithoutWordRange] || []).forEach(baseMappingsWordRange => {
-          const baseMappingsWordRangeInts = getWordRangeInts(baseMappingsWordRange)
-          const overrideMappingWordRangeInts = getWordRangeInts(overrideMappings[key].split(':')[1] || '0-')
-          if(overrideMappingWordRangeInts[0] <= baseMappingsWordRangeInts[1] && overrideMappingWordRangeInts[1] >= baseMappingsWordRangeInts[0]){
-            delete baseMappingsCleaned[`${keyWithoutWordRange}:${baseMappingsWordRange}`]
-          }
+      for(let locWithWordRange in overrideMappings) {
+
+        const [ bareOriginalLoc ] = locWithWordRange.split(':')
+        ;(baseMappingsKeysByBareOriginalLoc[bareOriginalLoc] || []).forEach(baseMappingsKey => {
+          delete baseMappingsCleaned[baseMappingsKey]
         })
+        delete baseMappingsKeysByBareOriginalLoc[bareOriginalLoc]
+
+        if(overrideMappings[locWithWordRange]) {
+          const [ bareTranslationLoc ] = overrideMappings[locWithWordRange].split(':')
+          ;(baseMappingsKeysByBareTranslationLoc[bareTranslationLoc] || []).forEach(baseMappingsKey => {
+            delete baseMappingsCleaned[baseMappingsKey]
+          })
+          delete baseMappingsKeysByBareTranslationLoc[bareTranslationLoc]
+        }
+
       }
-    
+
       // return merged overrideMappings onto baseMappings
       return { ...baseMappingsCleaned, ...overrideMappings }
     
     }
 
-    // get the unparsed versification mappings
-    let originalToTranslation = overrideMappings({
-      baseMappings: verseMappings[versificationModel],
-      overrideMappings: (skipsUnlikelyOriginals ? unlikelyOriginals : {}),
-    })
-    originalToTranslation = overrideMappings({
-      baseMappings: originalToTranslation,
-      overrideMappings: (extraVerseMappings || {}),
-    })
+    const parseOutRanges = mappings => {
+      mappings = { ...mappings }
+      for(let key in mappings) {
+        const keyParts = key.match(/^([0-9]{8})-([0-9]{3})$/)
+        if(keyParts) {
+          const startingLoc = parseInt(keyParts[1], 10)
+          const endingLoc = parseInt(keyParts[1].substr(0,5) + keyParts[2], 10)
+          if(endingLoc >= startingLoc) {
+            for(let loc=startingLoc; loc<=endingLoc; loc++) {
+              mappings[padLocWithLeadingZero(loc)] = padLocWithLeadingZero(loc + mappings[key])
+            }
+          }
+          delete mappings[key]
+        }
+      }
+      return mappings
+    }
 
     // parse out ranges
-    for(let key in originalToTranslation) {
-      const keyParts = key.match(/^([0-9]{8})-([0-9]{3})$/)
-      if(keyParts) {
-        const startingLoc = parseInt(keyParts[1], 10)
-        const endingLoc = parseInt(keyParts[1].substr(0,5) + keyParts[2], 10)
-        if(endingLoc >= startingLoc) {
-          for(let loc=startingLoc; loc<=endingLoc; loc++) {
-            originalToTranslation[padLocWithLeadingZero(loc)] = padLocWithLeadingZero(loc + originalToTranslation[key])
-          }
-        }
-        delete originalToTranslation[key]
-      }
-    }
+    let originalToTranslation = parseOutRanges(verseMappings[versificationModel])
+    const overrideMappings1 = (skipsUnlikelyOriginals ? unlikelyOriginals : {})
+    const overrideMappings2 = (extraVerseMappings || {})
+
+    // apply overrides
+    originalToTranslation = getOverrideMappings({
+      baseMappings: originalToTranslation,
+      overrideMappings: overrideMappings1,
+    })
+    originalToTranslation = getOverrideMappings({
+      baseMappings: originalToTranslation,
+      overrideMappings: overrideMappings2,
+    })
 
     // switch it around, ignoring nulls
     const translationToOriginal = {}
@@ -137,16 +155,28 @@ const getVerseMappingsByVersionInfo = ({ partialScope, versificationModel, skips
       translationToOriginal[originalToTranslation[key]] = key
     }
 
+    const normalizeWordRanges = mapping => (
+      !mapping
+        ? mapping
+        : mapping.replace(/([0-9]+)-([0-9]+)/g, (match, a, b) => (
+          a === b
+            ? a
+            : match
+        ))
+    )
+
     // make multi-level so that all keys are simple locs
     const convertMappingsToMultiLevel = mappings => {
       for(let key in mappings) {
         const keyParts = key.match(/^([0-9]{8}):([0-9]+(?:-[0-9]*)?(?:,[0-9]+(?:-[0-9]*)?)*)$/)
         if(keyParts) {
           const loc = keyParts[1]
-          const wordRangesStr = keyParts[2]
+          const wordRangesStr = normalizeWordRanges(keyParts[2])
           if(!mappings[loc]) mappings[loc] = {}
-          mappings[loc][wordRangesStr] = mappings[key]
+          mappings[loc][wordRangesStr] = normalizeWordRanges(mappings[key])
           delete mappings[key]
+        } else {
+          mappings[key] = normalizeWordRanges(mappings[key])
         }
       }
     }

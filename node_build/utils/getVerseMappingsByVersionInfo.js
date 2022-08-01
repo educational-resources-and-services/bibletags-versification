@@ -103,100 +103,121 @@ var getVerseMappingsByVersionInfo = function getVerseMappingsByVersionInfo() {
 
   if (!verseMappingsByVersionInfo[versificationModel]["".concat(extraVerseMappingsKey, "-").concat(!!skipsUnlikelyOriginals)]) {
     // Create object of versification mappings without abbreviations
-    var overrideMappings = function overrideMappings(_ref2) {
+    var getOverrideMappings = function getOverrideMappings(_ref2) {
       var baseMappings = _ref2.baseMappings,
           overrideMappings = _ref2.overrideMappings;
-
-      var getWordRangeInts = function getWordRangeInts(wordRange) {
-        return wordRange.split('-').map(function (strNum) {
-          return parseInt(strNum === '' ? 1000 : strNum, 10);
-        });
-      }; // process baseMappings
-
-
-      var baseMappingsMap = {};
+      // find baseMapping keys by bareLocs
+      var baseMappingsKeysByBareOriginalLoc = {};
+      var baseMappingsKeysByBareTranslationLoc = {};
       Object.keys(baseMappings).forEach(function (locWithWordRange) {
         var _locWithWordRange$spl = locWithWordRange.split(':'),
-            _locWithWordRange$spl2 = _slicedToArray(_locWithWordRange$spl, 2),
-            loc = _locWithWordRange$spl2[0],
-            wordRange = _locWithWordRange$spl2[1];
+            _locWithWordRange$spl2 = _slicedToArray(_locWithWordRange$spl, 1),
+            bareOriginalLoc = _locWithWordRange$spl2[0];
 
-        if (!baseMappingsMap[loc]) {
-          baseMappingsMap[loc] = [];
+        baseMappingsKeysByBareOriginalLoc[bareOriginalLoc] = baseMappingsKeysByBareOriginalLoc[bareOriginalLoc] || [];
+        baseMappingsKeysByBareOriginalLoc[bareOriginalLoc].push(locWithWordRange);
+
+        if (baseMappings[locWithWordRange]) {
+          var _baseMappings$locWith = baseMappings[locWithWordRange].split(':'),
+              _baseMappings$locWith2 = _slicedToArray(_baseMappings$locWith, 1),
+              bareTranslationLoc = _baseMappings$locWith2[0];
+
+          baseMappingsKeysByBareTranslationLoc[bareTranslationLoc] = baseMappingsKeysByBareTranslationLoc[bareTranslationLoc] || [];
+          baseMappingsKeysByBareTranslationLoc[bareTranslationLoc].push(locWithWordRange);
         }
-
-        wordRange && baseMappingsMap[loc].push(wordRange);
-      }); // delete some from baseMappings, based on keys in overrideMappings
+      }); // delete from baseMappings where base loc used in overrideMappings (both original and translation sides)
 
       var baseMappingsCleaned = _objectSpread({}, baseMappings);
 
-      var _loop = function _loop(key) {
-        var keyWithoutWordRange = key.split(':')[0];
-        delete baseMappingsCleaned[keyWithoutWordRange];
-        (baseMappingsMap[keyWithoutWordRange] || []).forEach(function (baseMappingsWordRange) {
-          var baseMappingsWordRangeInts = getWordRangeInts(baseMappingsWordRange);
-          var overrideMappingWordRangeInts = getWordRangeInts(overrideMappings[key].split(':')[1] || '0-');
+      for (var locWithWordRange in overrideMappings) {
+        var _locWithWordRange$spl3 = locWithWordRange.split(':'),
+            _locWithWordRange$spl4 = _slicedToArray(_locWithWordRange$spl3, 1),
+            bareOriginalLoc = _locWithWordRange$spl4[0];
 
-          if (overrideMappingWordRangeInts[0] <= baseMappingsWordRangeInts[1] && overrideMappingWordRangeInts[1] >= baseMappingsWordRangeInts[0]) {
-            delete baseMappingsCleaned["".concat(keyWithoutWordRange, ":").concat(baseMappingsWordRange)];
-          }
+        (baseMappingsKeysByBareOriginalLoc[bareOriginalLoc] || []).forEach(function (baseMappingsKey) {
+          delete baseMappingsCleaned[baseMappingsKey];
         });
-      };
+        delete baseMappingsKeysByBareOriginalLoc[bareOriginalLoc];
 
-      for (var key in overrideMappings) {
-        _loop(key);
+        if (overrideMappings[locWithWordRange]) {
+          var _overrideMappings$loc = overrideMappings[locWithWordRange].split(':'),
+              _overrideMappings$loc2 = _slicedToArray(_overrideMappings$loc, 1),
+              bareTranslationLoc = _overrideMappings$loc2[0];
+
+          (baseMappingsKeysByBareTranslationLoc[bareTranslationLoc] || []).forEach(function (baseMappingsKey) {
+            delete baseMappingsCleaned[baseMappingsKey];
+          });
+          delete baseMappingsKeysByBareTranslationLoc[bareTranslationLoc];
+        }
       } // return merged overrideMappings onto baseMappings
 
 
       return _objectSpread(_objectSpread({}, baseMappingsCleaned), overrideMappings);
-    }; // get the unparsed versification mappings
+    };
 
+    var parseOutRanges = function parseOutRanges(mappings) {
+      mappings = _objectSpread({}, mappings);
 
-    var originalToTranslation = overrideMappings({
-      baseMappings: verseMappings[versificationModel],
-      overrideMappings: skipsUnlikelyOriginals ? unlikelyOriginals : {}
-    });
-    originalToTranslation = overrideMappings({
-      baseMappings: originalToTranslation,
-      overrideMappings: extraVerseMappings || {}
-    }); // parse out ranges
+      for (var key in mappings) {
+        var keyParts = key.match(/^([0-9]{8})-([0-9]{3})$/);
 
-    for (var key in originalToTranslation) {
-      var keyParts = key.match(/^([0-9]{8})-([0-9]{3})$/);
+        if (keyParts) {
+          var startingLoc = parseInt(keyParts[1], 10);
+          var endingLoc = parseInt(keyParts[1].substr(0, 5) + keyParts[2], 10);
 
-      if (keyParts) {
-        var startingLoc = parseInt(keyParts[1], 10);
-        var endingLoc = parseInt(keyParts[1].substr(0, 5) + keyParts[2], 10);
-
-        if (endingLoc >= startingLoc) {
-          for (var loc = startingLoc; loc <= endingLoc; loc++) {
-            originalToTranslation[(0, _locFunctions.padLocWithLeadingZero)(loc)] = (0, _locFunctions.padLocWithLeadingZero)(loc + originalToTranslation[key]);
+          if (endingLoc >= startingLoc) {
+            for (var loc = startingLoc; loc <= endingLoc; loc++) {
+              mappings[(0, _locFunctions.padLocWithLeadingZero)(loc)] = (0, _locFunctions.padLocWithLeadingZero)(loc + mappings[key]);
+            }
           }
+
+          delete mappings[key];
         }
-
-        delete originalToTranslation[key];
       }
-    } // switch it around, ignoring nulls
 
+      return mappings;
+    }; // parse out ranges
+
+
+    var originalToTranslation = parseOutRanges(verseMappings[versificationModel]);
+    var overrideMappings1 = skipsUnlikelyOriginals ? unlikelyOriginals : {};
+    var overrideMappings2 = extraVerseMappings || {}; // apply overrides
+
+    originalToTranslation = getOverrideMappings({
+      baseMappings: originalToTranslation,
+      overrideMappings: overrideMappings1
+    });
+    originalToTranslation = getOverrideMappings({
+      baseMappings: originalToTranslation,
+      overrideMappings: overrideMappings2
+    }); // switch it around, ignoring nulls
 
     var translationToOriginal = {};
 
-    for (var _key in originalToTranslation) {
-      if (originalToTranslation[_key] === null) continue;
-      translationToOriginal[originalToTranslation[_key]] = _key;
-    } // make multi-level so that all keys are simple locs
+    for (var key in originalToTranslation) {
+      if (originalToTranslation[key] === null) continue;
+      translationToOriginal[originalToTranslation[key]] = key;
+    }
+
+    var normalizeWordRanges = function normalizeWordRanges(mapping) {
+      return !mapping ? mapping : mapping.replace(/([0-9]+)-([0-9]+)/g, function (match, a, b) {
+        return a === b ? a : match;
+      });
+    }; // make multi-level so that all keys are simple locs
 
 
     var convertMappingsToMultiLevel = function convertMappingsToMultiLevel(mappings) {
-      for (var _key2 in mappings) {
-        var _keyParts = _key2.match(/^([0-9]{8}):([0-9]+(?:-[0-9]*)?(?:,[0-9]+(?:-[0-9]*)?)*)$/);
+      for (var _key in mappings) {
+        var keyParts = _key.match(/^([0-9]{8}):([0-9]+(?:-[0-9]*)?(?:,[0-9]+(?:-[0-9]*)?)*)$/);
 
-        if (_keyParts) {
-          var _loc = _keyParts[1];
-          var wordRangesStr = _keyParts[2];
-          if (!mappings[_loc]) mappings[_loc] = {};
-          mappings[_loc][wordRangesStr] = mappings[_key2];
-          delete mappings[_key2];
+        if (keyParts) {
+          var loc = keyParts[1];
+          var wordRangesStr = normalizeWordRanges(keyParts[2]);
+          if (!mappings[loc]) mappings[loc] = {};
+          mappings[loc][wordRangesStr] = normalizeWordRanges(mappings[_key]);
+          delete mappings[_key];
+        } else {
+          mappings[_key] = normalizeWordRanges(mappings[_key]);
         }
       }
     };

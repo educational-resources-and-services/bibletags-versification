@@ -33,8 +33,6 @@ function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Sy
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-function _readOnlyError(name) { throw new TypeError("\"" + name + "\" is read-only"); }
-
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
 // Assuming a one-way mapping set takes up ~3k, 200 two-way mapping sets would be 1.2 MB of memory
@@ -231,7 +229,7 @@ var getVerseMappingsByVersionInfo = function getVerseMappingsByVersionInfo() {
     }; // Prevent exhausting memory by not caching too many mappings
 
     var numMappingSets = 0;
-    var oldestMappingSetInfo = {};
+    var oldestMappingSetInfo;
 
     for (var vModel in verseMappingsByVersionInfo) {
       for (var evmKey in verseMappingsByVersionInfo[vModel]) {
@@ -239,11 +237,11 @@ var getVerseMappingsByVersionInfo = function getVerseMappingsByVersionInfo() {
         var createdAt = verseMappingsByVersionInfo[vModel][evmKey]['createdAt'];
 
         if (!oldestMappingSetInfo || createdAt < oldestMappingSetInfo.createdAt) {
-          ({
+          oldestMappingSetInfo = {
             vModel: vModel,
             evmKey: evmKey,
             createdAt: createdAt
-          }), _readOnlyError("oldestMappingSetInfo");
+          };
         }
       }
     }

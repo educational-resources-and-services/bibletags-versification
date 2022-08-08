@@ -194,7 +194,7 @@ const getVerseMappingsByVersionInfo = ({ partialScope, versificationModel, skips
     // Prevent exhausting memory by not caching too many mappings
 
     let numMappingSets = 0
-    const oldestMappingSetInfo = {}
+    let oldestMappingSetInfo
 
     for(let vModel in verseMappingsByVersionInfo) {
       for(let evmKey in verseMappingsByVersionInfo[vModel]) {

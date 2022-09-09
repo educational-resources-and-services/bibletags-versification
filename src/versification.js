@@ -18,6 +18,10 @@ export const getPreviousOriginalLoc = loc => {
   } else if(chapter > 1) {
     chapter--
     verse = numberOfVersesPerChapterPerBook[bookId-1][chapter-1]
+  } else if(bookId > 1) {
+    bookId--
+    chapter = numberOfVersesPerChapterPerBook[bookId-1].length
+    verse = numberOfVersesPerChapterPerBook[bookId-1][chapter-1]
   } else {
     return null
   }
@@ -33,10 +37,14 @@ export const getNextOriginalLoc = loc => {
   } else if(chapter < numberOfVersesPerChapterPerBook[bookId-1].length) {
     chapter++
     verse = 1
+  } else if(bookId < 66) {
+    bookId++
+    chapter = 1
+    verse = 1
   } else {
     return null
   }
-  
+
   return getLocFromRef({ bookId, chapter, verse })
 }
 

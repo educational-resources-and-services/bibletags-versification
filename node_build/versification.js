@@ -93,6 +93,10 @@ var getPreviousOriginalLoc = function getPreviousOriginalLoc(loc) {
   } else if (chapter > 1) {
     chapter--;
     verse = _numberOfVersesPerChapterPerBook["default"][bookId - 1][chapter - 1];
+  } else if (bookId > 1) {
+    bookId--;
+    chapter = _numberOfVersesPerChapterPerBook["default"][bookId - 1].length;
+    verse = _numberOfVersesPerChapterPerBook["default"][bookId - 1][chapter - 1];
   } else {
     return null;
   }
@@ -116,6 +120,10 @@ var getNextOriginalLoc = function getNextOriginalLoc(loc) {
     verse++;
   } else if (chapter < _numberOfVersesPerChapterPerBook["default"][bookId - 1].length) {
     chapter++;
+    verse = 1;
+  } else if (bookId < 66) {
+    bookId++;
+    chapter = 1;
     verse = 1;
   } else {
     return null;

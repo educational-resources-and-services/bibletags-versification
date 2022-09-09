@@ -25,6 +25,10 @@ describe('getPreviousNextOriginalLoc', () => {
       assert.equal(loc, `01050025`)
     })
 
+    it('Exodus 1:1', () => {
+      const loc = getPreviousOriginalLoc(`02001001`)
+      assert.equal(loc, `01050026`)
+    })
   })
   
   describe('getNextOriginalLoc', () => {
@@ -46,6 +50,11 @@ describe('getPreviousNextOriginalLoc', () => {
 
     it('Genesis 50:26', () => {
       const loc = getNextOriginalLoc(`01050026`)
+      assert.equal(loc, `02001001`)
+    })
+
+    it('Revelation 22:21', () => {
+      const loc = getNextOriginalLoc(`66022021`)
       assert.equal(loc, null)
     })
 

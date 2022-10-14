@@ -85,4 +85,36 @@ describe('getStartAndEndVersesByChapter', () => {
 
   })
 
+  describe('Malachi', () => {
+
+    it('KJV', () => {
+      const startAndEndVerses = getStartAndEndVersesByChapter({
+        versionInfo: { versificationModel: 'kjv' },
+        bookId: 39,
+      })
+      assert.deepEqual(
+        startAndEndVerses,
+        {
+          startAndEndVersesByChapter: [ [ 1, 14 ], [ 1, 17 ], [ 1, 18 ], [ 1, 6 ] ],
+          skippedLocs: [],
+        }
+      )
+    })
+
+    it('Original', () => {
+      const startAndEndVerses = getStartAndEndVersesByChapter({
+        versionInfo: { versificationModel: 'original' },
+        bookId: 39,
+      })
+      assert.deepEqual(
+        startAndEndVerses,
+        {
+          startAndEndVersesByChapter: [ [ 1, 14 ], [ 1, 17 ], [ 1, 24 ] ],
+          skippedLocs: [],
+        }
+      )
+    })
+
+  })
+
 })

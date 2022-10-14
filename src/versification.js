@@ -430,8 +430,20 @@ export const getNumberOfChapters = ({ versionInfo, bookId }) => {
 }
 
 export const getStartAndEndVersesByChapter = ({ versionInfo, bookId }) => {
+  const BEYOND_MAX_VERSE_NUM = 180
 
-  const numberOfVersesPerChapter = numberOfVersesPerChapterPerBook[bookId-1]
+  const numberOfVersesPerChapter = [ ...numberOfVersesPerChapterPerBook[bookId-1] ]
+
+  // In the original, Malachi only has 3 chapters. But in many versions it has 4.
+  // So check number of chapters.
+  const numChapters = getNumberOfChapters({ versionInfo, bookId })
+  while(numberOfVersesPerChapter.length < numChapters) {
+    numberOfVersesPerChapter.push(BEYOND_MAX_VERSE_NUM)
+  }
+  while(numberOfVersesPerChapter.length > numChapters) {
+    numberOfVersesPerChapter.pop()
+  }
+
   let startAndEndVersesByChapter = []
 
   if(
@@ -461,7 +473,6 @@ export const getStartAndEndVersesByChapter = ({ versionInfo, bookId }) => {
     )
 
     // find the first valid verse in the chapter
-    const BEYOND_MAX_VERSE_NUM = 140
     let firstVerseInChapter = 0
     while(
       firstVerseInChapter < BEYOND_MAX_VERSE_NUM

@@ -22,5 +22,25 @@ describe('getNumberOfChapters', () => {
     })
 
   })
+
+  describe('Malachi', () => {
+
+    it('KJV', () => {
+      const numChapters = getNumberOfChapters({
+        versionInfo: { versificationModel: 'kjv' },
+        bookId: 39,
+      })
+      assert.equal(numChapters, 4)
+    })
+
+    it('Original', () => {
+      const numChapters = getNumberOfChapters({
+        versionInfo: { versificationModel: 'original' },
+        bookId: 39,
+      })
+      assert.equal(numChapters, 3)
+    })
+
+  })
   
 })

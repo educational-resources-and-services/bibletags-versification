@@ -515,7 +515,25 @@ exports.getNumberOfChapters = getNumberOfChapters;
 var getStartAndEndVersesByChapter = function getStartAndEndVersesByChapter(_ref6) {
   var versionInfo = _ref6.versionInfo,
       bookId = _ref6.bookId;
-  var numberOfVersesPerChapter = _numberOfVersesPerChapterPerBook["default"][bookId - 1];
+  var BEYOND_MAX_VERSE_NUM = 180;
+
+  var numberOfVersesPerChapter = _toConsumableArray(_numberOfVersesPerChapterPerBook["default"][bookId - 1]); // In the original, Malachi only has 3 chapters. But in many versions it has 4.
+  // So check number of chapters.
+
+
+  var numChapters = getNumberOfChapters({
+    versionInfo: versionInfo,
+    bookId: bookId
+  });
+
+  while (numberOfVersesPerChapter.length < numChapters) {
+    numberOfVersesPerChapter.push(BEYOND_MAX_VERSE_NUM);
+  }
+
+  while (numberOfVersesPerChapter.length > numChapters) {
+    numberOfVersesPerChapter.pop();
+  }
+
   var startAndEndVersesByChapter = [];
 
   if (!numberOfVersesPerChapter || versionInfo.partialScope === 'ot' && bookId >= 40 || versionInfo.partialScope === 'nt' && bookId <= 39) {
@@ -540,7 +558,6 @@ var getStartAndEndVersesByChapter = function getStartAndEndVersesByChapter(_ref6
     }; // find the first valid verse in the chapter
 
 
-    var BEYOND_MAX_VERSE_NUM = 140;
     var firstVerseInChapter = 0;
 
     while (firstVerseInChapter < BEYOND_MAX_VERSE_NUM && !isValidVerse(firstVerseInChapter)) {

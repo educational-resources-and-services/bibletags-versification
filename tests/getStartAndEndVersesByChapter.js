@@ -117,4 +117,36 @@ describe('getStartAndEndVersesByChapter', () => {
 
   })
 
+  describe('Invalid book', () => {
+
+    it('KJV', () => {
+      const startAndEndVerses = getStartAndEndVersesByChapter({
+        versionInfo: { versificationModel: 'kjv' },
+        bookId: 67,
+      })
+      assert.deepEqual(
+        startAndEndVerses,
+        {
+          startAndEndVersesByChapter: [],
+          skippedLocs: [],
+        }
+      )
+    })
+
+    it('KJV', () => {
+      const startAndEndVerses = getStartAndEndVersesByChapter({
+        versionInfo: { versificationModel: 'kjv' },
+        bookId: null,
+      })
+      assert.deepEqual(
+        startAndEndVerses,
+        {
+          startAndEndVersesByChapter: [],
+          skippedLocs: [],
+        }
+      )
+    })
+
+  })
+
 })

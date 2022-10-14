@@ -432,7 +432,19 @@ export const getNumberOfChapters = ({ versionInfo, bookId }) => {
 export const getStartAndEndVersesByChapter = ({ versionInfo, bookId }) => {
   const BEYOND_MAX_VERSE_NUM = 180
 
-  const numberOfVersesPerChapter = [ ...numberOfVersesPerChapterPerBook[bookId-1] ]
+  const numberOfVersesPerChapter = [ ...(numberOfVersesPerChapterPerBook[bookId-1] || []) ]
+
+  if(
+    numberOfVersesPerChapter.length === 0
+    || (versionInfo.partialScope === 'ot' && bookId >= 40)
+    || (versionInfo.partialScope === 'nt' && bookId <= 39)
+  ) {
+    // this version does not have this testament of the Bible
+    return {
+      startAndEndVersesByChapter: [],
+      skippedLocs: [],
+    }
+  }
 
   // In the original, Malachi only has 3 chapters. But in many versions it has 4.
   // So check number of chapters.
@@ -445,18 +457,6 @@ export const getStartAndEndVersesByChapter = ({ versionInfo, bookId }) => {
   }
 
   let startAndEndVersesByChapter = []
-
-  if(
-    !numberOfVersesPerChapter
-    || (versionInfo.partialScope === 'ot' && bookId >= 40)
-    || (versionInfo.partialScope === 'nt' && bookId <= 39)
-  ) {
-    // this version does not have this testament of the Bible
-    return {
-      startAndEndVersesByChapter: [],
-      skippedVerses: [],
-    }
-  }
 
   // for each chapter in the original
   numberOfVersesPerChapter.forEach((numVersesInOrig, idx) => {

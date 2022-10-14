@@ -517,7 +517,15 @@ var getStartAndEndVersesByChapter = function getStartAndEndVersesByChapter(_ref6
       bookId = _ref6.bookId;
   var BEYOND_MAX_VERSE_NUM = 180;
 
-  var numberOfVersesPerChapter = _toConsumableArray(_numberOfVersesPerChapterPerBook["default"][bookId - 1]); // In the original, Malachi only has 3 chapters. But in many versions it has 4.
+  var numberOfVersesPerChapter = _toConsumableArray(_numberOfVersesPerChapterPerBook["default"][bookId - 1] || []);
+
+  if (numberOfVersesPerChapter.length === 0 || versionInfo.partialScope === 'ot' && bookId >= 40 || versionInfo.partialScope === 'nt' && bookId <= 39) {
+    // this version does not have this testament of the Bible
+    return {
+      startAndEndVersesByChapter: [],
+      skippedLocs: []
+    };
+  } // In the original, Malachi only has 3 chapters. But in many versions it has 4.
   // So check number of chapters.
 
 
@@ -534,16 +542,7 @@ var getStartAndEndVersesByChapter = function getStartAndEndVersesByChapter(_ref6
     numberOfVersesPerChapter.pop();
   }
 
-  var startAndEndVersesByChapter = [];
-
-  if (!numberOfVersesPerChapter || versionInfo.partialScope === 'ot' && bookId >= 40 || versionInfo.partialScope === 'nt' && bookId <= 39) {
-    // this version does not have this testament of the Bible
-    return {
-      startAndEndVersesByChapter: [],
-      skippedVerses: []
-    };
-  } // for each chapter in the original
-
+  var startAndEndVersesByChapter = []; // for each chapter in the original
 
   numberOfVersesPerChapter.forEach(function (numVersesInOrig, idx) {
     var isValidVerse = function isValidVerse(verse) {

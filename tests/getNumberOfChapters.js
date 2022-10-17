@@ -42,5 +42,25 @@ describe('getNumberOfChapters', () => {
     })
 
   })
+
+  describe('Joel', () => {
+
+    it('KJV', () => {
+      const numChapters = getNumberOfChapters({
+        versionInfo: { versificationModel: 'kjv' },
+        bookId: 29,
+      })
+      assert.equal(numChapters, 3)
+    })
+
+    it('Original', () => {
+      const numChapters = getNumberOfChapters({
+        versionInfo: { versificationModel: 'original' },
+        bookId: 29,
+      })
+      assert.equal(numChapters, 4)
+    })
+
+  })
   
 })

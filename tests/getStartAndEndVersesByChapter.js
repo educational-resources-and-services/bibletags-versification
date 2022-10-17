@@ -117,6 +117,38 @@ describe('getStartAndEndVersesByChapter', () => {
 
   })
 
+  describe('Joel', () => {
+
+    it('KJV', () => {
+      const startAndEndVerses = getStartAndEndVersesByChapter({
+        versionInfo: { versificationModel: 'kjv' },
+        bookId: 29,
+      })
+      assert.deepEqual(
+        startAndEndVerses,
+        {
+          startAndEndVersesByChapter: [ [ 1, 20 ], [ 1, 32 ], [ 1, 21 ] ],
+          skippedLocs: [],
+        }
+      )
+    })
+
+    it('Original', () => {
+      const startAndEndVerses = getStartAndEndVersesByChapter({
+        versionInfo: { versificationModel: 'original' },
+        bookId: 29,
+      })
+      assert.deepEqual(
+        startAndEndVerses,
+        {
+          startAndEndVersesByChapter: [ [ 1, 20 ], [ 1, 27 ], [ 1, 5 ], [ 1, 21 ] ],
+          skippedLocs: [],
+        }
+      )
+    })
+
+  })
+
   describe('Invalid book', () => {
 
     it('KJV', () => {

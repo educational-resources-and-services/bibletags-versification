@@ -165,7 +165,7 @@ var getVerseMappingsByVersionInfo = function getVerseMappingsByVersionInfo() {
 
           if (endingLoc >= startingLoc) {
             for (var loc = startingLoc; loc <= endingLoc; loc++) {
-              mappings[(0, _locFunctions.padLocWithLeadingZero)(loc)] = (0, _locFunctions.padLocWithLeadingZero)(loc + mappings[key]);
+              mappings[(0, _locFunctions.padLocWithLeadingZero)(loc)] = mappings[key] === null ? null : (0, _locFunctions.padLocWithLeadingZero)(loc + mappings[key]);
             }
           }
 

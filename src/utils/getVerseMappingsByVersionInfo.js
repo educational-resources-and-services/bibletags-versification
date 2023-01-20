@@ -124,7 +124,7 @@ const getVerseMappingsByVersionInfo = ({ partialScope, versificationModel, skips
           const endingLoc = parseInt(keyParts[1].substr(0,5) + keyParts[2], 10)
           if(endingLoc >= startingLoc) {
             for(let loc=startingLoc; loc<=endingLoc; loc++) {
-              mappings[padLocWithLeadingZero(loc)] = padLocWithLeadingZero(loc + mappings[key])
+              mappings[padLocWithLeadingZero(loc)] = mappings[key] === null ? null : padLocWithLeadingZero(loc + mappings[key])
             }
           }
           delete mappings[key]

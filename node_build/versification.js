@@ -25,6 +25,12 @@ Object.defineProperty(exports, "getVerseMappingsByVersionInfo", {
   }
 });
 exports.isValidRefInOriginal = exports.hasCorrespondingVerseInOriginal = void 0;
+Object.defineProperty(exports, "numberOfVersesPerChapterPerBook", {
+  enumerable: true,
+  get: function get() {
+    return _numberOfVersesPerChapterPerBook["default"];
+  }
+});
 Object.defineProperty(exports, "padLocWithLeadingZero", {
   enumerable: true,
   get: function get() {

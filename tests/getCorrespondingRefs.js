@@ -310,6 +310,50 @@ describe('getCorrespondingRefs', () => {
       assert.deepEqual(correspondingVerseLocations, [])
     })
 
+    it('Matthew 12:47 + directionToTryIfSkipped:`next` (original -> ESV)', () => {
+      const correspondingVerseLocations = getCorrespondingRefs({
+        baseVersion: {
+          ref: {
+            bookId: 40,
+            chapter: 12,
+            verse: 47,
+          },
+          info: ugntOriginalInfo,
+        },
+        lookupVersionInfo: esvInfo,
+        directionToTryIfSkipped: `next`,
+      })
+      assert.deepEqual(correspondingVerseLocations, [
+        {
+          bookId: 40,
+          chapter: 12,
+          verse: 48,
+        },
+      ])
+    })
+
+    it('Matthew 12:47 + directionToTryIfSkipped:`previous` (original -> ESV)', () => {
+      const correspondingVerseLocations = getCorrespondingRefs({
+        baseVersion: {
+          ref: {
+            bookId: 40,
+            chapter: 12,
+            verse: 47,
+          },
+          info: ugntOriginalInfo,
+        },
+        lookupVersionInfo: esvInfo,
+        directionToTryIfSkipped: `previous`,
+      })
+      assert.deepEqual(correspondingVerseLocations, [
+        {
+          bookId: 40,
+          chapter: 12,
+          verse: 46,
+        },
+      ])
+    })
+
     it('1Chron 6:8 = no valid verse in corresponding version b/c partialScope (original -> MHNT)', () => {
       const correspondingVerseLocations = getCorrespondingRefs({
         baseVersion: {
@@ -468,6 +512,7 @@ describe('getCorrespondingRefs', () => {
           info: ugntOriginalInfo,
         },
         lookupVersionInfo: nivInfo,
+        directionToTryIfSkipped: `previous`,
       })
 
       assert.deepEqual(correspondingVerseLocations, [

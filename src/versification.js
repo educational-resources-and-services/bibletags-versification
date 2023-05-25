@@ -171,10 +171,11 @@ export const getOriginalLocsFromRange = (fromLoc, toLoc) => {
   return locs
 }
 
-export const getCorrespondingRefs = ({ baseVersion={}, lookupVersionInfo={} }) => {
+export const getCorrespondingRefs = ({ baseVersion={}, lookupVersionInfo={}, directionToTryIfSkipped }) => {
   // Returns one of the following:
     // an array of `ref` objects with keys `bookId`, `chapter`, `verse` and possibly `wordRanges`
-    // `false` if there is not a valid verse in the corresponding version
+    // an empty array if it would be a valid verse, but is skipped in lookup version
+    // `false` if there is not a valid verse in the lookup version
     // `null` if invalid parameters were passed
 
   // Must go from an original text to a translation, or vice versa.
@@ -283,6 +284,18 @@ export const getCorrespondingRefs = ({ baseVersion={}, lookupVersionInfo={} }) =
 
   } else if(lookupLocs === null) {
     // there are no corresponding verses in the original version
+    if(directionToTryIfSkipped) {
+      return getCorrespondingRefs({
+        baseVersion: {
+          ...baseVersion,
+          ref: (directionToTryIfSkipped === `next` ? getNextTranslationRef : getPreviousTranslationRef)({
+            ref: baseVersionRefWithoutWordRanges,
+            info: baseVersion.info,
+          }),
+        },
+        lookupVersionInfo,
+      })
+    }
     return []
 
   } else if(typeof lookupLocs === 'object') {

@@ -281,11 +281,13 @@ var getCorrespondingRefs = function getCorrespondingRefs(_ref4) {
   var _ref4$baseVersion = _ref4.baseVersion,
       baseVersion = _ref4$baseVersion === void 0 ? {} : _ref4$baseVersion,
       _ref4$lookupVersionIn = _ref4.lookupVersionInfo,
-      lookupVersionInfo = _ref4$lookupVersionIn === void 0 ? {} : _ref4$lookupVersionIn;
+      lookupVersionInfo = _ref4$lookupVersionIn === void 0 ? {} : _ref4$lookupVersionIn,
+      directionToTryIfSkipped = _ref4.directionToTryIfSkipped;
 
   // Returns one of the following:
   // an array of `ref` objects with keys `bookId`, `chapter`, `verse` and possibly `wordRanges`
-  // `false` if there is not a valid verse in the corresponding version
+  // an empty array if it would be a valid verse, but is skipped in lookup version
+  // `false` if there is not a valid verse in the lookup version
   // `null` if invalid parameters were passed
   // Must go from an original text to a translation, or vice versa.
   if (_typeof(baseVersion) !== 'object' || _typeof(baseVersion.info) !== 'object' || _typeof(lookupVersionInfo) !== 'object') {
@@ -372,6 +374,18 @@ var getCorrespondingRefs = function getCorrespondingRefs(_ref4) {
     lookupLocs = [baseLoc];
   } else if (lookupLocs === null) {
     // there are no corresponding verses in the original version
+    if (directionToTryIfSkipped) {
+      return getCorrespondingRefs({
+        baseVersion: _objectSpread(_objectSpread({}, baseVersion), {}, {
+          ref: (directionToTryIfSkipped === "next" ? getNextTranslationRef : getPreviousTranslationRef)({
+            ref: baseVersionRefWithoutWordRanges,
+            info: baseVersion.info
+          })
+        }),
+        lookupVersionInfo: lookupVersionInfo
+      });
+    }
+
     return [];
   } else if (_typeof(lookupLocs) === 'object') {
     // we want all the locations that the baseVersion mapped to, regardless of wordRanges

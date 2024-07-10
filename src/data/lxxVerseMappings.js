@@ -388,9 +388,18 @@ const lxxVerseMappings = {
   "27004003-006": null,
   "27004007-007": 3,
   "27004008": null,
-  "27004009-027": 5,  // this is not exactly right, but it seems too convoluted to figure out at this moment
-  "27004028-034": 7,
-  // 4:33-34 and 4:42-43 do not seem to have a correspondance in the original
+  "27004009-009": 3,
+  // LXX 4:13 does not seem to have coorespondence to the original
+  "27004010-013": 4,
+  // LXX 4:19 does not seem to have coorespondence to the original
+  "27004015-029": 5,
+  "27004030:1-6": "27004035",
+  "27004030:7-12": "27004036",
+  "27004030:13-": "27004037",
+  "27004031-031": 7,
+  // Orig 4:32 seems to be skipped by the LXX
+  "27004033-034": 6,
+  // LXX 4:41-43 does not seem to have coorespondence to the original
   "27005015": null,
   "27005018-022": null,
   "27005024-025": null,

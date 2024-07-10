@@ -415,19 +415,28 @@ var lxxVerseMappings = {
   "26032019": null,
   "26033026": null,
   "26040030": null,
-  // Dan 3 has 97 verses in the LXX! How they relate to the 33 verses in the original has not yet been determined
+  "27003024-030": 67,
+  "27003031-033": null,
   "27004001-002": 3,
   "27004003-006": null,
   "27004007-007": 3,
   "27004008": null,
-  "27004009-027": 5,
-  // this is not exactly right, but it seems too convoluted to figure out at this moment
-  "27004028-034": 7,
-  // 4:33-34 and 4:42-43 do not seem to have a correspondance in the original
+  "27004009-009": 3,
+  "27004010-014": 4,
+  "27004015-029": 5,
+  "27004030:1-6": "27004035",
+  "27004030:7-12": "27004036",
+  "27004030:13-": "27004037",
+  "27004031-031": 7,
+  "27004032": null,
+  "27004033-034": 6,
   "27005015": null,
   "27005018-022": null,
   "27005024-025": null,
-  "27005027-028": null
+  "27005027-028": null,
+  "27006013:1-29": "27006013",
+  "27006013:30-": "27006014",
+  "27006014-029": 1
 };
 var _default = lxxVerseMappings; // The following are currently understood to be verses in the LXX without correspondance in the original
 //   02028030
@@ -483,10 +492,10 @@ var _default = lxxVerseMappings; // The following are currently understood to be
 //   20028029
 //   24023041-42
 //   25001023
-//   27003034-097
-//   27004012-013
-//   27004033-034
-//   27004042-043
+//   27003024-090
+//   27004013
+//   27004019
+//   27004041-043
 //   27006030
 
 exports["default"] = _default;

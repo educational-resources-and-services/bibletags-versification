@@ -383,7 +383,9 @@ const lxxVerseMappings = {
   "26032019": null,
   "26033026": null,
   "26040030": null,
-  // Dan 3 has 97 verses in the LXX! How they relate to the 33 verses in the original has not yet been determined
+  // LXX 3:24-90 does not seem to have coorespondence to the original
+  "27003024-030": 67,
+  "27003031-033": null,
   "27004001-002": 3,
   "27004003-006": null,
   "27004007-007": 3,
@@ -397,13 +399,16 @@ const lxxVerseMappings = {
   "27004030:7-12": "27004036",
   "27004030:13-": "27004037",
   "27004031-031": 7,
-  // Orig 4:32 seems to be skipped by the LXX
+  "27004032": null,
   "27004033-034": 6,
   // LXX 4:41-43 does not seem to have coorespondence to the original
   "27005015": null,
   "27005018-022": null,
   "27005024-025": null,
   "27005027-028": null,
+  "27006013:1-29": "27006013",
+  "27006013:30-": "27006014",
+  "27006014-029": 1,
 }
 
 export default lxxVerseMappings

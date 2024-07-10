@@ -383,7 +383,6 @@ const lxxVerseMappings = {
   "26032019": null,
   "26033026": null,
   "26040030": null,
-  // LXX 3:24-90 does not seem to have coorespondence to the original
   "27003024-030": 67,
   "27003031-033": null,
   "27004001-002": 3,
@@ -391,9 +390,7 @@ const lxxVerseMappings = {
   "27004007-007": 3,
   "27004008": null,
   "27004009-009": 3,
-  // LXX 4:13 does not seem to have coorespondence to the original
-  "27004010-013": 4,
-  // LXX 4:19 does not seem to have coorespondence to the original
+  "27004010-014": 4,
   "27004015-029": 5,
   "27004030:1-6": "27004035",
   "27004030:7-12": "27004036",
@@ -401,7 +398,6 @@ const lxxVerseMappings = {
   "27004031-031": 7,
   "27004032": null,
   "27004033-034": 6,
-  // LXX 4:41-43 does not seem to have coorespondence to the original
   "27005015": null,
   "27005018-022": null,
   "27005024-025": null,
@@ -468,8 +464,8 @@ export default lxxVerseMappings
 //   20028029
 //   24023041-42
 //   25001023
-//   27003034-097
-//   27004012-013
-//   27004033-034
-//   27004042-043
+//   27003024-090
+//   27004013
+//   27004019
+//   27004041-043
 //   27006030
